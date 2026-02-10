@@ -105,7 +105,7 @@
 }
 
 /* Sheet/grid styles */
-.sheet-grid {
+.grid {
     display: grid;
     gap: 12px;
 }
@@ -113,4 +113,18 @@
 .sheet-cell {
     min-height: 32px;
     overflow: hidden;
+    width: 100%;
 }
+
+/* Sub-grid wrapper (nested grids) */
+.sub-grid-wrapper{ padding:0; margin:0; }
+
+/* Ensure cells and their direct children fill available grid area */
+.sheet-cell{ display:block; align-self:stretch; }
+.sheet-cell > *{ width:100%; height:100%; box-sizing:border-box; }
+
+/* Make rows stretch items so nested grids/components fill vertical space */
+.grid{ display:grid; gap:12px; align-items:stretch; }
+
+/* Ensure base fields expand to fill their container */
+.base-field{ height:100%; }

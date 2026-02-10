@@ -7,8 +7,5 @@
 </script>
 
 <BaseComponent onclick={onclick}>
-  {#if label}
-    <span>{label}</span>
-  {/if}
   <div>{text}</div>
 </BaseComponent>

@@ -2,12 +2,51 @@
   "title": "Character Sheet",
   "id": "test_sheet",
   "description": "Sheet",
-  "rows": 90,
   "cols": 6,
   "cells": [
     [
-      { "type": "StaticText", "id": "idk", "label": "Informações", "colspan": 2},
-      { "type": "TextField", "id": "nome_jogador", "label": "Nome do Jogador", "colspan": 2}
+      {
+        "type": "subgrid",
+        "id": "subgrid1",
+        "label": "Informations",
+        "colspan": 6,
+        "sheet": {
+          "rows": 2,
+          "cols": 10,
+          "cells": [
+            [
+              {
+                "type": "TextField",
+                "id": "player_name",
+                "label": "Player Name",
+                "placeholder": "Enter player name",
+                "colspan": 8
+              },
+              {
+                "type": "TextField",
+                "id": "nested_field_2",
+                "label": "Nested Field 2",
+                "colspan": 2,
+                "rowspan": 2
+              }
+            ],
+            [
+              {
+                "type": "StaticText",
+                "id": "nested_static_1",
+                "text": "Nested Static 1",
+                "colspan": 4
+              },
+              {
+                "type": "StaticText",
+                "id": "nested_static_2",
+                "text": "Nested Static 2",
+                "colspan": 4
+              }
+            ]
+          ]
+        }
+      }
     ]
   ]
 }

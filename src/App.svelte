@@ -8,7 +8,6 @@
   <h1>Custom RPG Character Sheet</h1>
 
   <Grid {sheet} />
-  <TextField label="Example Text Field" placeholder="Type something..." />
 
 </main>
 
