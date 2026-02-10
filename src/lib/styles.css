@@ -1,0 +1,116 @@
+:root {
+    --primary-color: #0B6EFD;
+    --secondary-color: #6C757D;
+    --background: #F7F8FA;
+    --surface: #FFFFFF;
+    --text-primary: #111827;
+    --text-secondary: #6B7280;
+    --border-color: #E5E7EB;
+    --border-width: 1px;
+    --border-radius: 8px;
+    --padding-base: 12px;
+    --gap: 12px;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --focus-outline: 2px solid rgba(11, 110, 253, 0.18);
+}
+
+.base-field {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--surface);
+    color: var(--text-primary);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--padding-base);
+    box-shadow: var(--shadow);
+}
+
+.base-field.card {
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
+}
+
+.base-field .label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.base-field .control {
+    display: flex;
+    gap: var(--gap);
+    align-items: center;
+}
+
+.base-field .prefix,
+.base-field .suffix {
+    display: flex;
+    align-items: center;
+}
+
+.base-field .content {
+    flex: 1;
+}
+
+.base-field .help {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+.base-field[aria-disabled="true"] {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.base-field:focus-within {
+    outline: var(--focus-outline);
+}
+
+.base-field.sm {
+    --padding-base: 8px;
+}
+
+.base-field.md {
+    --padding-base: 12px;
+}
+
+.base-field.lg {
+    --padding-base: 16px;
+}
+
+.text-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.text-input:disabled {
+    opacity: 0.6;
+}
+
+.static-text {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+.base-field.no-bg {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Sheet/grid styles */
+.sheet-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.sheet-cell {
+    min-height: 32px;
+    overflow: hidden;
+}

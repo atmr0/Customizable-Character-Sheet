@@ -1,0 +1,13 @@
+{
+  "title": "Character Sheet",
+  "id": "test_sheet",
+  "description": "Sheet",
+  "rows": 90,
+  "cols": 6,
+  "cells": [
+    [
+      { "type": "StaticText", "id": "idk", "label": "Informações", "colspan": 2},
+      { "type": "TextField", "id": "nome_jogador", "label": "Nome do Jogador", "colspan": 2}
+    ]
+  ]
+}
