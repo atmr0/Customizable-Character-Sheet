@@ -2,14 +2,15 @@ import SheetBuilder from './lib/Scripts/SheetBuilder';
 import { Constants } from './lib/constants';
 // build the nested sub-sheet first
 const subSheet = new SheetBuilder('Subgrid Sheet')
+  .id('informations')
   .rows(2)
-  .cols(10)
+  .cols(6)
   .row(r => r
-    .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', colspan: 8 })
-    .InputField({ id: 'profile_picture', label: 'Profile Picture', colspan: 2, rowspan: 2 })
+    .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', colspan: 5 })
+    .add({ type: 'ImageField', id: 'profile_picture', label: 'Profile Picture', colspan: 1, rowspan: 2 })
   )
   .row(r => r
-    .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', colspan: 6 })
+    .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', colspan: 3 })
     .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], colspan: 2 })
   )
   // .withStyle({ '*': { background: 'red' },

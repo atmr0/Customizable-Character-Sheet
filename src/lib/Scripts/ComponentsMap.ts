@@ -5,6 +5,7 @@ import ComputedText from "../components/ComputedText.svelte";
 import ListField from "../components/ListField.svelte";
 import CharacterAttribute from "../components/CharacterAttribute.svelte";
 import SelectField from "../components/SelectField.svelte";
+import ImageField from "../components/ImageField.svelte";
 import { Constants } from "../constants";
 
 
@@ -14,10 +15,9 @@ export const componentsMap: Record<string, any> = {
   [Constants.SubGrid]: SubGrid,
   [Constants.ComputedText]: ComputedText,
   [Constants.CharacterAttribute]: CharacterAttribute,
-  [Constants.SelectField || 'SelectField']: SelectField,
-  SelectField: SelectField,
-  Select: SelectField,
+  [Constants.SelectField]: SelectField,
   [Constants.ListField]: ListField,
+  [Constants.ImageField]: ImageField, // placeholder for future ImageField component
 };
 
 export type Sheet = {

@@ -6,4 +6,5 @@ export class Constants{
   static ComputedText = 'ComputedText';
   static ListField = 'ListField';
   static SelectField = 'SelectField';
+  static ImageField = 'ImageField';
 }

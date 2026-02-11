@@ -27,7 +27,7 @@
           <div
             class="sheet-cell"
             style={`${cellStyle(cell)} grid-column: span ${cell.colspan || 1}; grid-row: span ${cell.rowspan || 1};`}
-            data-id={cell.id}
+            id="cell-{cell.id}"
           >
             {#if cell.Component}
               <svelte:component this={cell.Component} {...cell.props} />

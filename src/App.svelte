@@ -1,8 +1,5 @@
 <script>
-  import CharacterAttribute from "./lib/components/CharacterAttribute.svelte";
   import Grid from "./lib/components/Grid.svelte";
-  import ListField from "./lib/components/ListField.svelte";
-  import InputField from "./lib/components/InputField.svelte";
   // import sheet from './Sheet/sheet.json';
   import mainSheet from "./MainSheet";
   let sheet = mainSheet;
