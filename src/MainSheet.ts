@@ -1,5 +1,4 @@
 import SheetBuilder from './lib/Scripts/SheetBuilder';
-import { background } from './lib/theme';
 
 // build the nested sub-sheet first
 const subSheet = new SheetBuilder('Subgrid Sheet')
@@ -15,7 +14,7 @@ const subSheet = new SheetBuilder('Subgrid Sheet')
   )
   .row(r => r
     .textField({ id: 'player_strength', label: 'Strength', placeholder: '0', colspan: 2 })
-    .add({ type: 'ComputedText', id: 'strength_mod', label: 'Strength % 10', expr: 'player_strength % 10', colspan: 2 })
+    .computedText({ id: 'strength_mod', label: 'Strength % 10', expr: 'player_strength % 10', colspan: 2 })
   )
   // .withStyle({ '*': { background: 'red' },
   // StaticText: { background: 'blue' } })
@@ -26,6 +25,7 @@ const mainSheet = new SheetBuilder('Character Sheet')
   .id('test_sheet')
   .cols(6)
   .row(r => r.subGrid({ id: 'subgrid1', label: 'Informations', colspan: 6 }, subSheet))
+  .row(r => r.characterAttribute({ id: 'strength_attr', label: 'Strength', value: 10 }))
   .build();
 
 export default mainSheet;

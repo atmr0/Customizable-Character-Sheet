@@ -15,15 +15,12 @@
 </script>
 
 <div
-  class="base-field {noBackground ? 'no-bg' : ''}"
-  style={cssVars + ($$restProps.style ? " " + $$restProps.style : "")}
+  class="base-component {noBackground ? 'no-bg' : ''}"
   {id}
   {...$$restProps}
 >
   {#if label}
-    <div class="label"><slot name="label">{label}</slot></div>
+    <slot name="label"><div class="label">{label}</div></slot>
   {/if}
   <slot />
 </div>
-
-<!-- styles moved to src/lib/styles.css -->

@@ -14,7 +14,7 @@
   --focus-outline: 2px solid rgba(11, 110, 253, 0.18);
 }
 
-.base-field {
+.base-component {
   display: block;
   width: 100%;
   box-sizing: border-box;
@@ -32,20 +32,15 @@
     margin-bottom: 1px;
   };
 
-  .no-bg {
+  
+}
+.no-bg {
     background: transparent !important;
     box-shadow: none !important;
     border: none !important;
   }
-}
 
-.main {
-  padding: var(--padding-base);
-  background: var(--background);
-  min-height: 100vh;
-}
-
-.base-field[aria-disabled="true"] {
+.base-component[aria-disabled="true"] {
   opacity: 0.6;
   pointer-events: none;
 }
@@ -58,7 +53,7 @@
 .text-input {
   width: 100%;
   box-sizing: border-box;
-  padding: 6px;
+  padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 1rem;
@@ -74,35 +69,9 @@
   border: none;
 }
 
-/* Sheet/grid styles */
-.grid {
-  display: grid;
-  gap: var(--gap);
-}
 
-
-/* Sub-grid wrapper (nested grids) */
-.sub-grid-wrapper {
-  padding: 8px;
-  
-}
-
-/* Ensure cells and their direct children fill available grid area */
-.sheet-cell {
-  display: block;
-  align-self: stretch;
-  padding: 0%
-}
-
-.sheet-cell>* {
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-/* Make rows stretch items so nested grids/components fill vertical space */
-.grid {
-  display: grid;
-  gap: var(--gap);
-  align-items: stretch;
+.computed-text {
+  font-style: italic;
+  color: var(--text-secondary);
+  min-height: 2em;
 }

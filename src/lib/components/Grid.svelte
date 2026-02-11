@@ -2,11 +2,12 @@
   import { buildGrid } from "../Scripts/GridBuilder";
 
   export let sheet: any;
+  export let withoutRows: boolean = false;
   $: built = sheet ? buildGrid(sheet) : { cols: 1, cells: [] };
 
   function gridStyle() {
     let style = `grid-template-columns: repeat(${built.cols || 1}, 1fr); `
-    if(built.rows) style += `grid-template-rows: repeat(${built.rows}, 1fr);`;
+    if(built.rows && !withoutRows) style += `grid-template-rows: repeat(${built.rows}, 1fr);`;
     return style;
   }
 

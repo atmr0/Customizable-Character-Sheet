@@ -3,7 +3,7 @@
   import Grid from "./Grid.svelte";
   export let sheet = { rows: 0, cols: 1, cells: [] };
   export let label = undefined;
-  export let noBackground = false;
+  export let noBackground = true;
 </script>
 
 <BaseComponent {label} {noBackground}>

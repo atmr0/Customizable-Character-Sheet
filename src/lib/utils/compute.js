@@ -5,10 +5,10 @@ export function evaluateExpression(expr, values = {}) {
   try {
     // Normaliza "Math.floor(...)" -> "floor(...)" para compatibilidade com expr-eval
     const normalized = String(expr).replace(/Math\./g, '');
-
+    
     const parser = new Parser();
     const parsed = parser.parse(normalized);
-
+    
     const scope = {};
     // converte valores para números (fallback 0)
     for (const [k, v] of Object.entries(values || {})) {
@@ -30,7 +30,6 @@ export function evaluateExpression(expr, values = {}) {
     scope.tan = Math.tan;
     scope.log = Math.log;
     scope.exp = Math.exp;
-
     return parsed.evaluate(scope);
   } catch (e) {
     return '';
