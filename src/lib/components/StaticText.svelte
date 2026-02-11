@@ -2,8 +2,6 @@
   import BaseComponent from "./BaseComponent.svelte";
   import { Constants } from "../constants.js";
   export let text = "";
-  export let label = undefined;
-  export let onclick = undefined;
   let componentClass = Constants.StaticText;
   let noBackground = true;
 </script>

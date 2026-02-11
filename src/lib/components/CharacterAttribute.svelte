@@ -18,6 +18,12 @@
   }
   if (id) setValue(id, Number(value));
 
+  let format = v => {
+    const num = Number(v);
+    if (isNaN(num)) return '';;
+    return num >= 0 ? `+${num}` : String(num);
+  };
+
   // calcula dinamicamente a expressão com os valores do store
   $: $valuesStore;
 </script>
@@ -34,6 +40,6 @@
       oninput={onInput}
       class="text-input"
     />
-    <ComputedText expr="{id} % 10" id={idComputed} />
+    <ComputedText expr="{id} % 10" id={idComputed} {format} />
   </div>
 </BaseComponent>
