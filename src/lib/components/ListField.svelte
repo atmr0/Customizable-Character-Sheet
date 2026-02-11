@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
   import { ComponentOps } from "../Scripts/ComponentsMap";
   import { componentsMap } from "../Scripts/ComponentsMap";
-  
+
   export let id: string | undefined;
   export let label: string | undefined;
   export let itemTemplate: ComponentOps[];
@@ -40,22 +40,14 @@
 
 <BaseComponent {id} {label}>
   <div class="list-field">
-    <ul class="list-items" style="grid-template-columns: repeat({storeItems.length}, 1fr);">
+    <ul
+      class="list-items"
+      style="grid-template-columns: repeat({storeItems.length}, 1fr);"
+    >
       {#each storeItems as it, i}
         <li class="list-item">
           {#each itemTemplate as tpl}
-            {console.log(tpl.type, componentsMap[tpl.type])}
-            {console.log(tpl.props)}
-            {@const uid = `${id}-${i}-${tpl.id}`}
-            <div class="item-field">
-              {#if tpl.label}
-                <label class="field-label" for={uid}>{tpl.label}</label>
-              {/if}
-              <svelte:component
-              this={  componentsMap[tpl.type]}
-              {...tpl.props}
-              />
-            </div>
+            <svelte:component this={componentsMap[tpl.type]} {...tpl.props} />
           {/each}
 
           <button
@@ -72,46 +64,3 @@
     </div>
   </div>
 </BaseComponent>
-
-<style>
-  .list-field {
-    display: block;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .list-items {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .list-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .item-text {
-    flex: 1;
-  }
-  .remove-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-  .list-add {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .list-add button {
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background: var(--surface);
-  }
-</style>

@@ -18,16 +18,20 @@
       itemTemplate={[
         {
           type: 'TextField',
-          id: "item-text",
-          label: "Item Text",
-          props: { placeholder: "placeh" },
+          props: { 
+            id: "item-text",
+            label: "Item Text",
+            placeholder: "placeh" 
+          },
         },
 
         {
-          type: 'CharacterAttribute',
-          id: "item-text",
-          label: "Item Text",
-          props: { placeholder: "placeh" },
+          type: 'TextField',
+          props: { 
+            id: "oi",
+            label: "Item Text",
+            placeholder: "placeh" 
+          },
         },
       ]}
     />

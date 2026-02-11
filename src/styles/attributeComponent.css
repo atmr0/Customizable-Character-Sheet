@@ -14,8 +14,17 @@
 .attribute .text-input {
   text-align: center;
   border-radius: 50%;
+  border: 2px solid var(--text-secondary);
   width: 72px;
   height: 72px;
+  transition: box-shadow .12s ease, border-width .12s ease, border-color .12s ease;
+}
+
+.attribute .text-input:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 2px blue;
+  border-width: 2px;
+  border-color: blue;
 }
 
 .attribute .computed-text {
