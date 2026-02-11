@@ -9,6 +9,14 @@
     if(built.rows) style += `grid-template-rows: repeat(${built.rows}, 1fr);`;
     return style;
   }
+
+  function cellStyle(cell) {
+    let style = ""
+    for(const key in cell.style) {
+      style += `${key}: ${cell.style[key]}; `;
+    }
+    return style;
+  }
 </script>
 
 {#if built}
@@ -17,7 +25,7 @@
         {#each row as cell}
           <div
             class="sheet-cell"
-            style={`grid-column: span ${cell.colspan || 1}; grid-row: span ${cell.rowspan || 1};`}
+            style={`${cellStyle(cell)} grid-column: span ${cell.colspan || 1}; grid-row: span ${cell.rowspan || 1};`}
             data-id={cell.id}
           >
             {#if cell.Component}

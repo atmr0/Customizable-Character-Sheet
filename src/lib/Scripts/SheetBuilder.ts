@@ -92,6 +92,15 @@ export class SheetBuilder {
     return this;
   }
 
+  withStyle(style: Record<string, Record<string, any>>){
+    for(const cell of this.sheet.cells.flat()) {
+      let st = style[cell.type as string] || style['*'];
+      if(st)
+        cell.style = { ...cell.style, ...st };
+    }
+    return this;
+  }
+
   build(){
     this.sheet.rows = this.sheet.cells.length || this.sheet.rows;
     return this.sheet;

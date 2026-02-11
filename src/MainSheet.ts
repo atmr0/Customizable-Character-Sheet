@@ -1,4 +1,5 @@
 import SheetBuilder from './lib/Scripts/SheetBuilder';
+import { background } from './lib/theme';
 
 // build the nested sub-sheet first
 const subSheet = new SheetBuilder('Subgrid Sheet')
@@ -10,8 +11,10 @@ const subSheet = new SheetBuilder('Subgrid Sheet')
   )
   .row(r => r
     .textField({ id: 'character_name', label: 'Character Name', colspan: 6 })
-    .textField({ id: 'nested_static_2', label: 'Nested Static 2', colspan: 2 })
+    .staticText({ id: 'nested_static_2', text: 'Nested Static 2', colspan: 2 })
   )
+  // .withStyle({ '*': { background: 'red' },
+  // StaticText: { background: 'blue' } })
   .build();
 
 // build the main sheet using the subSheet
