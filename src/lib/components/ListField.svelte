@@ -5,13 +5,14 @@
 
   export let id: string | undefined;
   export let label: string | undefined;
-  export let items: string[] = [];
+  export let itemTemplate: any;
+  export let items: any[] = [];
   export let placeholder: string = 'New item';
   export let allowEmpty: boolean = false;
   export let onadd = undefined;
   export let onremove = undefined;
 
-  let newItem = '';
+  let newItem:any;
 
   // Initialize store value if missing
   onMount(() => {
@@ -23,11 +24,11 @@
   $: storeItems = id ? ($valuesStore[id] || []) : items;
 
   function addItem() {
-    const v = newItem.trim();
+    const v = newItem;
     if (!v && !allowEmpty) return;
     const next = [...(storeItems || []), v];
     if (id) setValue(id, next);
-    newItem = '';
+    newItem = undefined;
     onadd?.(v, next);
   }
 

@@ -4,6 +4,7 @@ import SubGrid from "../components/SubGrid.svelte";
 import ComputedText from "../components/ComputedText.svelte";
 import ListField from "../components/ListField.svelte";
 import CharacterAttribute from "../components/CharacterAttribute.svelte";
+import { Constants } from "../constants";
 
 
 export const componentsMap: Record<string, any> = {
@@ -34,22 +35,22 @@ export class ComponentOps{
 }
 
 export class TextFieldOps extends ComponentOps{
-  type: string = 'TextField';
+  type: string = Constants.TextField;
   value?: any;
   placeholder?: string;
 }
 
 export class StaticTextOps extends ComponentOps{
-  type: string = 'StaticText';
+  type: string = Constants.StaticText;
   text?: string;
 }
 
 export class SubGridOps extends ComponentOps{
-  type: string = 'SubGrid';
+  type: string = Constants.SubGrid;
   sheet?: Sheet;
 }
 
 export class ComputedTextOps extends ComponentOps{
-  type: string = 'ComputedText';
+  type: string = Constants.ComputedText;
   expr?: string;
 }

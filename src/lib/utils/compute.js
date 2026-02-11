@@ -28,7 +28,6 @@ export function evaluateExpression(expr, values = {}) {
     scope.sin = Math.sin;
     scope.cos = Math.cos;
     scope.tan = Math.tan;
-    scope.log = Math.log;
     scope.exp = Math.exp;
     return parsed.evaluate(scope);
   } catch (e) {

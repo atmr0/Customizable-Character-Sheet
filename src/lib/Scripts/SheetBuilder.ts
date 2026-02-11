@@ -1,5 +1,5 @@
 import { ComponentOps, ComputedTextOps, Sheet, StaticTextOps, SubGridOps, TextFieldOps } from "./ComponentsMap";
-
+import { Constants } from "../constants";
 
 function ensureId(prefix = 'cell') {
   return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
@@ -14,11 +14,11 @@ export class RowBuilder {
     return this;
   }
 
-  textField(opts: Partial<TextFieldOps>) { return this.add({ type: 'TextField', ...opts }); }
-  staticText(opts: Partial<StaticTextOps>) { return this.add({ type: 'StaticText', ...opts }); }
-  subGrid(opts: Partial<SubGridOps>, sheet: Sheet) { return this.add({ type: 'SubGrid', ...opts, sheet }); }
-  characterAttribute(opts: Partial<ComponentOps>) { return this.add({ type: 'CharacterAttribute', ...opts }); }
-  computedText(opts: Partial<ComputedTextOps>) { return this.add({ type: 'ComputedText', ...opts }); }
+  textField(opts: Partial<TextFieldOps>) { return this.add({ type: Constants.TextField , ...opts }); }
+  staticText(opts: Partial<StaticTextOps>) { return this.add({ type: Constants.StaticText , ...opts }); }
+  subGrid(opts: Partial<SubGridOps>, sheet: Sheet) { return this.add({ type: Constants.SubGrid , ...opts, sheet }); }
+  characterAttribute(opts: Partial<ComponentOps>) { return this.add({ type: Constants.CharacterAttribute , ...opts }); }
+  computedText(opts: Partial<ComputedTextOps>) { return this.add({ type: Constants.ComputedText , ...opts }); }
 
   build() { return this.row; }
 }

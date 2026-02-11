@@ -12,10 +12,6 @@ const subSheet = new SheetBuilder('Subgrid Sheet')
     .textField({ id: 'character_name', label: 'Character Name', colspan: 6 })
     .staticText({ id: 'nested_static_2', text: 'Nested Static 2', colspan: 2 })
   )
-  .row(r => r
-    .textField({ id: 'player_strength', label: 'Strength', placeholder: '0', colspan: 2 })
-    .computedText({ id: 'strength_mod', label: 'Strength % 10', expr: 'player_strength % 10', colspan: 2 })
-  )
   // .withStyle({ '*': { background: 'red' },
   // StaticText: { background: 'blue' } })
   .build();
@@ -25,7 +21,14 @@ const mainSheet = new SheetBuilder('Character Sheet')
   .id('test_sheet')
   .cols(6)
   .row(r => r.subGrid({ id: 'subgrid1', label: 'Informations', colspan: 6 }, subSheet))
-  .row(r => r.characterAttribute({ id: 'strength_attr', label: 'Strength', value: 10 }))
+  .row(r => r
+    .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
+    .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10 })
+    .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10 })
+    .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10 })
+    .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10 })
+    .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10 })
+  )
   .build();
 
 export default mainSheet;

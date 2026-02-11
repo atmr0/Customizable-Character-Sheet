@@ -6,8 +6,12 @@
   export let theme = null; // allow override via prop
   export let id: string | undefined;
   export let label: string | undefined;
-  export let noBackground: boolean = true; // when true, render without background/border/shadow
+  export let noBackground: boolean = true;
+  export let componentClass = ''; 
 
+  // allows for better styling other components
+  // other components will have a class that can be used for styling inner elements
+  if(componentClass) componentClass = componentClass+"-wrapper";
   $: appliedTheme = theme
     ? { ...defaultTheme, ...theme }
     : get(themeStore) || defaultTheme;
@@ -15,7 +19,7 @@
 </script>
 
 <div
-  class="base-component {noBackground ? 'no-bg' : ''}"
+  class="base-component {noBackground ? 'no-bg' : ''} {componentClass}"
   {id}
   {...$$restProps}
 >

@@ -1,15 +1,13 @@
 <script>
   import BaseComponent from "./BaseComponent.svelte";
   import { setValue, valuesStore } from "../valuesStore.js";
-  import { evaluateExpression } from "../utils/compute.js";
-  import TextField from "./TextField.svelte";
   import ComputedText from "./ComputedText.svelte";
-
+  import { Constants } from "../constants.js";
   export let id;
   export let label;
   export let value = "";
   export let placeholder = "";
-  export let attributeKey; // chave para armazenar no valuesStore
+  let componentClass = Constants.CharacterAttribute;
 
   let idField = id ? `${id}_field` : undefined;
   let idComputed = id ? `${id}_computed` : undefined;
@@ -18,12 +16,13 @@
     value = e.target.value;
     if (id) setValue(id, Number(value));
   }
+  if (id) setValue(id, Number(value));
 
   // calcula dinamicamente a expressão com os valores do store
   $: $valuesStore;
 </script>
 
-<BaseComponent {id}>
+<BaseComponent {id} {componentClass}>
   <div class="attribute">
     {#if label}
       <div class="label">{label}</div>

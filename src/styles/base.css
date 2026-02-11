@@ -30,15 +30,18 @@
     font-size: small;
     color: var(--text-secondary);
     margin-bottom: 1px;
-  };
-
-  
-}
-.no-bg {
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
   }
+
+  ;
+
+
+}
+
+.no-bg {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
 
 .base-component[aria-disabled="true"] {
   opacity: 0.6;

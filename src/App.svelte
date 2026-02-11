@@ -1,6 +1,7 @@
 <script>
   import CharacterAttribute from "./lib/components/CharacterAttribute.svelte";
   import Grid from "./lib/components/Grid.svelte";
+    import ListField from "./lib/components/ListField.svelte";
   // import sheet from './Sheet/sheet.json';
   import mainSheet from "./MainSheet";
   let sheet = mainSheet;
@@ -10,7 +11,7 @@
   <h1>Custom RPG Character Sheet</h1>
   <div class="main">
     <Grid {sheet} />
-    <CharacterAttribute label="Strength" id="strength_attr" value={10} />
+    <ListField label="Strength" id="str_attr"/>
   </div>
 </main>
 
