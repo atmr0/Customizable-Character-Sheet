@@ -1,4 +1,4 @@
-import TextField from "../components/TextField.svelte";
+import InputField from "../components/InputField.svelte";
 import StaticText from "../components/StaticText.svelte";
 import SubGrid from "../components/SubGrid.svelte";
 import ComputedText from "../components/ComputedText.svelte";
@@ -9,7 +9,7 @@ import { Constants } from "../constants";
 
 
 export const componentsMap: Record<string, any> = {
-  [Constants.TextField]: TextField,
+  [Constants.InputField]: InputField,
   [Constants.StaticText]: StaticText,
   [Constants.SubGrid]: SubGrid,
   [Constants.ComputedText]: ComputedText,
@@ -38,10 +38,15 @@ export class ComponentOps{
   [k: string]: any;
 }
 
-export class TextFieldOps extends ComponentOps{
-  type: string = Constants.TextField;
-  value?: any;
+export class InputFieldOps extends ComponentOps{
+  type: string = Constants.InputField;
+  value?: string | number;
   placeholder?: string;
+  inputType: string = 'text'; // 'text'|'number'
+  allowFloat: boolean = false; // allow decimals when numeric
+  step: number | string = this.allowFloat ? 'any' : 1;
+  min: number | undefined = undefined;
+  max: number | undefined = undefined;
 }
 
 export class StaticTextOps extends ComponentOps{
@@ -67,5 +72,5 @@ export class ListFieldOps extends ComponentOps{
 export class SelectFieldOps extends ComponentOps{
   type: string = Constants.SelectField
   options?: string[];
-  value?: any;
+  value?: string | number;
 }

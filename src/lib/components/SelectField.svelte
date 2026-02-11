@@ -27,15 +27,3 @@
     {/each}
   </select>
 </BaseComponent>
-
-<style>
-  .select-input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 6px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--surface);
-    font-size: 1rem;
-  }
-</style>

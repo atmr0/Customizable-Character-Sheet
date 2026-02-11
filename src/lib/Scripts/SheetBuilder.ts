@@ -15,7 +15,7 @@ export class RowBuilder {
     return this;
   }
 
-  textField(opts: Partial<CM.TextFieldOps>) { return this.add({ type: Constants.TextField , ...opts }); }
+  InputField(opts: Partial<CM.InputFieldOps>) { return this.add({ type: Constants.InputField , ...opts }); }
   staticText(opts: Partial<CM.StaticTextOps>) { return this.add({ type: Constants.StaticText , ...opts }); }
   subGrid(opts: Partial<CM.SubGridOps>, sheet: CM.Sheet) { return this.add({ type: Constants.SubGrid , ...opts, sheet }); }
   /* componentops */ 

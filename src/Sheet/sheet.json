@@ -16,14 +16,14 @@
           "cells": [
             [
               {
-                "type": "TextField",
+                "type": "InputField",
                 "id": "player_name",
                 "label": "Player Name",
                 "placeholder": "Enter player name",
                 "colspan": 8
               },
               {
-                "type": "TextField",
+                "type": "InputField",
                 "id": "nested_field_2",
                 "label": "Nested Field 2",
                 "colspan": 2,

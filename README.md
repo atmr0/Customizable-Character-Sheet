@@ -6,7 +6,7 @@ Arquivos adicionados:
 - `src/lib/themeStore.js` — um `writable` store para overrides dinâmicos.
 - `src/lib/components/BaseField.svelte` — componente base com `slots`, `props` e re-emissão de eventos.
 
-Exemplo de uso do `BaseField` em um componente `TextField.svelte`:
+Exemplo de uso do `BaseField` em um componente `InputField.svelte`:
 
 ```svelte
 <script>

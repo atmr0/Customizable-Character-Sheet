@@ -36,6 +36,16 @@
     if (id) setValue(id, next);
     onremove?.(removed, index, next);
   }
+
+  function getIdItem(tpl: ComponentOps, i: number) {
+    let answer = `${id}`;
+    if(tpl.id) answer += `-${tpl.id}-${i}`;
+    else {
+      let tLabel = tpl.label ? tpl.label.replace(/\s+/g, '_').toLowerCase() : 'item';
+      answer += `-${tLabel}-${i}`;
+    }
+    return answer;
+  }
 </script>
 
 <BaseComponent {id} {label}>
@@ -47,7 +57,8 @@
       {#each storeItems as it, i}
         <li class="list-item">
           {#each itemTemplate as tpl}
-            <svelte:component this={componentsMap[tpl.type]} {...tpl.props} />
+            {@const itemId = getIdItem(tpl, i)}
+            <svelte:component this={componentsMap[tpl.type]} {...tpl} id={itemId} />
           {/each}
 
           <button

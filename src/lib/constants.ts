@@ -1,5 +1,5 @@
 export class Constants{
-  static TextField = 'TextField';
+  static InputField = 'InputField';
   static StaticText = 'StaticText';
   static SubGrid = 'SubGrid';
   static CharacterAttribute = 'CharacterAttribute';

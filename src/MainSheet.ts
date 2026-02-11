@@ -5,11 +5,11 @@ const subSheet = new SheetBuilder('Subgrid Sheet')
   .rows(2)
   .cols(10)
   .row(r => r
-    .textField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', colspan: 8 })
-    .textField({ id: 'profile_picture', label: 'Profile Picture', colspan: 2, rowspan: 2 })
+    .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', colspan: 8 })
+    .InputField({ id: 'profile_picture', label: 'Profile Picture', colspan: 2, rowspan: 2 })
   )
   .row(r => r
-    .textField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', colspan: 6 })
+    .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', colspan: 6 })
     .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], colspan: 2 })
   )
   // .withStyle({ '*': { background: 'red' },
@@ -31,9 +31,9 @@ const mainSheet = new SheetBuilder('Character Sheet')
   )
   .row(r => r
     .listField({
-      id: 'inventory', label: 'Inventory', itemTemplate: [
-        { type: Constants.TextField, label: 'Item Name', placeholder: 'Enter item name' },
-        { type: Constants.TextField, label: 'Quantity', placeholder: 'Enter quantity' }
+      id: 'inventory', label: 'Inventory', colspan: 3, itemTemplate: [
+        { type: Constants.InputField, label: 'Item Name', placeholder: 'Item name' },
+        { type: Constants.InputField, label: 'Quantity', inputType: 'number', value: 0 }
       ]
     })
   )
