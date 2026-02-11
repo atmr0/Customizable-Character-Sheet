@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { buildGrid } from "./GridBuilder";
-  // sheet: { rows, cols, cells: [ [cell...] ] }
+  import { buildGrid } from "../Scripts/GridBuilder";
+
   export let sheet: any;
   $: built = sheet ? buildGrid(sheet) : { cols: 1, cells: [] };
 

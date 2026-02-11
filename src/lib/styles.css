@@ -26,45 +26,18 @@
     box-shadow: var(--shadow);
 }
 
-.base-field.card {
-    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
-}
-
-.base-field .label {
+.base-field .label{
     font-weight: 600;
     color: var(--text-secondary);
     margin-bottom: 6px;
 }
-
-.base-field .control {
-    display: flex;
-    gap: var(--gap);
-    align-items: center;
+.static-text{
+  font-weight: 600;
+  color: var(--text-primary);
 }
-
-.base-field .prefix,
-.base-field .suffix {
-    display: flex;
-    align-items: center;
-}
-
-.base-field .content {
-    flex: 1;
-}
-
-.base-field .help {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-top: 6px;
-}
-
 .base-field[aria-disabled="true"] {
     opacity: 0.6;
     pointer-events: none;
-}
-
-.base-field:focus-within {
-    outline: var(--focus-outline);
 }
 
 .base-field.sm {
@@ -110,11 +83,6 @@
     gap: 12px;
 }
 
-.sheet-cell {
-    min-height: 32px;
-    overflow: hidden;
-    width: 100%;
-}
 
 /* Sub-grid wrapper (nested grids) */
 .sub-grid-wrapper{ padding:0; margin:0; }

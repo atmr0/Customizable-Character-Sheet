@@ -1,8 +1,8 @@
 <script>
-  import StaticText from './lib/components/StaticText.svelte';
-  import TextField from './lib/components/TextField.svelte';
   import Grid from './lib/components/Grid.svelte';
-  import sheet from './Sheet/sheet.json';
+  // import sheet from './Sheet/sheet.json';
+  import mainSheet from './MainSheet'
+  let sheet = mainSheet;
 </script>
 <main class="app">
   <h1>Custom RPG Character Sheet</h1>

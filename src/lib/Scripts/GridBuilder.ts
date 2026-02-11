@@ -1,6 +1,6 @@
-import TextField from "./TextField.svelte";
-import StaticText from "./StaticText.svelte";
-import SubGrid from "./SubGrid.svelte";
+import TextField from "../components/TextField.svelte";
+import StaticText from "../components/StaticText.svelte";
+import SubGrid from "../components/SubGrid.svelte";
 
 /**
  * Build a sheet structure mapping cell type names to Svelte component constructors
@@ -8,6 +8,8 @@ import SubGrid from "./SubGrid.svelte";
  * `Component` and `props` fields added to every cell.
  */
 export function buildGrid(sheet: any) {
+
+
   const componentsMap: Record<string, any> = {
     TextField: TextField,
     StaticText: StaticText,
@@ -21,7 +23,6 @@ export function buildGrid(sheet: any) {
   function resolveComponent(type: string) {
     if (!type) return null;
     let a = componentsMap[type] || componentsMap[type.toLowerCase()] || null;
-    console.log(`Resolving component for type "${type}":`, a);
     return a;
   }
 

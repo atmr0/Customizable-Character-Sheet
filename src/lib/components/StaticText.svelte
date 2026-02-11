@@ -4,8 +4,9 @@
   export let text = '';
   export let label = undefined;
   export let onclick = undefined;
+  let noBackground = true; 
 </script>
 
-<BaseComponent onclick={onclick}>
-  <div>{text}</div>
+<BaseComponent {noBackground}>
+  <div class="static-text">{text}</div>
 </BaseComponent>
