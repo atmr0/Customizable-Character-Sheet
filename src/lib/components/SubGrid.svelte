@@ -7,9 +7,7 @@
 </script>
 
 <BaseComponent {label} {noBackground}>
-  <div class="content">
-    <div class="sub-grid-wrapper" role="group" aria-label="Sub grid">
-      <Grid {sheet} />
-    </div>
+  <div class="sub-grid-wrapper" role="group" aria-label="Sub grid">
+    <Grid {sheet} />
   </div>
 </BaseComponent>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import BaseComponent from "./BaseComponent.svelte";
   import { makeUid } from "../utils/values.js";
+   import { setValue } from '../valuesStore.js';
 
   let cell: any; // TODO: type
   export let value: string = "";
@@ -13,6 +14,8 @@
     const raw = e.target.value;
     value = raw;
     oninput?.(e);
+     // propagate to global values store when id is present
+     if(id) setValue(id, value);
   }
 </script>
 

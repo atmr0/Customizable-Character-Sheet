@@ -6,8 +6,10 @@
 </script>
 <main class="app">
   <h1>Custom RPG Character Sheet</h1>
+  <div class ="main">
 
-  <Grid {sheet} />
+    <Grid {sheet} />
+  </div>
 
 </main>
 

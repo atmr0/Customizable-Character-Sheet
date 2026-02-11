@@ -14,15 +14,16 @@
   $: cssVars = themeToCssVars(appliedTheme);
 </script>
 
-
-  <div
-    class= "base-field  {noBackground ? "no-bg" : ""}"
+<div
+  class="base-field {noBackground ? 'no-bg' : ''}"
   style={cssVars + ($$restProps.style ? " " + $$restProps.style : "")}
-  id={id}
+  {id}
   {...$$restProps}
 >
-  <div class="label"><slot name="label">{label}</slot></div>
-  <div class="content"><slot /></div>
+  {#if label}
+    <div class="label"><slot name="label">{label}</slot></div>
+  {/if}
+  <slot />
 </div>
 
 <!-- styles moved to src/lib/styles.css -->

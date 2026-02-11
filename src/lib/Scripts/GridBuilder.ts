@@ -1,6 +1,7 @@
 import TextField from "../components/TextField.svelte";
 import StaticText from "../components/StaticText.svelte";
 import SubGrid from "../components/SubGrid.svelte";
+import ComputedText from "../components/ComputedText.svelte";
 
 /**
  * Build a sheet structure mapping cell type names to Svelte component constructors
@@ -14,10 +15,13 @@ export function buildGrid(sheet: any) {
     TextField: TextField,
     StaticText: StaticText,
     SubGrid: SubGrid,
+    ComputedText: ComputedText,
     // lowercase aliases
     textfield: TextField,
     statictext: StaticText,
     subgrid: SubGrid,
+    computedtext: ComputedText,
+    computed: ComputedText,
   };
 
   function resolveComponent(type: string) {

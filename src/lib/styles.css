@@ -1,98 +1,108 @@
 :root {
-    --primary-color: #0B6EFD;
-    --secondary-color: #6C757D;
-    --background: #F7F8FA;
-    --surface: #FFFFFF;
-    --text-primary: #111827;
-    --text-secondary: #6B7280;
-    --border-color: #E5E7EB;
-    --border-width: 1px;
-    --border-radius: 8px;
-    --padding-base: 12px;
-    --gap: 12px;
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    --focus-outline: 2px solid rgba(11, 110, 253, 0.18);
+  --primary-color: #0B6EFD;
+  --secondary-color: #6C757D;
+  --background: #F7F8FA;
+  --surface: #FFFFFF;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --border-color: #E5E7EB;
+  --border-width: 1px;
+  --border-radius: 6px;
+  --padding-base: 8px;
+  --gap: 8px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --focus-outline: 2px solid rgba(11, 110, 253, 0.18);
 }
 
 .base-field {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    background: var(--surface);
-    color: var(--text-primary);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: var(--padding-base);
-    box-shadow: var(--shadow);
-}
-
-.base-field .label{
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-}
-.static-text{
-  font-weight: 600;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--surface);
   color: var(--text-primary);
-}
-.base-field[aria-disabled="true"] {
-    opacity: 0.6;
-    pointer-events: none;
-}
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: inherit;
+  box-shadow: var(--shadow);
 
-.base-field.sm {
-    --padding-base: 8px;
-}
+  .label {
+    font-weight: 600;
+    font-size: small;
+    color: var(--text-secondary);
+    margin-bottom: 1px;
+  };
 
-.base-field.md {
-    --padding-base: 12px;
-}
-
-.base-field.lg {
-    --padding-base: 16px;
-}
-
-.text-input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-size: 1rem;
-}
-
-.text-input:disabled {
-    opacity: 0.6;
-}
-
-.static-text {
-    background: transparent;
-    box-shadow: none;
-    border: none;
-}
-
-.base-field.no-bg {
+  .no-bg {
     background: transparent !important;
     box-shadow: none !important;
     border: none !important;
+  }
+}
+
+.main {
+  padding: var(--padding-base);
+  background: var(--background);
+  min-height: 100vh;
+}
+
+.base-field[aria-disabled="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.static-text {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.text-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.text-input:disabled {
+  opacity: 0.6;
+}
+
+.static-text {
+  background: transparent;
+  box-shadow: none;
+  border: none;
 }
 
 /* Sheet/grid styles */
 .grid {
-    display: grid;
-    gap: 12px;
+  display: grid;
+  gap: var(--gap);
 }
 
 
 /* Sub-grid wrapper (nested grids) */
-.sub-grid-wrapper{ padding:0; margin:0; }
+.sub-grid-wrapper {
+  padding: 8px;
+  
+}
 
 /* Ensure cells and their direct children fill available grid area */
-.sheet-cell{ display:block; align-self:stretch; }
-.sheet-cell > *{ width:100%; height:100%; box-sizing:border-box; }
+.sheet-cell {
+  display: block;
+  align-self: stretch;
+  padding: 0%
+}
+
+.sheet-cell>* {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
 
 /* Make rows stretch items so nested grids/components fill vertical space */
-.grid{ display:grid; gap:12px; align-items:stretch; }
-
-/* Ensure base fields expand to fill their container */
-.base-field{ height:100%; }
+.grid {
+  display: grid;
+  gap: var(--gap);
+  align-items: stretch;
+}
