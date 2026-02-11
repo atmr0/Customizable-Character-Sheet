@@ -8,12 +8,12 @@ import { Constants } from "../constants";
 
 
 export const componentsMap: Record<string, any> = {
-  TextField: TextField,
-  StaticText: StaticText,
-  SubGrid: SubGrid,
-  ComputedText: ComputedText,
-  CharacterAttribute: CharacterAttribute,
-  ListField: ListField,
+  'TextField': TextField,
+  'StaticText': StaticText,
+  'SubGrid': SubGrid,
+  'ComputedText': ComputedText,
+  'CharacterAttribute': CharacterAttribute,
+  'ListField': ListField,
 };
 
 export type Sheet = {

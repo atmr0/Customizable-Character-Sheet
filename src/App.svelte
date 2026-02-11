@@ -1,7 +1,8 @@
 <script>
   import CharacterAttribute from "./lib/components/CharacterAttribute.svelte";
   import Grid from "./lib/components/Grid.svelte";
-    import ListField from "./lib/components/ListField.svelte";
+  import ListField from "./lib/components/ListField.svelte";
+  import TextField from "./lib/components/TextField.svelte";
   // import sheet from './Sheet/sheet.json';
   import mainSheet from "./MainSheet";
   let sheet = mainSheet;
@@ -11,7 +12,25 @@
   <h1>Custom RPG Character Sheet</h1>
   <div class="main">
     <Grid {sheet} />
-    <ListField label="Strength" id="str_attr"/>
+    <ListField
+      label="List"
+      id="list"
+      itemTemplate={[
+        {
+          type: 'TextField',
+          id: "item-text",
+          label: "Item Text",
+          props: { placeholder: "placeh" },
+        },
+
+        {
+          type: 'CharacterAttribute',
+          id: "item-text",
+          label: "Item Text",
+          props: { placeholder: "placeh" },
+        },
+      ]}
+    />
   </div>
 </main>
 
