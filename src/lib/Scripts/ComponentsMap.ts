@@ -4,16 +4,20 @@ import SubGrid from "../components/SubGrid.svelte";
 import ComputedText from "../components/ComputedText.svelte";
 import ListField from "../components/ListField.svelte";
 import CharacterAttribute from "../components/CharacterAttribute.svelte";
+import SelectField from "../components/SelectField.svelte";
 import { Constants } from "../constants";
 
 
 export const componentsMap: Record<string, any> = {
-  'TextField': TextField,
-  'StaticText': StaticText,
-  'SubGrid': SubGrid,
-  'ComputedText': ComputedText,
-  'CharacterAttribute': CharacterAttribute,
-  'ListField': ListField,
+  [Constants.TextField]: TextField,
+  [Constants.StaticText]: StaticText,
+  [Constants.SubGrid]: SubGrid,
+  [Constants.ComputedText]: ComputedText,
+  [Constants.CharacterAttribute]: CharacterAttribute,
+  [Constants.SelectField || 'SelectField']: SelectField,
+  SelectField: SelectField,
+  Select: SelectField,
+  [Constants.ListField]: ListField,
 };
 
 export type Sheet = {
@@ -53,4 +57,15 @@ export class SubGridOps extends ComponentOps{
 export class ComputedTextOps extends ComponentOps{
   type: string = Constants.ComputedText;
   expr?: string;
+}
+
+export class ListFieldOps extends ComponentOps{
+  type: string = Constants.ListField;
+  itemTemplate?: Partial<ComponentOps>[];
+}
+
+export class SelectFieldOps extends ComponentOps{
+  type: string = Constants.SelectField
+  options?: string[];
+  value?: any;
 }

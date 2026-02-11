@@ -12,29 +12,7 @@
   <h1>Custom RPG Character Sheet</h1>
   <div class="main">
     <Grid {sheet} />
-    <ListField
-      label="List"
-      id="list"
-      itemTemplate={[
-        {
-          type: 'TextField',
-          props: { 
-            id: "item-text",
-            label: "Item Text",
-            placeholder: "placeh" 
-          },
-        },
-
-        {
-          type: 'TextField',
-          props: { 
-            id: "oi",
-            label: "Item Text",
-            placeholder: "placeh" 
-          },
-        },
-      ]}
-    />
+    
   </div>
 </main>
 

@@ -1,16 +1,16 @@
 import SheetBuilder from './lib/Scripts/SheetBuilder';
-
+import { Constants } from './lib/constants';
 // build the nested sub-sheet first
 const subSheet = new SheetBuilder('Subgrid Sheet')
   .rows(2)
   .cols(10)
   .row(r => r
-    .textField({ id: 'player_name', label: 'Player Name', placeholder: 'Enter player name', colspan: 8 })
+    .textField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', colspan: 8 })
     .textField({ id: 'profile_picture', label: 'Profile Picture', colspan: 2, rowspan: 2 })
   )
   .row(r => r
-    .textField({ id: 'character_name', label: 'Character Name', colspan: 6 })
-    .staticText({ id: 'nested_static_2', text: 'Nested Static 2', colspan: 2 })
+    .textField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', colspan: 6 })
+    .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], colspan: 2 })
   )
   // .withStyle({ '*': { background: 'red' },
   // StaticText: { background: 'blue' } })
@@ -28,6 +28,14 @@ const mainSheet = new SheetBuilder('Character Sheet')
     .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10 })
     .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10 })
     .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10 })
+  )
+  .row(r => r
+    .listField({
+      id: 'inventory', label: 'Inventory', itemTemplate: [
+        { type: Constants.TextField, label: 'Item Name', placeholder: 'Enter item name' },
+        { type: Constants.TextField, label: 'Quantity', placeholder: 'Enter quantity' }
+      ]
+    })
   )
   .build();
 
