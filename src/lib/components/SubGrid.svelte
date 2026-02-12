@@ -1,6 +1,6 @@
 <script>
   import BaseComponent from "./BaseComponent.svelte";
-  import Grid from "./Grid.svelte";
+  import RenderGrid from "./RenderGrid.svelte";
   export let sheet = { rows: 0, cols: 1, cells: [] };
   export let label = undefined;
   export let noBackground = true;
@@ -8,6 +8,6 @@
 
 <BaseComponent {label} {noBackground}>
   <div class="sub-grid-wrapper" role="group" aria-label="Sub grid">
-    <Grid {sheet} />
+    <RenderGrid {sheet} />
   </div>
 </BaseComponent>

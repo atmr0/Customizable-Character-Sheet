@@ -1,5 +1,6 @@
 import SheetBuilder from './lib/Scripts/SheetBuilder';
 import { Constants } from './lib/constants';
+import { attributesColors } from './lib/theme';
 // build the nested sub-sheet first
 const subSheet = new SheetBuilder('Subgrid Sheet')
   .id('informations')
@@ -7,7 +8,7 @@ const subSheet = new SheetBuilder('Subgrid Sheet')
   .cols(6)
   .row(r => r
     .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', colspan: 5 })
-    .add({ type: 'ImageField', id: 'profile_picture', label: 'Profile Picture', colspan: 1, rowspan: 2 })
+    .add({ type: 'ImageField', id: 'profile_picture', colspan: 1, rowspan: 2 })
   )
   .row(r => r
     .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', colspan: 3 })
@@ -17,18 +18,20 @@ const subSheet = new SheetBuilder('Subgrid Sheet')
   // StaticText: { background: 'blue' } })
   .build();
 
+
+type keys = keyof typeof attributesColors;
 // build the main sheet using the subSheet
 const mainSheet = new SheetBuilder('Character Sheet')
   .id('test_sheet')
   .cols(6)
   .row(r => r.subGrid({ id: 'subgrid1', label: 'Informations', colspan: 6 }, subSheet))
   .row(r => r
-    .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
-    .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10 })
-    .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10 })
-    .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10 })
-    .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10 })
-    .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10 })
+    .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10, focusColor: '#ef4444' })
+    .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10, focusColor: '#0ea5e9' })
+    .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10, focusColor: '#f59e0b' })
+    .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10, focusColor: '#8b5cf6' })
+    .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10, focusColor: '#10b981' })
+    .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10, focusColor: '#ec4899' })
   )
   .row(r => r
     .listField({
@@ -38,6 +41,7 @@ const mainSheet = new SheetBuilder('Character Sheet')
       ]
     })
   )
+  .withStyle({ 'CharacterAttribute.text-input': { "border-color": ((cell: any) => attributesColors[cell.id as keys]) } })
   .build();
 
 export default mainSheet;

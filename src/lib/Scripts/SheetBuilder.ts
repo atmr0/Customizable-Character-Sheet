@@ -8,10 +8,11 @@ function ensureId(prefix = 'cell') {
 
 export class RowBuilder {
   private row: CM.ComponentOps[] = [];
-
+  private last: CM.ComponentOps | null = null;
   add(cell: CM.ComponentOps) {
     if (!cell.id) cell.id = ensureId(cell.type || 'cell');
     this.row.push(cell);
+    this.last = cell;
     return this;
   }
 
@@ -24,6 +25,12 @@ export class RowBuilder {
   listField(opts: Partial<CM.ListFieldOps>) { return this.add({ type: Constants.ListField , ...opts }); }
   selectField(opts: Partial<CM.SelectFieldOps>) { return this.add({ type: Constants.SelectField , ...opts }); }
 
+  withStyle(style: any) {
+    if (this.last) {
+      this.last.style = { ...this.last.style, ...style };
+    }
+    return this;
+  }
   build() { return this.row; }
 }
 
@@ -51,11 +58,45 @@ export class SheetBuilder {
     return this;
   }
 
+  private convertStyle(cell: CM.ComponentOps, style: Record<string, any>) {
+    let styleStr: Record<string, string> = {};
+    for (const key in style) {
+      if(typeof style[key] === 'function') {
+        console.log(`Computing style for cell ${cell.id} with dynamic style function for key "${key}"`);  
+        styleStr[key] = style[key](cell);
+      } else {
+        styleStr[key] = style[key];
+      }
+    }
+    console.log(styleStr)
+    return styleStr;
+  }
+
   withStyle(style: Record<string, Record<string, any>>) {
     for (const cell of this.sheet.cells.flat()) {
+      // apply direct styles for the cell type or wildcard
       let st = style[cell.type as string] || style['*'];
-      if (st)
-        cell.style = { ...cell.style, ...st };
+      if (st) {
+        cell.style = { ...cell.style, ...this.convertStyle(cell, st) };
+      }
+
+      // support selectors in the style keys like 'Component.selector'
+      for (const key of Object.keys(style)) {
+        if (key === '*' || key === cell.type) continue;
+
+        const parts = String(key).split('.');
+        if (parts.length < 2) continue;
+        
+        const [base, selector] = parts;
+        if (base !== '*' && base !== cell.type) continue;
+        const st2 = style[key];
+        if (!st2) continue;
+        
+        
+        if (!cell.styleInner) cell.styleInner = {} as Record<string, Record<string, any>>;
+        const selKey = selector;
+        cell.styleInner[selKey] = { ...(cell.styleInner[selKey] || {}), ...this.convertStyle(cell, st2) };
+      }
     }
     return this;
   }

@@ -11,12 +11,21 @@
     return style;
   }
 
-  function cellStyle(cell) {
-    let style = ""
-    for(const key in cell.style) {
-      style += `${key}: ${cell.style[key]}; `;
+  function innerStyleTag(cell) {
+    if(!cell.styleInner) return '';
+    let css = '';
+    const cid = `cell-${cell.id}`;
+    for(const sel in cell.styleInner) {
+      const rules = cell.styleInner[sel];
+      // ensure selector starts with . or # or element; default to class
+      const selector = sel.match(/^[.#]/) ? sel : `.${sel}`;
+      css += `#${cid} ${selector} { `;
+      for(const k in rules) {
+        css += `${k}: ${rules[k]}; `;
+      }
+      css += `}\n`;
     }
-    return style;
+    return css;
   }
 </script>
 
@@ -26,9 +35,10 @@
         {#each row as cell}
           <div
             class="sheet-cell"
-            style={`${cellStyle(cell)} grid-column: span ${cell.colspan || 1}; grid-row: span ${cell.rowspan || 1};`}
+            style={`grid-column: span ${cell.colspan || 1}; grid-row: span ${cell.rowspan || 1};`}
             id="cell-{cell.id}"
           >
+            {@html innerStyleTag(cell) ? `<style>${innerStyleTag(cell)}</style>` : ''}
             {#if cell.Component}
               <svelte:component this={cell.Component} {...cell.props} />
             {:else}

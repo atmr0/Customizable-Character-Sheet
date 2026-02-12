@@ -17,6 +17,15 @@ export const defaultTheme = {
   breakpoints: { sm: 640, md: 768, lg: 1024, xl: 1280 },
 };
 
+export const attributesColors = {
+  str_attr: '#EF4444',
+  dex_attr: '#F59E0B',
+  con_attr: '#10B981',
+  int_attr: '#3B82F6',
+  wis_attr: '#8B5CF6',
+  cha_attr: '#EC4899',
+};
+
 /**
  * Convert a theme object into a CSS variables string for inline style.
  * Example: themeToCssVars({ primaryColor: '#fff' }) -> "--primary-color:#fff;"

@@ -1,5 +1,5 @@
 <script>
-  import Grid from "./lib/components/Grid.svelte";
+  import RenderGrid from "./lib/components/RenderGrid.svelte";
   // import sheet from './Sheet/sheet.json';
   import mainSheet from "./MainSheet";
   let sheet = mainSheet;
@@ -8,7 +8,7 @@
 <main class="app">
   <h1>Custom RPG Character Sheet</h1>
   <div class="main">
-    <Grid {sheet} />
+    <RenderGrid {sheet} />
     
   </div>
 </main>
