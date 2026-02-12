@@ -23,9 +23,9 @@ export const componentsMap: Record<string, any> = {
 export type Sheet = {
   title?: string;
   id?: string;
-  rows?: number;
+  numberOfRows?: number;
   cols?: number;
-  cells: ComponentOps[][];
+  rows: ComponentOps[][];
 };
 
 export class ComponentOps{

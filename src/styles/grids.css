@@ -4,6 +4,12 @@
   align-items: stretch;
 }
 
+/* Row wrapper should not break the grid; use display: contents so children remain grid items.
+   Fallback will keep rows as blocks in older browsers. */
+.row {
+  display: contents;
+}
+
 .sub-grid-wrapper {
   padding: var(--padding-base);  
 }

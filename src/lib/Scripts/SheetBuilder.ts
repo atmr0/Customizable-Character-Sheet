@@ -1,6 +1,8 @@
 import * as CM from "./ComponentsMap";
 import { Constants } from "../constants";
 
+export let styleObj:Record<string,any> = {};
+export let styleTag:string;
 
 function ensureId(prefix = 'cell') {
   return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
@@ -36,25 +38,27 @@ export class RowBuilder {
 
 export class SheetBuilder {
   private sheet: CM.Sheet;
-
+  private rowIndex:number = 0;
   constructor(title?: string) {
-    this.sheet = { title, id: undefined, rows: 0, cols: 1, cells: [] } as CM.Sheet;
+    this.sheet = { title, id: undefined, numberOfRows: 0, cols: 1, rows: [] } as CM.Sheet;
   }
 
   id(v: string) { this.sheet.id = v; return this; }
   title(v: string) { this.sheet.title = v; return this; }
   cols(n: number) { this.sheet.cols = n; return this; }
-  rows(n: number) { this.sheet.rows = n; return this; }
+  rows(n: number) { this.sheet.numberOfRows = n; return this; }
 
   row(fn: (r: RowBuilder) => RowBuilder) {
     const rb = new RowBuilder();
     fn(rb);
-    this.sheet.cells.push(rb.build());
+    this.sheet.rows.push(rb.build());
+    this.rowIndex += 1;
     return this;
   }
 
   rowsFrom(rows: CM.ComponentOps[][]) {
-    for (const r of rows) this.sheet.cells.push(r);
+    for (const r of rows) this.sheet.rows.push(r);
+    this.rowIndex += rows.length;
     return this;
   }
 
@@ -62,42 +66,28 @@ export class SheetBuilder {
     let styleStr: Record<string, string> = {};
     for (const key in style) {
       if(typeof style[key] === 'function') {
-        console.log(`Computing style for cell ${cell.id} with dynamic style function for key "${key}"`);  
         styleStr[key] = style[key](cell);
       } else {
         styleStr[key] = style[key];
       }
     }
-    console.log(styleStr)
     return styleStr;
   }
 
-  withStyle(style: Record<string, Record<string, any>>) {
-    for (const cell of this.sheet.cells.flat()) {
-      // apply direct styles for the cell type or wildcard
-      let st = style[cell.type as string] || style['*'];
-      if (st) {
-        cell.style = { ...cell.style, ...this.convertStyle(cell, st) };
-      }
+  withStyle(style:Record<string, any> | Record<string, Record<string, any>>, targetClass:string = "") {
+    // let rowId = `${this.id}-row-${this.rowIndex} ${targetClass}`;
+    // for (const key of Object.keys(style)) {
+    //   if(!style[key]) continue;
+    //   if(typeof style[key] === 'string') styleObj[rowId] = {...styleObj[rowId], [key]: style[key] };
+      
+    //   if(typeof style[key] === 'object') {
+    //     // this.withStyle({ [key]: style[key] }, key);
+    //     //styleObj[rowId] = this.convertStyle({ id: rowId, type: 'Row' }, style[key]);
+    //   }
+    // }
 
-      // support selectors in the style keys like 'Component.selector'
-      for (const key of Object.keys(style)) {
-        if (key === '*' || key === cell.type) continue;
-
-        const parts = String(key).split('.');
-        if (parts.length < 2) continue;
-        
-        const [base, selector] = parts;
-        if (base !== '*' && base !== cell.type) continue;
-        const st2 = style[key];
-        if (!st2) continue;
-        
-        
-        if (!cell.styleInner) cell.styleInner = {} as Record<string, Record<string, any>>;
-        const selKey = selector;
-        cell.styleInner[selKey] = { ...(cell.styleInner[selKey] || {}), ...this.convertStyle(cell, st2) };
-      }
-    }
+    // console.log('Updated styleObj:', styleObj);
+    
     return this;
   }
 

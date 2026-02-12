@@ -1,15 +1,15 @@
 <script lang="ts">
   import { buildGrid } from "../Scripts/GridBuilder";
-  
+  import {type Sheet} from "../Scripts/ComponentsMap";
   export let sheet: any;
-  export let withoutRows: boolean = false;
-  $: built = sheet ? buildGrid(sheet) : { cols: 1, cells: [] };
+  let built: Sheet;
+  $: built = sheet ? buildGrid(sheet) : { cols: 1, rows: [] };
 
   function gridStyle() {
     let style = `grid-template-columns: repeat(${built.cols || 1}, 1fr); `
-    if(built.rows && !withoutRows) style += `grid-template-rows: repeat(${built.rows}, 1fr);`;
+    if(built.numberOfRows) style += `grid-template-rows: repeat(${built.numberOfRows}, 1fr);`;
     return style;
-  }
+  }  
 
   function innerStyleTag(cell) {
     if(!cell.styleInner) return '';
@@ -26,19 +26,21 @@
       css += `}\n`;
     }
     return css;
-  }
+  } 
 </script>
 
 {#if built}
   <div class="grid" style= {gridStyle()}>
-    {#each built.cells as row}
+    {#each built.rows as row, rowIndex}
+      <div class="row" id="{`${sheet.id}-row-${rowIndex + 1}`}">
         {#each row as cell}
           <div
             class="sheet-cell"
-            style={`grid-column: span ${cell.colspan || 1}; grid-row: span ${cell.rowspan || 1};`}
+            style={` grid-column: span ${cell.colspan || 1}; grid-row: span ${cell.rowspan || 1};`}
             id="cell-{cell.id}"
           >
-            {@html innerStyleTag(cell) ? `<style>${innerStyleTag(cell)}</style>` : ''}
+            <!-- {@html innerStyleTag(cell) ? `<style>${innerStyleTag(cell)}</style>` : ''} -->
+            {console.log(cell)}
             {#if cell.Component}
               <svelte:component this={cell.Component} {...cell.props} />
             {:else}
@@ -46,6 +48,7 @@
             {/if}
           </div>
         {/each}
+      </div>
     {/each}
   </div>
 {/if}

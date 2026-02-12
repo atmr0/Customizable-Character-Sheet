@@ -41,7 +41,7 @@ const mainSheet = new SheetBuilder('Character Sheet')
       ]
     })
   )
-  .withStyle({ 'CharacterAttribute.text-input': { "border-color": ((cell: any) => attributesColors[cell.id as keys]) } })
+  // .withStyle({  "border-color": 'red' } )
   .build();
 
 export default mainSheet;
