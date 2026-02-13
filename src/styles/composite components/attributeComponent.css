@@ -1,3 +1,12 @@
+.attribute{
+  --input-font-size: 1.25rem;
+
+  --focus-color: blue;
+  --focus-border-width: 2px;
+  --focus-box-shadow: 0 0 0 4px var(--focus-color);
+  --focus-outline: none;
+}
+
 .attribute {
   display: flex;
   flex-direction: column;
@@ -21,10 +30,10 @@
 }
 
 .attribute .text-input:focus-within {
-  outline: none;
-  border-width: 2px;
-  /* border-color: var(--attribute-focus, var(--primary-color));
-  box-shadow: 0 0 0 6px rgba(11,110,253,0.08), 0 0 0 4px var(--attribute-focus, var(--primary-color)); */
+  outline: var(--focus-outline);
+  border-width: var(--focus-border-width);
+  border-color: var(--focus-color);
+  box-shadow: var(--focus-box-shadow);
 }
 
 .attribute .computed-text {

@@ -98,6 +98,7 @@ export class SheetBuilder {
 
   build() {
     styleTag = this.convertStyleObjToTag();
+    // console.log(styleTag)
     return this.sheet;
   }
 }

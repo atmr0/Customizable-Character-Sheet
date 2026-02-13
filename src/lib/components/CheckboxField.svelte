@@ -24,6 +24,13 @@
   }
 </script>
 
+<!-- 
+INSPIRED BY Himalaiya Singh's Code Pen:
+https://codepen.io/singhimalaya/pen/dBJBMO
+
+Access in 02/2026
+-->
+
 <BaseComponent {id} componentClass="checkbox-field">
   <div class="checkbox-wrapper">
     <label class="checkbox-root" for={inputId}>

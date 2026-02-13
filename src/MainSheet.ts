@@ -35,11 +35,9 @@ const mainSheet = new SheetBuilder('Character Sheet')
     .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10, focusColor: '#ec4899' })
   )
   .withStyle({
-    ".text-input:focus-within":
+    ".attribute":
     {
-      "border-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
-      "box-shadow": (cell: ComponentOps) => `0 0 0 2px ${attributesColors[cell.id as keys]}`,
-      "border-width": '3px',
+      "--focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
     },
   })
   .row(r => r

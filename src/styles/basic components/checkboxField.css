@@ -5,13 +5,9 @@ https://codepen.io/singhimalaya/pen/dBJBMO
 Access in 02/2026
 */
 
-
-* {
-  -webkit-tap-highlight-color: transparent;
+.checkbox-wrapper {
   outline: none;
-}
-
-:root {
+ 
   --size: 18px;
 
   --shadow-offset-ratio: 0.7;

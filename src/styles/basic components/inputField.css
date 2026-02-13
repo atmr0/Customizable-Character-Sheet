@@ -1,0 +1,22 @@
+.text-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-base);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.text-input:disabled {
+  opacity: 0.6;
+}
+
+.select-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-base);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--surface);
+  font-size: 1rem;
+}
