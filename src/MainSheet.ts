@@ -1,3 +1,4 @@
+import { ComponentOps } from './lib/Scripts/ComponentsMap';
 import SheetBuilder from './lib/Scripts/SheetBuilder';
 import { Constants } from './lib/constants';
 import { attributesColors } from './lib/theme';
@@ -33,6 +34,14 @@ const mainSheet = new SheetBuilder('Character Sheet')
     .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10, focusColor: '#10b981' })
     .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10, focusColor: '#ec4899' })
   )
+  .withStyle({
+    ".text-input:focus-within":
+    {
+      "border-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
+      "box-shadow": (cell: ComponentOps) => `0 0 0 2px ${attributesColors[cell.id as keys]}`,
+      "border-width": '3px',
+    },
+  })
   .row(r => r
     .listField({
       id: 'inventory', label: 'Inventory', colspan: 3, itemTemplate: [
@@ -41,7 +50,6 @@ const mainSheet = new SheetBuilder('Character Sheet')
       ]
     })
   )
-  // .withStyle({  "border-color": 'red' } )
   .build();
 
 export default mainSheet;

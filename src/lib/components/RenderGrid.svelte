@@ -40,7 +40,6 @@
             id="cell-{cell.id}"
           >
             <!-- {@html innerStyleTag(cell) ? `<style>${innerStyleTag(cell)}</style>` : ''} -->
-            {console.log(cell)}
             {#if cell.Component}
               <svelte:component this={cell.Component} {...cell.props} />
             {:else}

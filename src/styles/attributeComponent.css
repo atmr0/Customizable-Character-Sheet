@@ -23,8 +23,8 @@
 .attribute .text-input:focus-within {
   outline: none;
   border-width: 2px;
-  border-color: var(--attribute-focus, var(--primary-color));
-  box-shadow: 0 0 0 6px rgba(11,110,253,0.08), 0 0 0 4px var(--attribute-focus, var(--primary-color));
+  /* border-color: var(--attribute-focus, var(--primary-color));
+  box-shadow: 0 0 0 6px rgba(11,110,253,0.08), 0 0 0 4px var(--attribute-focus, var(--primary-color)); */
 }
 
 .attribute .computed-text {
