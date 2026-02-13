@@ -12,10 +12,13 @@
   if (id) setValue(id, checked);
 
   $: storeVal = id ? ($valuesStore[id] ?? checked) : checked;
-
+  // avoid duplicating the outer id on the input; create a distinct input id
+  $: inputId = id ? `${id}_cb` : undefined;
   function onChange(e) {
     const v = e.target.checked;
     checked = v;
+    console.log(id, inputId)
+    console.log(checked)
     if (id) setValue(id, v);
     onchange?.(v, e);
   }
@@ -23,20 +26,20 @@
 
 <BaseComponent {id} componentClass="checkbox-field">
   <div class="checkbox-wrapper">
-    <input
-      type="checkbox"
-      class="checkbox-input"
-      {id}
-      bind:checked
-      on:change={onChange}
-      {disabled}
-      aria-checked={checked}
-    />
-    <label for={id}>
+    <label class="checkbox-root" for={inputId}>
+      <input
+        id={inputId}
+        type="checkbox"
+        class="checkbox-input"
+        bind:checked
+        on:change={onChange}
+        {disabled}
+        aria-checked={checked}
+      />
       <span class="outer-box">
         <div class="tick_mark"></div>
       </span>
-      <span class="label-text">Exemplo de texto</span>
+      <span class="label-text">{label}</span>
     </label>
   </div>
 </BaseComponent>

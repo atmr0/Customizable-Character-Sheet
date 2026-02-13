@@ -12,12 +12,12 @@ Access in 02/2026
 }
 
 :root {
-  --size: 30px;
+  --size: 18px;
 
   --shadow-offset-ratio: 0.7;
   --v-offset-shadow: 0;
   /*calc(var(--size) * var(--shadow-offset-ratio));*/
-  --shadow-blur-ratio: 0;
+  --shadow-blur-ratio: 0.1;
 
   --outer-box-blur-radius: calc(var(--size) * var(--shadow-blur-ratio));
   --outer-box-shadow: 0 var(--v-offset-shadow) var(--outer-box-blur-radius) var(--accent-shadow);
@@ -133,7 +133,7 @@ label:active .outer-box {
   color: #222;
   line-height: 1;
   white-space: normal;
-  word-break: break-word;
+  /* word-break: break-word; */
   max-width: calc(100vw - (var(--size) * 1.5));
 }
 
@@ -174,18 +174,18 @@ label {
   transform: translateX(calc(var(--size) * var(--tick-translate-x-ratio)));
 }
 
-.checkbox-input:checked+label .outer-box {
+.checkbox-input:checked + .outer-box {
   background-color: var(--success-color);
   box-shadow: var(--checked-box-shadow);
 }
 
-.checkbox-input:checked+label .outer-box:before {
+.checkbox-input:checked + .outer-box:before {
   width: 0;
   height: 0;
 }
 
-.checkbox-input:checked+label .tick_mark:before,
-.checkbox-input:checked+label .tick_mark:after {
+.checkbox-input:checked + .outer-box .tick_mark:before,
+.checkbox-input:checked + .outer-box .tick_mark:after {
   transform: translate(0);
   opacity: 1;
 }
