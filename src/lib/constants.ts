@@ -1,10 +1,11 @@
 export class Constants{
-  static InputField = 'InputField';
-  static StaticText = 'StaticText';
-  static SubGrid = 'SubGrid';
   static CharacterAttribute = 'CharacterAttribute';
+  static CheckboxField = 'CheckboxField';
   static ComputedText = 'ComputedText';
+  static ImageField = 'ImageField';
+  static InputField = 'InputField';
   static ListField = 'ListField';
   static SelectField = 'SelectField';
-  static ImageField = 'ImageField';
+  static StaticText = 'StaticText';
+  static SubGrid = 'SubGrid';
 }

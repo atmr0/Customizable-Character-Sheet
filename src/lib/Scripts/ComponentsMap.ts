@@ -6,6 +6,7 @@ import ListField from "../components/ListField.svelte";
 import CharacterAttribute from "../components/CharacterAttribute.svelte";
 import SelectField from "../components/SelectField.svelte";
 import ImageField from "../components/ImageField.svelte";
+import CheckboxField from "../components/CheckboxField.svelte";
 import { Constants } from "../constants";
 
 
@@ -17,7 +18,8 @@ export const componentsMap: Record<string, any> = {
   [Constants.CharacterAttribute]: CharacterAttribute,
   [Constants.SelectField]: SelectField,
   [Constants.ListField]: ListField,
-  [Constants.ImageField]: ImageField, // placeholder for future ImageField component
+  [Constants.ImageField]: ImageField, 
+  [Constants.CheckboxField]: CheckboxField,
 };
 
 export type Sheet = {

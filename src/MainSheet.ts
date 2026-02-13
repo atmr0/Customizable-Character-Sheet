@@ -43,12 +43,7 @@ const mainSheet = new SheetBuilder('Character Sheet')
     },
   })
   .row(r => r
-    .listField({
-      id: 'inventory', label: 'Inventory', colspan: 3, itemTemplate: [
-        { type: Constants.InputField, label: 'Item Name', placeholder: 'Item name' },
-        { type: Constants.InputField, label: 'Quantity', inputType: 'number', value: 0 }
-      ]
-    })
+    .add({type: Constants.CheckboxField, id: 'trainded', label: 'Trained', colspan: 1})
   )
   .build();
 

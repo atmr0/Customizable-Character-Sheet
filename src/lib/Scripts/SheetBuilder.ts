@@ -85,7 +85,6 @@ export class SheetBuilder {
     if (cell) selector += ` #${cell.id}`;
     if (targetClass) selector += ` ${targetClass}`;
 
-    console.log("Created selector:", selector);
     return selector;
   }
 
@@ -99,7 +98,6 @@ export class SheetBuilder {
 
   build() {
     styleTag = this.convertStyleObjToTag();
-    console.log(styleTag)
     return this.sheet;
   }
 }
