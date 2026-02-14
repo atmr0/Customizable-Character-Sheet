@@ -2,12 +2,7 @@
   display: block;
   width: 100%;
   box-sizing: border-box;
-  background: var(--surface);
-  color: var(--text-primary);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--border-radius);
   padding: inherit;
-  box-shadow: var(--shadow);
 }
 
 .base-component .label {
@@ -26,4 +21,8 @@
 .base-component[aria-disabled="true"] {
   opacity: 0.6;
   pointer-events: none;
+}
+
+:focus {
+  outline: none;
 }

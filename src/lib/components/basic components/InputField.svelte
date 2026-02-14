@@ -1,7 +1,8 @@
 <script lang="ts">
-  import BaseComponent from "./BaseComponent.svelte";
-  import { setValue } from "../valuesStore.js";
-  import { Constants } from "../constants.js";
+  import { BaseComponent } from "../componentsIndex.js";
+
+  import { setValue } from "../../valuesStore.js";
+  import { Constants } from "../../constants";
 
   let cell: any; // TODO: type
   export let value: any = "";

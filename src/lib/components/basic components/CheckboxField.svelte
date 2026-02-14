@@ -1,6 +1,6 @@
 <script lang="ts">
-  import BaseComponent from "./BaseComponent.svelte";
-  import { valuesStore, setValue } from "../valuesStore.js";
+  import { BaseComponent } from "../componentsIndex.js";
+  import { valuesStore, setValue } from "../../valuesStore.js";
 
   export let id: string | undefined;
   export let label: string | undefined;

@@ -5,9 +5,12 @@
   --surface: #FFFFFF;
   --text-primary: #111827;
   --text-secondary: #6B7280;
-  --border-color: #E5E7EB;
+
+  --border-color: #a5a7aB;
+
   --border-width: 1/16rem;
-  --border-radius: 6px;
+  --border-radius: 0;
+  --border-bottom: 1px solid var(--border-color);
   --padding-base: 0.5rem;
   --gap: 0.5rem;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);

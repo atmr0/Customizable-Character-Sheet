@@ -1,0 +1,12 @@
+.select-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-base);
+  padding-bottom: .25em;
+  border: none;
+  background: transparent;
+  border: none;
+  border-bottom: var(--border-bottom);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+}

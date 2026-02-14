@@ -1,9 +1,9 @@
 <script lang="ts">
-  import BaseComponent from "./BaseComponent.svelte";
-  import { valuesStore, setValue } from "../valuesStore.js";
   import { onMount } from "svelte";
-  import { ComponentOps } from "../Scripts/ComponentsMap";
-  import { componentsMap } from "../Scripts/ComponentsMap";
+  import { BaseComponent } from "../componentsIndex.js";
+  import { valuesStore, setValue } from "../../valuesStore.js";
+  import { ComponentOps, componentsMap } from "../../Scripts/ComponentsMap";
+
 
   export let id: string | undefined;
   export let label: string | undefined;

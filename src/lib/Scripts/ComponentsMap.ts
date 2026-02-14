@@ -1,12 +1,4 @@
-import InputField from "../components/InputField.svelte";
-import StaticText from "../components/StaticText.svelte";
-import SubGrid from "../components/SubGrid.svelte";
-import ComputedText from "../components/ComputedText.svelte";
-import ListField from "../components/ListField.svelte";
-import CharacterAttribute from "../components/CharacterAttribute.svelte";
-import SelectField from "../components/SelectField.svelte";
-import ImageField from "../components/ImageField.svelte";
-import CheckboxField from "../components/CheckboxField.svelte";
+import {InputField, StaticText, SubGrid, ComputedText, ListField, CharacterAttribute, SelectField, ImageField, CheckboxField} from "../components/componentsIndex.js"; 
 import { Constants } from "../constants";
 
 

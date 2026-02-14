@@ -1,22 +1,23 @@
 .text-input {
+  --font-size: 1rem;
+  --background: transparent;
+  --border: none;
+  --border-radius: 0;
+}
+
+.text-input {
   width: 100%;
+  background: var(--background);
   box-sizing: border-box;
   padding: var(--padding-base);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 1rem;
+  border: var(--border);
+  border-bottom: var(--border-bottom);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size);
+  padding-bottom: .25em;
 }
 
 .text-input:disabled {
   opacity: 0.6;
 }
 
-.select-input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: var(--padding-base);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: var(--surface);
-  font-size: 1rem;
-}

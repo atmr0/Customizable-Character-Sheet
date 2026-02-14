@@ -1,6 +1,5 @@
 <script>
-  import BaseComponent from "./BaseComponent.svelte";
-  import RenderGrid from "./RenderGrid.svelte";
+  import { BaseComponent, RenderGrid } from "../componentsIndex.js";
   export let sheet = { rows: 0, cols: 1, cells: [] };
   export let label = undefined;
   export let noBackground = true;

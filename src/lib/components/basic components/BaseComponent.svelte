@@ -1,8 +1,4 @@
 <script lang="ts">
-  import { defaultTheme, themeToCssVars } from "../theme.js";
-  import { themeStore } from "../themeStore.js";
-  import { get } from "svelte/store";
-
   export let theme = null; // allow override via prop
   export let id: string | undefined;
   export let label: string | undefined = undefined;
@@ -12,9 +8,6 @@
   // allows for better styling other components
   // other components will have a class that can be used for styling inner elements
   if(componentClass) componentClass = componentClass+"-wrapper";
-  $: appliedTheme = theme
-    ? { ...defaultTheme, ...theme }
-    : get(themeStore) || defaultTheme;
 </script>
 
 <div

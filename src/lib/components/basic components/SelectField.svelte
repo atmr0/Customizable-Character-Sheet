@@ -1,7 +1,8 @@
 <script lang="ts">
-  import BaseComponent from "./BaseComponent.svelte";
-  import { setValue } from "../valuesStore.js";
-    import { Constants } from "../constants";
+  import { BaseComponent } from "../componentsIndex.js";
+  import { setValue } from "../../valuesStore.js";
+  import { Constants } from "../../constants";
+
 
   export let id: string;
   export let label: string | undefined;
@@ -9,7 +10,7 @@
   export let value: any = "";
   export let placeholder: string = "Select...";
   export let onchange = undefined;
-  let componentClass = Constants.SelectField
+  let componentClass = Constants.SelectField;
   function handleChange(e) {
     value = e.target.value;
     onchange?.(e);

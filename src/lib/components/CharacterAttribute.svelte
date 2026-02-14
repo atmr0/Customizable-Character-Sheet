@@ -1,8 +1,7 @@
 <script>
-  import BaseComponent from "./BaseComponent.svelte";
+  import {BaseComponent, ComputedText} from "./componentsIndex.js";
   import { setValue, valuesStore } from "../valuesStore.js";
-  import ComputedText from "./ComputedText.svelte";
-  import { Constants } from "../constants.js";
+  import { Constants } from "../constants.ts";
   export let id;
   export let label;
   export let value = "";

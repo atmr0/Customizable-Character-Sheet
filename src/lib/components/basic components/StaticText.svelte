@@ -1,6 +1,7 @@
 <script>
-  import BaseComponent from "./BaseComponent.svelte";
-  import { Constants } from "../constants.js";
+  import { BaseComponent } from "../componentsIndex.js";
+  import { Constants } from "../../constants.ts";
+
   export let text = "";
   let componentClass = Constants.StaticText;
   let noBackground = true;
