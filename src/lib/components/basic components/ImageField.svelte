@@ -13,6 +13,7 @@
   let componentClass = Constants.ImageField;
 
   let fileInput: HTMLInputElement | null = null;
+  let previewOpen = false;
 
   // derived image src from store
   $: currentImage = id ? $valuesStore[id] || "" : "";
@@ -21,11 +22,19 @@
     fileInput?.click();
   }
 
+  function openPreview() {
+    previewOpen = true;
+  }
+
+  function closePreview() {
+    previewOpen = false;
+  }
+
   function handleKeydown(e: KeyboardEvent) {
     const key = e.key;
     if (key === "Enter" || key === " " || key === "Spacebar") {
       e.preventDefault();
-      openPicker();
+      if (currentImage) openPreview();
     }
   }
 
@@ -52,8 +61,8 @@
     class="image-wrapper"
     role="button"
     tabindex="0"
-    aria-label={label || "Upload image"}
-    on:click={openPicker}
+    aria-label={label || "Image"}
+    on:click={() => (currentImage ? openPreview() : undefined)}
     on:keydown={handleKeydown}
   >
     {#if currentImage}
@@ -78,7 +87,16 @@
     class="hidden-input"
     on:change={handleFile}
   />
-</BaseComponent>
 
-<style>
-</style>
+  {#if previewOpen}
+    <div
+      class="image-modal"
+      aria-label="Image "
+    >
+      <div class="image-modal-inner" on:click|stopPropagation>
+        <img src={currentImage} alt={label} class="zoomed-image" />
+        <button class="close-btn" on:click={closePreview} aria-label="Close">Close</button>
+      </div>
+    </div>
+  {/if}
+</BaseComponent>
