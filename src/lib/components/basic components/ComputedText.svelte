@@ -10,20 +10,21 @@
   export let id: string | undefined = undefined;
   let componentClass = Constants.ComputedText;
   let computed = "";
+  let lastValue = ""
   $: $valuesStore; // ensure reactive dependency
   $: if (expr) {
     try {
       const val = evaluateExpression(expr, $valuesStore || {});
       computed = val === null || val === undefined ? "" : val;
+      if (id && computed !== lastValue) {
+        setValue(id, computed);
+        lastValue = computed;
+      }
     } catch (e) {
       computed = "";
     }
   } else {
     computed = "";
-  }
-
-  function onchange(e) {
-    if (id) setValue(id, computed);
   }
 </script>
 
@@ -31,6 +32,6 @@
   <div
     class="computed-text"
     contenteditable="true"
-    bind:innerText={computed}
-  ></div>
+
+  >{format(computed)}</div>
 </BaseComponent>

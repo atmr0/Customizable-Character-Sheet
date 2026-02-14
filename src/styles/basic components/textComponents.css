@@ -9,4 +9,7 @@
 .computed-text {
   color: var(--text-secondary);
   min-height: 2em;
+  display:flex;
+  align-items: center;
+  justify-content: center;
 }

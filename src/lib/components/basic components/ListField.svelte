@@ -49,7 +49,7 @@
 <BaseComponent {id} {label}>
   <div class="list-field">
     <ul
-      class="list-items"
+      class="list-all-items"
       style="grid-template-columns: repeat({storeItems.length}, 1fr);"
     >
       {#each storeItems as it, i}

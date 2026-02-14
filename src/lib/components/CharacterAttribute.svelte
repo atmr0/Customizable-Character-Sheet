@@ -1,5 +1,5 @@
 <script>
-  import {BaseComponent, ComputedText} from "./componentsIndex.js";
+  import { BaseComponent, ComputedText } from "./componentsIndex.js";
   import { setValue, valuesStore } from "../valuesStore.js";
   import { Constants } from "../constants.ts";
   export let id;
@@ -9,7 +9,7 @@
   let componentClass = Constants.CharacterAttribute;
 
   let idField = id ? `${id}_field` : undefined;
-  let idComputed = id ? `${id}_computed` : undefined;
+  let idComputed = id ? `${id}_mod` : undefined;
   // atualiza store quando o campo muda
   function onInput(e) {
     value = e.target.value;
@@ -17,12 +17,13 @@
   }
   if (id) setValue(id, Number(value));
 
-  let format = v => {
+  let format = (v) => {
     const num = Number(v);
-    if (isNaN(num)) return '';;
+    if (isNaN(num)) return "";
     return num >= 0 ? `+${num}` : String(num);
   };
 
+  let modificator;
   // calcula dinamicamente a expressão com os valores do store
   $: $valuesStore;
 </script>
@@ -39,6 +40,6 @@
       oninput={onInput}
       class="text-input"
     />
-    <ComputedText expr="{id} % 10" id={idComputed} {format} />
+    <ComputedText bind:this={modificator} expr="{id} % 10" id={idComputed} {format} />
   </div>
 </BaseComponent>
