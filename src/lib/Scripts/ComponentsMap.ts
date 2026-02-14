@@ -76,3 +76,7 @@ export class SelectFieldOps extends ComponentOps{
   options?: string[];
   value?: string | number;
 }
+
+export class CheckboxFieldOps extends ComponentOps{
+  type: string = Constants.CheckboxField
+}

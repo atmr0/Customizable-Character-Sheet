@@ -7,7 +7,6 @@
 }
 
 .computed-text {
-  font-style: italic;
   color: var(--text-secondary);
   min-height: 2em;
 }

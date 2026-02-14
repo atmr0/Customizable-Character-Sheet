@@ -9,8 +9,6 @@
   export let label: string | undefined;
   export let itemTemplate: ComponentOps[];
   export let items: any[] = [];
-  export let placeholder: string = "New item";
-  export let allowEmpty: boolean = false;
   export let onadd = undefined;
   export let onremove = undefined;
 

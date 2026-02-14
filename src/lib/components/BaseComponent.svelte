@@ -15,7 +15,6 @@
   $: appliedTheme = theme
     ? { ...defaultTheme, ...theme }
     : get(themeStore) || defaultTheme;
-  $: cssVars = themeToCssVars(appliedTheme);
 </script>
 
 <div

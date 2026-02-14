@@ -9,11 +9,11 @@ export const defaultTheme = {
   textSecondary: '#6B7280',
   borderColor: '#E5E7EB',
   borderWidth: '1px',
-  borderRadius: '6px',
-  paddingBase: '8px',
-  gap: '8px',
+  borderRadius: '0.5rem',
+  paddingBase: '0.5rem',
+  gap: '0.5rem',
   shadow: '0 1px 3px rgba(0,0,0,0.08)',
-  focusOutline: '2px solid rgba(11,110,253,0.18)',
+  focusOutline: '0.125rem solid rgba(11,110,253,0.18)',
   breakpoints: { sm: 640, md: 768, lg: 1024, xl: 1280 },
 };
 

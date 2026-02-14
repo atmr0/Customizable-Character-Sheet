@@ -42,6 +42,7 @@ const mainSheet = new SheetBuilder('Character Sheet')
   })
   .row(r => r
     .add({type: Constants.CheckboxField, id: 'trainded', label: 'Trained', colspan: 1})
+    .listField({ id: 'skills', label: 'Skills', colspan: 5, itemTemplate: [{ 'type': Constants.InputField, placeholder: 'Skill name' }] })
   )
   .build();
 

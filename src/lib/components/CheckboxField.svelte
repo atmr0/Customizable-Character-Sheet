@@ -8,17 +8,13 @@
   export let disabled: boolean = false;
   export let onchange = undefined;
 
-  // initialize store value
   if (id) setValue(id, checked);
 
   $: storeVal = id ? ($valuesStore[id] ?? checked) : checked;
-  // avoid duplicating the outer id on the input; create a distinct input id
   $: inputId = id ? `${id}_cb` : undefined;
   function onChange(e) {
     const v = e.target.checked;
     checked = v;
-    console.log(id, inputId)
-    console.log(checked)
     if (id) setValue(id, v);
     onchange?.(v, e);
   }

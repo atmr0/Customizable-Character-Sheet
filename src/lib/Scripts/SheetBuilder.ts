@@ -26,6 +26,7 @@ export class RowBuilder {
   computedText(opts: Partial<CM.ComputedTextOps>) { return this.add({ type: Constants.ComputedText, ...opts }); }
   listField(opts: Partial<CM.ListFieldOps>) { return this.add({ type: Constants.ListField, ...opts }); }
   selectField(opts: Partial<CM.SelectFieldOps>) { return this.add({ type: Constants.SelectField, ...opts }); }
+  checkboxField(opts: Partial<CM.CheckboxFieldOps>) { return this.add({ type: Constants.CheckboxField, ...opts }); }
 
   withStyle(style: any) {
     if (this.last) {
