@@ -56,8 +56,7 @@
               }
             ]
           ],
-          "styles": {},
-          "styleTag": ""
+          "styles": {}
         }
       }
     ],
@@ -66,37 +65,55 @@
         "type": "CharacterAttribute",
         "id": "str_attr",
         "label": "Strength",
-        "value": 10
+        "value": 10,
+        "style": {
+          "--attr-focus-color": "#EF4444"
+        }
       },
       {
         "type": "CharacterAttribute",
         "id": "dex_attr",
         "label": "Dexterity",
-        "value": 10
+        "value": 10,
+        "style": {
+          "--attr-focus-color": "#F59E0B"
+        }
       },
       {
         "type": "CharacterAttribute",
         "id": "con_attr",
         "label": "Constitution",
-        "value": 10
+        "value": 10,
+        "style": {
+          "--attr-focus-color": "#10B981"
+        }
       },
       {
         "type": "CharacterAttribute",
         "id": "int_attr",
         "label": "Intelligence",
-        "value": 10
+        "value": 10,
+        "style": {
+          "--attr-focus-color": "#3B82F6"
+        }
       },
       {
         "type": "CharacterAttribute",
         "id": "wis_attr",
         "label": "Wisdom",
-        "value": 10
+        "value": 10,
+        "style": {
+          "--attr-focus-color": "#8B5CF6"
+        }
       },
       {
         "type": "CharacterAttribute",
         "id": "cha_attr",
         "label": "Charisma",
-        "value": 10
+        "value": 10,
+        "style": {
+          "--attr-focus-color": "#000000"
+        }
       }
     ],
     [
@@ -125,24 +142,23 @@
     ]
   ],
   "styles": {
-    "#test_sheet-row-2 #str_attr .character-attribute": {
+    "#test_sheet-row-2 #str_attr": {
       "--attr-focus-color": "#EF4444"
     },
-    "#test_sheet-row-2 #dex_attr .character-attribute": {
+    "#test_sheet-row-2 #dex_attr": {
       "--attr-focus-color": "#F59E0B"
     },
-    "#test_sheet-row-2 #con_attr .character-attribute": {
+    "#test_sheet-row-2 #con_attr": {
       "--attr-focus-color": "#10B981"
     },
-    "#test_sheet-row-2 #int_attr .character-attribute": {
+    "#test_sheet-row-2 #int_attr": {
       "--attr-focus-color": "#3B82F6"
     },
-    "#test_sheet-row-2 #wis_attr .character-attribute": {
+    "#test_sheet-row-2 #wis_attr": {
       "--attr-focus-color": "#8B5CF6"
     },
-    "#test_sheet-row-2 #cha_attr .character-attribute": {
+    "#cell-cha_attr": {
       "--attr-focus-color": "#EC4899"
     }
-  },
-  "styleTag": "#test_sheet-row-2 #str_attr .character-attribute { --attr-focus-color: #EF4444; }\n#test_sheet-row-2 #dex_attr .character-attribute { --attr-focus-color: #F59E0B; }\n#test_sheet-row-2 #con_attr .character-attribute { --attr-focus-color: #10B981; }\n#test_sheet-row-2 #int_attr .character-attribute { --attr-focus-color: #3B82F6; }\n#test_sheet-row-2 #wis_attr .character-attribute { --attr-focus-color: #8B5CF6; }\n#test_sheet-row-2 #cha_attr .character-attribute { --attr-focus-color: #EC4899; }\n"
+  }
 }

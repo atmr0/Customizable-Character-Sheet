@@ -27,25 +27,25 @@ const mainSheet = new SheetBuilder('Character Sheet')
   .cols(6)
   .row(r => r.subGrid({ id: 'subgrid1', label: 'Informations', colspan: 6 }, subSheet))
   .row(r => r
-    .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10})
-    .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10})
-    .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10})
-    .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10})
-    .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10})
-    .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10})
+    .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
+    .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10 })
+    .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10 })
+    .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10 })
+    .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10 })
+    .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10 })
   )
   .withStyle({
-    ".character-attribute":
-    {
-      "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
-    },
+
+    "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
   })
   .row(r => r
-    .add({type: Constants.CheckboxField, id: 'trainded', label: 'Trained', colspan: 1})
-    .listField({ id: 'skills', label: 'Skills', colspan: 5, itemTemplate: [
-      { 'type': Constants.InputField, placeholder: 'Skill name' },
-      { 'type': Constants.ComputedText, expr: "cha_attr_mod + 5", }
-    ] })
+    .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', colspan: 1 })
+    .listField({
+      id: 'skills', label: 'Skills', colspan: 5, itemTemplate: [
+        { 'type': Constants.InputField, placeholder: 'Skill name' },
+        { 'type': Constants.ComputedText, expr: "cha_attr_mod + 5", }
+      ]
+    })
   )
   .build();
 

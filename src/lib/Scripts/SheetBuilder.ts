@@ -1,8 +1,7 @@
 import * as CM from "./ComponentsMap";
 import { Constants } from "../constants";
 
-export let styleObj: Record<string, any> = {};
-export let styleTag: string = "";
+let styleObj: Record<string, any> = {};
 
 function ensureId(prefix = 'cell') {
   return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
@@ -40,11 +39,8 @@ export class RowBuilder {
 export class SheetBuilder {
   private sheet: CM.Sheet;
   private rowIndex: number = 0;
-  private styleObj: Record<string, any> = {};
   constructor(title?: string) {
-    this.sheet = { title, id: undefined, numberOfRows: 0, cols: 1, rows: [] } as CM.Sheet;
-    (this.sheet as any).styles = {};
-    (this.sheet as any).styleTag = "";
+    this.sheet = { title, id: undefined, numberOfRows: 0, cols: 1, rows: [], styles: styleObj } as CM.Sheet;
   }
 
   id(v: string) { this.sheet.id = v; return this; }
@@ -67,10 +63,12 @@ export class SheetBuilder {
   }
 
   // apply a single string rule: add to styleObj and set inline style on row cells
-  private applyStringRule(rowId: string, key: string, value: string, rowCells: CM.ComponentOps[]) {
-    this.styleObj[rowId] = { ...this.styleObj[rowId], [key]: value };
+  private applyStringRule(targetClass: string, rowId: string, key: string, value: string, rowCells: CM.ComponentOps[]) {
+    styleObj[rowId] = { ...styleObj[rowId], [key]: value };
     for (let cell of rowCells) {
-      cell.style = { ...(cell.style || {}), [key]: value };
+      let styleToAppend:any = { [key]: value };
+      if (targetClass) styleToAppend = { [this.createSelector(targetClass, cell)]: styleToAppend };
+      cell.style = { ...(cell.style || {}), ...styleToAppend };
     }
   }
 
@@ -79,9 +77,11 @@ export class SheetBuilder {
     for (let cell of rowCells) {
       const value = fn(cell as CM.ComponentOps);
       const selector = this.createSelector(targetClass, cell);
-      console.log(targetClass, key, value)
-      this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
-      cell.style = { ...(cell.style || {}), [targetClass]: { ...cell.style?.[targetClass], [key]: value } };
+        styleObj[selector] = { ...styleObj[selector], [key]: value };
+
+      let styleToAppend:any = { [key]: value };
+      if (targetClass) styleToAppend = { [selector]: styleToAppend };
+      cell.style = { ...(cell.style || {}), ...styleToAppend };
     }
   }
 
@@ -92,7 +92,7 @@ export class SheetBuilder {
 
   // persist instance styleObj into sheet.styles for serialization
   private syncInstanceStyles() {
-    (this.sheet as any).styles = { ...((this.sheet as any).styles || {}), ...this.styleObj };
+    this.sheet.styles = { ...(this.sheet.styles || {}), ...styleObj };
   }
 
   withStyle(style: Record<string, any> | Record<string, Record<string, Function>>, targetClass: string = "") {
@@ -104,7 +104,7 @@ export class SheetBuilder {
 
       const val = style[key];
       if (typeof val === 'string') {
-        this.applyStringRule(rowId, key, val, rowCells);
+        this.applyStringRule(targetClass,rowId, key, val, rowCells);
         continue;
       }
 
@@ -131,24 +131,20 @@ export class SheetBuilder {
     return selector;
   }
 
-  convertStyleObjToTag(obj?: Record<string, any>) {
-    const target = obj || this.styleObj || styleObj;
-    let styles = '';
+  public static convertStyleObjToTag(obj?: Record<string, any>) {
+    const target = obj || styleObj;
+    console.log('target:', target);
+    let tag = '';
     for (const [selector, rules] of Object.entries(target)) {
-      styles += `${selector} { ${Object.entries(rules).map(([prop, value]) => `${prop}: ${value};`).join(' ')} }\n`;
+      tag += `${selector} { ${Object.entries(rules).map(([prop, value]) => `${prop}: ${value};`).join(' ')} }\n`;
     }
-    return styles;
+    console.log(tag)
+    return tag;
   }
 
   build() {
-    const tag = this.convertStyleObjToTag(this.styleObj);
-    (this.sheet as any).styleTag = tag;
-    (this.sheet as any).styles = { ...((this.sheet as any).styles || {}), ...this.styleObj };
-
-    // keep global compatibility variables updated
-    styleObj = { ...styleObj, ...this.styleObj };
-    styleTag = tag;
-
+    this.sheet.styles = { ...(this.sheet.styles || {}), ...styleObj };
+    this.sheet.styleTag = SheetBuilder.convertStyleObjToTag(this.sheet.styles);
     return this.sheet;
   }
 }

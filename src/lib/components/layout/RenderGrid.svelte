@@ -3,7 +3,7 @@
   import { type Sheet } from "../../Scripts/ComponentsMap";
   export let sheet: any;
   let built: Sheet;
-  $: built = sheet ? buildGrid(sheet) : { cols: 1, rows: [] };
+  $: built = sheet ? buildGrid(sheet) : { cols: 1, rows: [], styles: {} };
 
   function gridStyle() {
     let style = `grid-template-columns: repeat(${built.cols || 1}, 1fr); `;
@@ -31,7 +31,6 @@
       css += `}\n`;
     }
     css += `}\n`;
-    console.log(css);
     return css;
   }
 
