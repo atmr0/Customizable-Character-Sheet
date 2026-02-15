@@ -31,7 +31,5 @@
 <BaseComponent {id} {label} {componentClass}>
   <div
     class="computed-text"
-    contenteditable="true"
-
   >{format(computed)}</div>
 </BaseComponent>

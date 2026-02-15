@@ -1,0 +1,148 @@
+{
+  "title": "Character Sheet",
+  "id": "test_sheet",
+  "numberOfRows": 0,
+  "cols": 6,
+  "rows": [
+    [
+      {
+        "type": "SubGrid",
+        "id": "subgrid1",
+        "label": "Informations",
+        "colspan": 6,
+        "sheet": {
+          "title": "Subgrid Sheet",
+          "id": "informations",
+          "numberOfRows": 2,
+          "cols": 6,
+          "rows": [
+            [
+              {
+                "type": "InputField",
+                "id": "player_name",
+                "label": "Player Name",
+                "placeholder": "John Doe",
+                "colspan": 5
+              },
+              {
+                "type": "ImageField",
+                "id": "profile_picture",
+                "colspan": 1,
+                "rowspan": 2
+              }
+            ],
+            [
+              {
+                "type": "InputField",
+                "id": "character_name",
+                "label": "Character Name",
+                "placeholder": "Gon Freecss",
+                "colspan": 3
+              },
+              {
+                "type": "SelectField",
+                "id": "nen_type",
+                "label": "Nen type",
+                "placeholder": "Not discovered yet",
+                "options": [
+                  "Enhancer",
+                  "Emitter",
+                  "Manipulator",
+                  "Transmuter",
+                  "Conjurer",
+                  "Specialist"
+                ],
+                "colspan": 2
+              }
+            ]
+          ],
+          "styles": {},
+          "styleTag": ""
+        }
+      }
+    ],
+    [
+      {
+        "type": "CharacterAttribute",
+        "id": "str_attr",
+        "label": "Strength",
+        "value": 10
+      },
+      {
+        "type": "CharacterAttribute",
+        "id": "dex_attr",
+        "label": "Dexterity",
+        "value": 10
+      },
+      {
+        "type": "CharacterAttribute",
+        "id": "con_attr",
+        "label": "Constitution",
+        "value": 10
+      },
+      {
+        "type": "CharacterAttribute",
+        "id": "int_attr",
+        "label": "Intelligence",
+        "value": 10
+      },
+      {
+        "type": "CharacterAttribute",
+        "id": "wis_attr",
+        "label": "Wisdom",
+        "value": 10
+      },
+      {
+        "type": "CharacterAttribute",
+        "id": "cha_attr",
+        "label": "Charisma",
+        "value": 10
+      }
+    ],
+    [
+      {
+        "type": "CheckboxField",
+        "id": "trainded",
+        "label": "Trained",
+        "colspan": 1
+      },
+      {
+        "type": "ListField",
+        "id": "skills",
+        "label": "Skills",
+        "colspan": 5,
+        "itemTemplate": [
+          {
+            "type": "InputField",
+            "placeholder": "Skill name"
+          },
+          {
+            "type": "ComputedText",
+            "expr": "cha_attr_mod + 5"
+          }
+        ]
+      }
+    ]
+  ],
+  "styles": {
+    "#test_sheet-row-2 #str_attr .attribute": {
+      "--focus-color": "#EF4444"
+    },
+    "#test_sheet-row-2 #dex_attr .attribute": {
+      "--focus-color": "#F59E0B"
+    },
+    "#test_sheet-row-2 #con_attr .attribute": {
+      "--focus-color": "#10B981"
+    },
+    "#test_sheet-row-2 #int_attr .attribute": {
+      "--focus-color": "#3B82F6"
+    },
+    "#test_sheet-row-2 #wis_attr .attribute": {
+      "--focus-color": "#8B5CF6"
+    },
+    "#test_sheet-row-2 #cha_attr .attribute": {
+      "--focus-color": "#EC4899"
+    }
+  },
+  "styleTag": "#test_sheet-row-2 #str_attr .attribute { --focus-color: #EF4444; }\n#test_sheet-row-2 #dex_attr .attribute { --focus-color: #F59E0B; }\n#test_sheet-row-2 #con_attr .attribute { --focus-color: #10B981; }\n#test_sheet-row-2 #int_attr .attribute { --focus-color: #3B82F6; }\n#test_sheet-row-2 #wis_attr .attribute { --focus-color: #8B5CF6; }\n#test_sheet-row-2 #cha_attr .attribute { --focus-color: #EC4899; }\n"
+}

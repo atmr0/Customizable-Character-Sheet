@@ -40,8 +40,11 @@ export class RowBuilder {
 export class SheetBuilder {
   private sheet: CM.Sheet;
   private rowIndex: number = 0;
+  private styleObj: Record<string, any> = {};
   constructor(title?: string) {
     this.sheet = { title, id: undefined, numberOfRows: 0, cols: 1, rows: [] } as CM.Sheet;
+    (this.sheet as any).styles = {};
+    (this.sheet as any).styleTag = "";
   }
 
   id(v: string) { this.sheet.id = v; return this; }
@@ -63,21 +66,59 @@ export class SheetBuilder {
     return this;
   }
 
+  // apply a single string rule: add to styleObj and set inline style on row cells
+  private applyStringRule(rowId: string, key: string, value: string, rowCells: CM.ComponentOps[]) {
+    this.styleObj[rowId] = { ...this.styleObj[rowId], [key]: value };
+    for (let cell of rowCells) {
+      cell.style = { ...(cell.style || {}), [key]: value };
+    }
+  }
+
+  // apply a function rule per cell: evaluate function, set selector-level rule and inline style
+  private applyFunctionRule(targetClass: string, key: string, fn: Function, rowCells: CM.ComponentOps[]) {
+    for (let cell of rowCells) {
+      const value = fn(cell as CM.ComponentOps);
+      const selector = this.createSelector(targetClass, cell);
+      this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
+      cell.style = { ...(cell.style || {}), [key]: value };
+    }
+  }
+
+  // apply an object rule by delegating to withStyle for nested selectors
+  private applyObjectRule(obj: Record<string, any>, key: string) {
+    this.withStyle(obj, key);
+  }
+
+  // persist instance styleObj into sheet.styles for serialization
+  private syncInstanceStyles() {
+    (this.sheet as any).styles = { ...((this.sheet as any).styles || {}), ...this.styleObj };
+  }
+
   withStyle(style: Record<string, any> | Record<string, Record<string, Function>>, targetClass: string = "") {
-    let rowId = this.createSelector(targetClass);
+    const rowId = this.createSelector(targetClass);
+    const rowCells = this.sheet.rows[this.rowIndex - 1] || [];
+
     for (const key in style) {
       if (!style[key]) continue;
 
-      if (typeof style[key] === 'string') styleObj[rowId] = { ...styleObj[rowId], [key]: style[key] };
+      const val = style[key];
+      if (typeof val === 'string') {
+        this.applyStringRule(rowId, key, val, rowCells);
+        continue;
+      }
 
-      if (typeof style[key] === 'function')
-        for (let cell of this.sheet.rows[this.rowIndex - 1])
-          styleObj[this.createSelector(targetClass, cell)] = { ...styleObj[this.createSelector(targetClass, cell)], [key]: style[key](cell as CM.ComponentOps) };
+      if (typeof val === 'function') {
+        this.applyFunctionRule(targetClass, key, val, rowCells);
+        continue;
+      }
 
-      if (typeof style[key] === 'object') {
-        this.withStyle(style[key], key);
+      if (typeof val === 'object') {
+        this.applyObjectRule(val, key);
+        continue;
       }
     }
+
+    this.syncInstanceStyles();
     return this;
   }
 
@@ -89,17 +130,24 @@ export class SheetBuilder {
     return selector;
   }
 
-  convertStyleObjToTag() {
+  convertStyleObjToTag(obj?: Record<string, any>) {
+    const target = obj || this.styleObj || styleObj;
     let styles = '';
-    for (const [selector, rules] of Object.entries(styleObj)) {
+    for (const [selector, rules] of Object.entries(target)) {
       styles += `${selector} { ${Object.entries(rules).map(([prop, value]) => `${prop}: ${value};`).join(' ')} }\n`;
     }
     return styles;
   }
 
   build() {
-    styleTag = this.convertStyleObjToTag();
-    // console.log(styleTag)
+    const tag = this.convertStyleObjToTag(this.styleObj);
+    (this.sheet as any).styleTag = tag;
+    (this.sheet as any).styles = { ...((this.sheet as any).styles || {}), ...this.styleObj };
+
+    // keep global compatibility variables updated
+    styleObj = { ...styleObj, ...this.styleObj };
+    styleTag = tag;
+
     return this.sheet;
   }
 }
