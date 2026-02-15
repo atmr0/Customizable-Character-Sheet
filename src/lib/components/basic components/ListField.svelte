@@ -1,8 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { BaseComponent } from "../componentsIndex.js";
+  import { BaseComponent } from "../componentsIndex";
   import { valuesStore, setValue } from "../../valuesStore.js";
-  import { ComponentOps, componentsMap } from "../../Scripts/ComponentsMap";
+  import type { ComponentOps } from "../../Scripts/ComponentsMap";
+
+  let localComponentsMap: Record<string, any> = {};
 
 
   export let id: string | undefined;
@@ -12,12 +14,18 @@
   export let onadd = undefined;
   export let onremove = undefined;
 
-  // Initialize store value if missing
-  onMount(() => {
-    if (id && !$valuesStore[id] && items && items.length) {
-      setValue(id, items);
-    }
-  });
+  // // Initialize store value if missing
+  // onMount(() => {
+  //   if (id && !$valuesStore[id] && items && items.length) {
+  //     setValue(id, items);
+  //   }
+
+  //   // load components map dynamically to avoid circular imports
+  //   (async () => {
+  //     const mod = await import("../../Scripts/ComponentsMap");
+  //     localComponentsMap = mod.componentsMap || {};
+  //   })();
+  // });
 
   $: storeItems = id ? $valuesStore[id] || [] : items;
 
@@ -56,7 +64,7 @@
         <li class="list-item">
           {#each itemTemplate as tpl}
             {@const itemId = getIdItem(tpl, i)}
-            <svelte:component this={componentsMap[tpl.type]} {...tpl} id={itemId} />
+            <svelte:component this={localComponentsMap[tpl.type]} {...tpl} id={itemId} />
           {/each}
 
           <button

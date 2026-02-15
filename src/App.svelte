@@ -1,7 +1,8 @@
 <script>
-  import RenderGrid from "./lib/components/RenderGrid.svelte";
+  import {RenderGrid} from "./lib/components/componentsIndex";
   import mainSheet from "./MainSheet";
   let sheet = mainSheet;
+  console.log(JSON.stringify(sheet));
 </script>
 
 <main class="app">

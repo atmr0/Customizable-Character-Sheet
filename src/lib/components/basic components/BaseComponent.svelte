@@ -1,5 +1,4 @@
 <script lang="ts">
-  export let theme = null; // allow override via prop
   export let id: string | undefined;
   export let label: string | undefined = undefined;
   export let noBackground: boolean = true;

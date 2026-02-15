@@ -1,17 +1,25 @@
-import {InputField, StaticText, SubGrid, ComputedText, ListField, CharacterAttribute, SelectField, ImageField, CheckboxField} from "../components/componentsIndex.js"; 
+import InputField from "../components/basic components/InputField.svelte";
+import StaticText from "../components/basic components/StaticText.svelte";
+import SubGrid from "../components/layout/SubGrid.svelte";
+import ComputedText from "../components/basic components/ComputedText.svelte";
+import ListField from "../components/basic components/ListField.svelte";
+import CharacterAttribute from "../components/CharacterAttribute.svelte";
+import SelectField from "../components/basic components/SelectField.svelte";
+import ImageField from "../components/basic components/ImageField.svelte";
+import CheckboxField from "../components/basic components/CheckboxField.svelte";
 import { Constants } from "../constants";
 
 
 export const componentsMap: Record<string, any> = {
+  [Constants.CharacterAttribute]: CharacterAttribute,
+  [Constants.CheckboxField]: CheckboxField,
+  [Constants.ComputedText]: ComputedText,
+  [Constants.ImageField]: ImageField, 
   [Constants.InputField]: InputField,
+  [Constants.ListField]: ListField,
+  [Constants.SelectField]: SelectField,
   [Constants.StaticText]: StaticText,
   [Constants.SubGrid]: SubGrid,
-  [Constants.ComputedText]: ComputedText,
-  [Constants.CharacterAttribute]: CharacterAttribute,
-  [Constants.SelectField]: SelectField,
-  [Constants.ListField]: ListField,
-  [Constants.ImageField]: ImageField, 
-  [Constants.CheckboxField]: CheckboxField,
 };
 
 export type Sheet = {
