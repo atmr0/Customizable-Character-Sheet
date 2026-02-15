@@ -5,8 +5,11 @@
   padding-bottom: .25em;
   border: none;
   background: transparent;
-  border: none;
   border-bottom: var(--border-bottom);
   border-radius: var(--border-radius);
   font-size: 1rem;
+
+  &:focus {
+    outline: none;
+  }
 }

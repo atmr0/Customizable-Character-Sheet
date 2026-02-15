@@ -3,9 +3,7 @@
   --background: transparent;
   --border: none;
   --border-radius: 0;
-}
 
-.text-input {
   width: 100%;
   background: var(--background);
   box-sizing: border-box;
@@ -15,9 +13,9 @@
   border-radius: var(--border-radius);
   font-size: var(--font-size);
   padding-bottom: .25em;
-}
 
-.text-input:disabled {
-  opacity: 0.6;
+  &:disabled {
+    opacity: 0.6;
+  }
 }
 

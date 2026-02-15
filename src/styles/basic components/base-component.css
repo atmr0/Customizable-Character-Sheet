@@ -3,24 +3,24 @@
   width: 100%;
   box-sizing: border-box;
   padding: inherit;
-}
 
-.base-component .label {
-  font-weight: 600;
-  font-size: small;
-  color: var(--text-secondary);
-  margin-bottom: 1px;
+  .label {
+    font-weight: 600;
+    font-size: small;
+    color: var(--text-secondary);
+    margin-bottom: 1px;
+  }
+
+  &[aria-disabled="true"] {
+    opacity: 0.6;
+    pointer-events: none;
+  }
 }
 
 .no-bg {
   background: transparent;
   box-shadow: none;
   border: none;
-}
-
-.base-component[aria-disabled="true"] {
-  opacity: 0.6;
-  pointer-events: none;
 }
 
 :focus {

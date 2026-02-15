@@ -32,12 +32,12 @@
 .list-add {
   display: flex;
   align-items: center;
-}
 
-.list-add button {
-  padding: var(--add-btn-padding);
-  margin-top: var(--gap-between-items);
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background: var(--surface);
+  button {
+    padding: var(--add-btn-padding);
+    margin-top: var(--gap-between-items);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+  }
 }

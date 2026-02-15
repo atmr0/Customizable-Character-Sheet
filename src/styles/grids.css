@@ -4,22 +4,18 @@
   align-items: stretch;
 }
 
-.row {
-  display: contents;
-}
+.row { display: contents; }
 
-.sub-grid-wrapper {
-  padding: var(--padding-base);  
-}
+.sub-grid-wrapper { padding: var(--padding-base); }
 
 .sheet-cell {
   display: block;
   align-self: stretch;
   padding: 0%;
-}
 
-.sheet-cell>* {
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
+  & > * {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
 }
