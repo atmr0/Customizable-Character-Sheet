@@ -14,18 +14,23 @@
   export let onadd = undefined;
   export let onremove = undefined;
 
-  // // Initialize store value if missing
-  // onMount(() => {
-  //   if (id && !$valuesStore[id] && items && items.length) {
-  //     setValue(id, items);
-  //   }
+  // Initialize store value if missing and load components map dynamically to avoid circular imports
+  onMount(() => {
+    if (id && !$valuesStore[id] && items && items.length) {
+      setValue(id, items);
+    }
 
-  //   // load components map dynamically to avoid circular imports
-  //   (async () => {
-  //     const mod = await import("../../Scripts/ComponentsMap");
-  //     localComponentsMap = mod.componentsMap || {};
-  //   })();
-  // });
+    (async () => {
+      try {
+        const mod = await import("../../Scripts/ComponentsMap");
+        localComponentsMap = mod.componentsMap || {};
+      } catch (err) {
+        // if dynamic import fails, leave map empty — template will guard render
+        console.warn('Failed to load components map dynamically', err);
+        localComponentsMap = {};
+      }
+    })();
+  });
 
   $: storeItems = id ? $valuesStore[id] || [] : items;
 
@@ -62,10 +67,12 @@
     >
       {#each storeItems as it, i}
         <li class="list-item">
-          {#each itemTemplate as tpl}
-            {@const itemId = getIdItem(tpl, i)}
-            <svelte:component this={localComponentsMap[tpl.type]} {...tpl} id={itemId} />
-          {/each}
+              {#each itemTemplate as tpl}
+                {@const itemId = getIdItem(tpl, i)}
+                {#if localComponentsMap && localComponentsMap[tpl.type]}
+                  <svelte:component this={localComponentsMap[tpl.type]} {...tpl} id={itemId} />
+                {/if}
+              {/each}
 
           <button
             type="button"

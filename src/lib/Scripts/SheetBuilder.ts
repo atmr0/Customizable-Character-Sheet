@@ -8,9 +8,9 @@ function ensureId(prefix = 'cell') {
 }
 
 export class RowBuilder {
-  private row: CM.ComponentOps[] = [];
-  private last: CM.ComponentOps | null = null;
-  add(cell: CM.ComponentOps) {
+  private row: Partial<CM.ComponentOps>[] = [];
+  private last: Partial<CM.ComponentOps> | null = null;
+  add(cell: Partial<CM.ComponentOps>) {
     if (!cell.id) cell.id = ensureId(cell.type || 'cell');
     this.row.push(cell);
     this.last = cell;
