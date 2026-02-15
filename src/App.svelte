@@ -3,10 +3,10 @@
   import sheetJson from "./Sheet/exported_sheet_json.json";
   import { mainSheet } from "./MainSheet";
     import SheetBuilder from "./lib/Scripts/SheetBuilder";
-  let sheet = sheetJson;
+  // let sheet = sheetJson;
   // let styleTag = sheet.styleTag || "";
   // console.log("style tag:", styleTag);
-  // let sheet = mainSheet;
+  let sheet = mainSheet;
   let styleTag = sheet.styleTag || SheetBuilder.convertStyleObjToTag(sheet.styles || {});
   console.log(sheet.styles)
   console.log(styleTag)

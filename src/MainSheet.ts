@@ -12,7 +12,7 @@ const subSheet = new SheetBuilder('Subgrid Sheet')
     .add({ type: 'ImageField', id: 'profile_picture', colspan: 1, rowspan: 2 })
   )
   .row(r => r
-    .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', colspan: 3 })
+    .InputField({ label: 'Character Name', placeholder: 'Gon Freecss', colspan: 3 })
     .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], colspan: 2 })
   )
   // .withStyle({ '*': { background: 'red' },

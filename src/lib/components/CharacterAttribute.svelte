@@ -2,6 +2,7 @@
   import { BaseComponent, ComputedText } from "./componentsIndex.js";
   import { setValue, valuesStore } from "../valuesStore.js";
   import { Constants } from "../constants.ts";
+    import InputField from "./basic components/InputField.svelte";
   export let id;
   export let label;
   export let value = "";
@@ -33,12 +34,13 @@
     {#if label}
       <div class="label">{label}</div>
     {/if}
-    <input
-      {idField}
+    <InputField
+      id={idField}
       bind:value
       {placeholder}
       oninput={onInput}
       class="text-input"
+      type="number"
     />
     <ComputedText bind:this={modificator} expr="{id} % 10" id={idComputed} {format} />
   </div>

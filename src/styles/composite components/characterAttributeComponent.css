@@ -2,43 +2,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25em;
-}
+  gap: 0.25em;  
+  .label {
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  
+  .text-input {
+    font-size: var(--attr-input-font-size);
+    text-align: center;
+    border-radius: var(--attr-input-border-radius);
+    border: var(--attr-input-border);
+    width: var(--attr-input-width);
+    height: var(--attr-input-height);
+    display: block;
+    margin-inline: auto;
+    transition: box-shadow var(--attr-transition-duration) ease, border-width var(--attr-transition-duration) ease, border-color var(--attr-transition-duration) ease;
+    &:focus-within {
+      outline: var(--attr-focus-outline);
+      border-width: var(--attr-focus-border-width);
+      border-color: var(--attr-focus-color);
+      box-shadow: 0 0 0 var(--attr-focus-box-shadow-width) var(--attr-focus-color);
+    }
+  }
 
-.character-attribute .label {
-  text-align: center;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.character-attribute .text-input {
-  font-size: var(--attr-input-font-size);
-  text-align: center;
-  border-radius: var(--attr-input-border-radius);
-  border: var(--attr-input-border);
-  width: var(--attr-input-width);
-  height: var(--attr-input-height);
-  transition: box-shadow var(--attr-transition-duration) ease, border-width var(--attr-transition-duration) ease, border-color var(--attr-transition-duration) ease;
-}
-
-.character-attribute .computed-text {
-  text-align: center;
-  background-color: transparent;
-  border: none;
-  min-height: 0;
-  width: inherit;
-  margin: 0;
-  padding: 0;
-  margin-left: -0.5ch; /* adjust for centering with number sign*/
-}
-
-.character-attribute .text-input:focus-within {
-  outline: var(--attr-focus-outline);
-  border-width: var(--attr-focus-border-width);
-  border-color: var(--attr-focus-color);
-  box-shadow: 0 0 0 var(--attr-focus-box-shadow-width) var(--attr-focus-color);
-}
-
-.character-attribute .computed-text {
-  text-align: center;
+  .computed-text {
+    text-align: center;
+    background-color: transparent;
+    border: none;
+    min-height: 0;
+    width: inherit;
+    margin: 0;
+    padding: 0;
+    margin-left: -0.5ch; /* adjust for centering with number sign*/
+  }
 }

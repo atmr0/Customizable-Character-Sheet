@@ -38,6 +38,7 @@ export class ComponentOps{
   label?: string;
   colspan?: number;
   rowspan?: number;
+  style: Record<string, any> = {};
 
   [k: string]: any;
 }
