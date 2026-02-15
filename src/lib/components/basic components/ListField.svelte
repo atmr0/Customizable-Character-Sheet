@@ -3,14 +3,15 @@
   import { BaseComponent } from "../componentsIndex";
   import { valuesStore, setValue } from "../../valuesStore.js";
   import type { ComponentOps } from "../../Scripts/ComponentsMap";
+  import { get } from "svelte/store";
 
   let localComponentsMap: Record<string, any> = {};
-
 
   export let id: string | undefined;
   export let label: string | undefined;
   export let itemTemplate: ComponentOps[];
-  export let items: any[] = [];
+  export let items: ComponentOps[] = [];
+  export let editable: boolean = true;
   export let onadd = undefined;
   export let onremove = undefined;
 
@@ -26,7 +27,7 @@
         localComponentsMap = mod.componentsMap || {};
       } catch (err) {
         // if dynamic import fails, leave map empty — template will guard render
-        console.warn('Failed to load components map dynamically', err);
+        console.warn("Failed to load components map dynamically", err);
         localComponentsMap = {};
       }
     })();
@@ -35,6 +36,7 @@
   $: storeItems = id ? $valuesStore[id] || [] : items;
 
   function addItem() {
+    if (!editable) return;
     const v = "";
     const next = [...(storeItems || []), v];
     if (id) setValue(id, next);
@@ -42,17 +44,21 @@
   }
 
   function removeItem(index: number) {
+    if (!editable) return;
     const next = [...(storeItems || [])];
     const removed = next.splice(index, 1)[0];
     if (id) setValue(id, next);
     onremove?.(removed, index, next);
   }
 
-  function getIdItem(tpl: ComponentOps, i: number) {
+  function getIdItem(tpl: ComponentOps, i: number, j: number) {
+    if(i<items.length && items[i][j].id) return items[i][j].id;
     let answer = `${id}`;
-    if(tpl.id) answer += `-${tpl.id}-${i}`;
+    if (tpl.id) answer += `-${tpl.id}-${i}`;
     else {
-      let tLabel = tpl.label ? tpl.label.replace(/\s+/g, '_').toLowerCase() : 'item';
+      let tLabel = tpl.label
+        ? tpl.label.replace(/\s+/g, "_").toLowerCase()
+        : "item";
       answer += `-${tLabel}-${i}`;
     }
     return answer;
@@ -67,24 +73,33 @@
     >
       {#each storeItems as it, i}
         <li class="list-item">
-              {#each itemTemplate as tpl}
-                {@const itemId = getIdItem(tpl, i)}
-                {#if localComponentsMap && localComponentsMap[tpl.type]}
-                  <svelte:component this={localComponentsMap[tpl.type]} {...tpl} id={itemId} />
-                {/if}
-              {/each}
+          {#each itemTemplate as tpl, j}
+            {@const itemId = getIdItem(tpl, i, j)}
+            {@const itemProp = i<items.length ? items[i][j] : tpl}
+            {#if localComponentsMap && localComponentsMap[tpl.type]}
+              <svelte:component
+                this={localComponentsMap[tpl.type]}
+                {...itemProp}
+                id={itemId}
+              />
+            {/if}
+          {/each}
 
-          <button
-            type="button"
-            class="remove-btn"
-            on:click={() => removeItem(i)}>×</button
-          >
+          {#if editable}
+            <button
+              type="button"
+              class="remove-btn"
+              on:click={() => removeItem(i)}>×</button
+            >
+          {/if}
         </li>
       {/each}
     </ul>
 
-    <div class="list-add">
-      <button type="button" on:click={addItem}>Add</button>
-    </div>
+    {#if editable}
+      <div class="list-add">
+        <button type="button" on:click={addItem}>Add</button>
+      </div>
+    {/if}
   </div>
 </BaseComponent>

@@ -26,3 +26,7 @@
 :focus {
   outline: none;
 }
+
+:focus-visible {
+  outline: rgb(0, 0, 0, 0.3) solid 1px;
+}

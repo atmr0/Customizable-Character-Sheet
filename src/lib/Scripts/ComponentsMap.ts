@@ -27,8 +27,8 @@ export type Sheet = {
   id?: string;
   numberOfRows?: number;
   cols?: number;
-  rows: ComponentOps[][];
-  styles: Record<string, any>;
+  rows?: ComponentOps[][];
+  styles?: Record<string, any>;
   styleTag?: string;
 };
 

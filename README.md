@@ -102,7 +102,7 @@ sheet.row(r => r
   Example of a nested object using selectors.
   ```js
   .withStyle({
-	".text-input": {
+	".input-field": {
 		"--attr-focus-color": "#FF00FF"
 	}
   })

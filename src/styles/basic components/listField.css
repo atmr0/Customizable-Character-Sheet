@@ -1,6 +1,4 @@
-.list-field {
-  /* use centralized list variables */
-}
+
 
 .list-all-items {
   list-style: none;
@@ -21,7 +19,7 @@
 
 .remove-btn {
   background: transparent;
-  /* border: none; */
+  border: none;
   color: var(--text-secondary);
   font-size: 1.2rem;
   cursor: pointer;

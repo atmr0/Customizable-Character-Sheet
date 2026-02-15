@@ -1,9 +1,9 @@
 <script lang="ts">
   import { buildGrid } from "../../Scripts/GridBuilder";
-  import { type Sheet } from "../../Scripts/ComponentsMap";
+  import { ComponentOps, type Sheet } from "../../Scripts/ComponentsMap";
   export let sheet: any;
   let built: Sheet;
-  $: built = sheet ? buildGrid(sheet) : { cols: 1, rows: [], styles: {} };
+  $: built = sheet ? buildGrid(sheet) : { };
 
   function gridStyle() {
     let style = `grid-template-columns: repeat(${built.cols || 1}, 1fr); `;

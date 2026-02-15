@@ -5,13 +5,9 @@
     import SheetBuilder from "./lib/Scripts/SheetBuilder";
   // let sheet = sheetJson;
   // let styleTag = sheet.styleTag || "";
-  // console.log("style tag:", styleTag);
   let sheet = mainSheet;
   let styleTag = sheet.styleTag || SheetBuilder.convertStyleObjToTag(sheet.styles || {});
-  console.log(sheet.styles)
-  console.log(styleTag)
 
-  // console.log(JSON.stringify(sheet));
 </script>
 
 <main class="app">

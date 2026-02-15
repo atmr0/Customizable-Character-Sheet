@@ -12,7 +12,7 @@ const subSheet = new SheetBuilder('Subgrid Sheet')
     .add({ type: 'ImageField', id: 'profile_picture', colspan: 1, rowspan: 2 })
   )
   .row(r => r
-    .InputField({ label: 'Character Name', placeholder: 'Gon Freecss', colspan: 3 })
+    .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', colspan: 3 })
     .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], colspan: 2 })
   )
   // .withStyle({ '*': { background: 'red' },
@@ -35,15 +35,28 @@ const mainSheet = new SheetBuilder('Character Sheet')
     .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10 })
   )
   .withStyle({
-
-    "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
+    ".character-attribute":
+    {
+      "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
+    },
   })
   .row(r => r
     .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', colspan: 1 })
     .listField({
-      id: 'skills', label: 'Skills', colspan: 5, itemTemplate: [
-        { 'type': Constants.InputField, placeholder: 'Skill name' },
-        { 'type': Constants.ComputedText, expr: "cha_attr_mod + 5", }
+      id: 'skills', label: 'Skills', colspan: 5, editable: true,
+      itemTemplate: [
+        { type: Constants.InputField, placeholder: 'Skill name', inputType: 'text' },
+        { type: Constants.ComputedText, expr: "cha_attr_mod + 5" }
+      ],
+      items: [
+        [
+          { type: Constants.InputField, id:'teste',value: 'Athletics', inputType: 'text' },
+          { type: Constants.ComputedText, expr: "cha_attr_mod + 5" }
+        ],
+        [
+          { type: Constants.InputField, value: 'Perception', inputType: 'text' },
+          { type: Constants.ComputedText, expr: "cha_attr_mod + 5" }
+        ]
       ]
     })
   )

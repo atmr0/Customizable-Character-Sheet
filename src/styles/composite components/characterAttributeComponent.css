@@ -9,7 +9,7 @@
     color: var(--text-secondary);
   }
   
-  .text-input {
+  .input-field {
     font-size: var(--attr-input-font-size);
     text-align: center;
     border-radius: var(--attr-input-border-radius);

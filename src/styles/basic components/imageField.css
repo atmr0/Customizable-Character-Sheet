@@ -54,7 +54,10 @@
     }
   }
 
-  .hidden-input { display: none; }
+}
+
+.hidden-input {
+  display: none;
 }
 
 .image-modal {
@@ -66,7 +69,11 @@
   justify-content: center;
   z-index: 1000;
 
-  .close-btn { position: absolute; top: 8px; right: 8px; }
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
 
   .zoomed-image {
     max-width: 100%;

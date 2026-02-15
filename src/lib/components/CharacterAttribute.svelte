@@ -39,8 +39,8 @@
       bind:value
       {placeholder}
       oninput={onInput}
-      class="text-input"
-      type="number"
+      class="input-field"
+      inputType="number"
     />
     <ComputedText bind:this={modificator} expr="{id} % 10" id={idComputed} {format} />
   </div>

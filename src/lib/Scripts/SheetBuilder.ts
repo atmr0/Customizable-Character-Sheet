@@ -133,12 +133,10 @@ export class SheetBuilder {
 
   public static convertStyleObjToTag(obj?: Record<string, any>) {
     const target = obj || styleObj;
-    console.log('target:', target);
     let tag = '';
     for (const [selector, rules] of Object.entries(target)) {
       tag += `${selector} { ${Object.entries(rules).map(([prop, value]) => `${prop}: ${value};`).join(' ')} }\n`;
     }
-    console.log(tag)
     return tag;
   }
 
