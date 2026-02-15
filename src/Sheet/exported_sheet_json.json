@@ -125,24 +125,24 @@
     ]
   ],
   "styles": {
-    "#test_sheet-row-2 #str_attr .attribute": {
-      "--focus-color": "#EF4444"
+    "#test_sheet-row-2 #str_attr .character-attribute": {
+      "--attr-focus-color": "#EF4444"
     },
-    "#test_sheet-row-2 #dex_attr .attribute": {
-      "--focus-color": "#F59E0B"
+    "#test_sheet-row-2 #dex_attr .character-attribute": {
+      "--attr-focus-color": "#F59E0B"
     },
-    "#test_sheet-row-2 #con_attr .attribute": {
-      "--focus-color": "#10B981"
+    "#test_sheet-row-2 #con_attr .character-attribute": {
+      "--attr-focus-color": "#10B981"
     },
-    "#test_sheet-row-2 #int_attr .attribute": {
-      "--focus-color": "#3B82F6"
+    "#test_sheet-row-2 #int_attr .character-attribute": {
+      "--attr-focus-color": "#3B82F6"
     },
-    "#test_sheet-row-2 #wis_attr .attribute": {
-      "--focus-color": "#8B5CF6"
+    "#test_sheet-row-2 #wis_attr .character-attribute": {
+      "--attr-focus-color": "#8B5CF6"
     },
-    "#test_sheet-row-2 #cha_attr .attribute": {
-      "--focus-color": "#EC4899"
+    "#test_sheet-row-2 #cha_attr .character-attribute": {
+      "--attr-focus-color": "#EC4899"
     }
   },
-  "styleTag": "#test_sheet-row-2 #str_attr .attribute { --focus-color: #EF4444; }\n#test_sheet-row-2 #dex_attr .attribute { --focus-color: #F59E0B; }\n#test_sheet-row-2 #con_attr .attribute { --focus-color: #10B981; }\n#test_sheet-row-2 #int_attr .attribute { --focus-color: #3B82F6; }\n#test_sheet-row-2 #wis_attr .attribute { --focus-color: #8B5CF6; }\n#test_sheet-row-2 #cha_attr .attribute { --focus-color: #EC4899; }\n"
+  "styleTag": "#test_sheet-row-2 #str_attr .character-attribute { --attr-focus-color: #EF4444; }\n#test_sheet-row-2 #dex_attr .character-attribute { --attr-focus-color: #F59E0B; }\n#test_sheet-row-2 #con_attr .character-attribute { --attr-focus-color: #10B981; }\n#test_sheet-row-2 #int_attr .character-attribute { --attr-focus-color: #3B82F6; }\n#test_sheet-row-2 #wis_attr .character-attribute { --attr-focus-color: #8B5CF6; }\n#test_sheet-row-2 #cha_attr .character-attribute { --attr-focus-color: #EC4899; }\n"
 }

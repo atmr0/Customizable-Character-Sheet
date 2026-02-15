@@ -35,9 +35,9 @@ const mainSheet = new SheetBuilder('Character Sheet')
     .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10})
   )
   .withStyle({
-    ".attribute":
+    ".character-attribute":
     {
-      "--focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
+      "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
     },
   })
   .row(r => r

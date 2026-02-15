@@ -29,7 +29,7 @@
 </script>
 
 <BaseComponent {id} {componentClass}>
-  <div class="attribute">
+  <div class="character-attribute">
     {#if label}
       <div class="label">{label}</div>
     {/if}

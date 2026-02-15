@@ -1,7 +1,5 @@
 .list-field {
-  --gap-right: 0.5rem;
-  --gap-between-items: 0.25rem;
-  --add-btn-padding: 0.25rem 0.5rem;
+  /* use centralized list variables */
 }
 
 .list-all-items {
@@ -10,7 +8,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--gap-between-items);
+  gap: var(--list-gap-between-items);
 }
 
 .list-item {
@@ -18,7 +16,7 @@
   align-items: center;
   grid-column: span 1;
   justify-content: space-between;
-  gap: var(--gap-right);
+  gap: var(--list-gap-right);
 }
 
 .remove-btn {
@@ -34,8 +32,8 @@
   align-items: center;
 
   button {
-    padding: var(--add-btn-padding);
-    margin-top: var(--gap-between-items);
+    padding: var(--list-add-btn-padding);
+    margin-top: var(--list-gap-between-items);
     border-radius: 6px;
     border: 1px solid var(--border-color);
     background: var(--surface);

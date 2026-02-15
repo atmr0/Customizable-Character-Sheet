@@ -7,46 +7,7 @@ Access in 02/2026
 
 .checkbox-wrapper {
   outline: none;
- 
   --size: var(--control-size, 1em);
-
-  --shadow-offset-ratio: 0.7;
-  --v-offset-shadow: 0; /*calc(var(--size) * var(--shadow-offset-ratio));*/
-  --shadow-blur-ratio: 0.1;
-
-  --outer-box-blur-radius: calc(var(--size) * var(--shadow-blur-ratio));
-  --outer-box-shadow: 0 var(--v-offset-shadow) var(--outer-box-blur-radius) var(--accent-shadow);
-  --checked-box-shadow: 0 var(--v-offset-shadow) var(--outer-box-blur-radius) var(--checked-box-shadow);
-
-  --inner-box-ratio: 0.7;
-  --inner-box-color: #fff;
-  --inner-box-shadow: inset 0 var(--v-offset-shadow) var(--outer-box-blur-radius) var(--accent-shadow);
-  --inner-box-hover-shadow: inset 0 var(--v-offset-shadow) calc(var(--outer-box-blur-radius) * 0.8) var(--accent-hover-shadow);
-  --inner-box-hover-ratio: 0.55;
-
-  /* tick mark */
-  --tick-size-ratio: 0.7;
-  --tick-border-radius: 0.125em;
-  
-  --tick-thickness-ratio: 0.15  ;
-  --tick-short-arm-length-ratio: 0.5;
-  --tick-long-arm-length-ratio: 1;
-  
-  --tick-short-arm-shadow: -0.125em 0 5px var(--tick-shadow-color);
-  --tick-long-arm-shadow: 0 calc(var(--size) * 0.03) calc(var(--size) * 0.05) var(--tick-shadow-color);
-  
-  --tick-translate-x-ratio: 0.78;
-  --tick-translate-y-ratio: 0.88;
-  
-  /* colors */
-  --outer-box-color: var(--secondary-color);
-  --checked-box-color: #07d410;
-  --tick-shadow-color: rgb(0, 0, 0, 0.23);
-  --tick-color: #cf0;
-  --accent-shadow: #ffbeb8;
-  --accent-hover-shadow: #ff9d96;
-  --checked-box-shadow: #92ff97;
-  --box-border-radius: 5%;
 }
 
 .checkbox-input {
@@ -71,9 +32,9 @@ label {
   position: relative;
   width: var(--size);
   height: var(--size);
-  background-color: var(--outer-box-color);
-  border-radius: var(--box-border-radius);
-  box-shadow: var(--outer-box-shadow);
+  background-color: var(--cb-checkbox-outer-color);
+  border-radius: var(--cb-checkbox-box-border-radius);
+  box-shadow: var(--cb-outer-box-shadow);
   transition: 0.2s ease transform, 0.2s ease background-color, 0.2s ease box-shadow;
   display: inline-block;
   vertical-align: middle;
@@ -91,20 +52,20 @@ label {
   top: 50%;
   right: 0;
   left: 0;
-  width: calc(var(--size) * var(--inner-box-ratio));
-  height: calc(var(--size) * var(--inner-box-ratio));
+  width: calc(var(--size) * var(--cb-inner-box-ratio));
+  height: calc(var(--size) * var(--cb-inner-box-ratio));
   margin: 0 auto;
-  background-color: var(--inner-box-color);
+  background-color: var(--cb-inner-box-color);
   transform: translateY(-50%);
-  border-radius: var(--box-border-radius);
-  box-shadow: var(--inner-box-shadow);
+  border-radius: var(--cb-checkbox-box-border-radius);
+  box-shadow: var(--cb-inner-box-shadow);
   transition: 0.2s ease width, 0.2s ease height, 0.2s ease box-shadow;
 }
 
 label:hover .outer-box:before {
-  width: calc(var(--size) * var(--inner-box-hover-ratio));
-  height: calc(var(--size) * var(--inner-box-hover-ratio));
-  box-shadow: var(--inner-box-hover-shadow);
+  width: calc(var(--size) * var(--cb-inner-box-hover-ratio));
+  height: calc(var(--size) * var(--cb-inner-box-hover-ratio));
+  box-shadow: var(--cb-inner-box-hover-shadow);
 }
 
 label:active .outer-box {
@@ -142,8 +103,8 @@ label {
 .tick_mark:after {
   content: "";
   position: absolute;
-  background-color: var(--tick-color);
-  border-radius: var(--tick-border-radius);
+  background-color: var(--cb-tick-color);
+  border-radius: var(--cb-tick-border-radius);
   opacity: 0;
   transition: 0.2s ease transform, 0.2s ease opacity;
 }
@@ -152,27 +113,27 @@ label {
   left: 0;
   bottom: 0;
   /* width of arm */
-  width: calc(var(--size) * var(--tick-thickness-ratio));
+  width: calc(var(--size) * var(--cb-tick-thickness-ratio));
   /* length of arm */
-  height: calc(var(--size) * var(--tick-short-arm-length-ratio) * var(--tick-size-ratio));
-  box-shadow: var(--tick-short-arm-shadow);
-  transform: translateY(calc(-1 * var(--size) * var(--tick-translate-y-ratio)));
+  height: calc(var(--size) * var(--cb-tick-short-arm-length-ratio) * var(--cb-tick-size-ratio));
+  box-shadow: var(--cb-tick-short-arm-shadow);
+  transform: translateY(calc(-1 * var(--size) * var(--cb-tick-translate-y-ratio)));
 }
 
 .tick_mark:after {
   left: 0;
   bottom: 0;
   /* length of arm */
-  width: calc(var(--size) * var(--tick-long-arm-length-ratio) * var(--tick-size-ratio));
+  width: calc(var(--size) * var(--cb-tick-long-arm-length-ratio) * var(--cb-tick-size-ratio));
   /* width of arm */
-  height: calc(var(--size) * var(--tick-thickness-ratio));
-  box-shadow: var(--tick-long-arm-shadow);
-  transform: translateX(calc(var(--size) * var(--tick-translate-x-ratio)));
+  height: calc(var(--size) * var(--cb-tick-thickness-ratio));
+  box-shadow: var(--cb-tick-long-arm-shadow);
+  transform: translateX(calc(var(--size) * var(--cb-tick-translate-x-ratio)));
 }
 
 .checkbox-input:checked + .outer-box {
-  background-color: var(--checked-box-color);
-  box-shadow: var(--checked-box-shadow);
+  background-color: var(--cb-checkbox-checked-color);
+  box-shadow: var(--cb-checked-box-shadow);
 }
 
 .checkbox-input:checked + .outer-box:before {

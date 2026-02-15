@@ -79,8 +79,9 @@ export class SheetBuilder {
     for (let cell of rowCells) {
       const value = fn(cell as CM.ComponentOps);
       const selector = this.createSelector(targetClass, cell);
+      console.log(targetClass, key, value)
       this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
-      cell.style = { ...(cell.style || {}), [key]: value };
+      cell.style = { ...(cell.style || {}), [targetClass]: { ...cell.style?.[targetClass], [key]: value } };
     }
   }
 

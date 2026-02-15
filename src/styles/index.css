@@ -8,5 +8,5 @@
 @import './basic components/listField.css';
 @import './basic components/textComponents.css';
 @import './basic components/selectField.css';
-@import './composite components/attributeComponent.css';
+@import './composite components/characterAttributeComponent.css';
 /* Consolidated stylesheet — import this file where needed. */
