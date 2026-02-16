@@ -129,38 +129,38 @@ You can use the `SheetBuilder` and `RowBuilder` explained above, or you can use 
 Example of a JSON sheet:
 ```json
 {
-  "title": "Character Sheet",
-  "id": "test_sheet",
-  "numberOfRows": 0,
-  "cols": 6,
-  "rows": 
-	[
-	    [
-		    {
-				"type": "InputField",
-				"id": "player_name",
-				"label": "Player Name",
-				"placeholder": "John Doe",
-				"colspan": 5
-		    },
-		],
-		[
-			{
-				"type": "CharacterAttribute",
-				"id": "str_attr",
-				"label": "Strength",
-				"value": 10,
-				"style": {
-				  "--attr-focus-color": "#EF4444"
-				}
-	      },
-		]
-	],
-	"styles": {
-		"#str_attr": {
-	      "--attr-focus-color": "#EF4444"
-	    },
-	}
+  "title": "Character Sheet",
+  "id": "test_sheet",
+  "numberOfRows": 0,
+  "cols": 6,
+  "rows": 
+  [
+      [
+        {
+        "type": "InputField",
+        "id": "player_name",
+        "label": "Player Name",
+        "placeholder": "John Doe",
+        "colspan": 5
+        }
+    ],
+    [
+      {
+        "type": "CharacterAttribute",
+        "id": "str_attr",
+        "label": "Strength",
+        "value": 10,
+        "style": {
+          "--attr-focus-color": "#EF4444"
+        }
+        }
+    ]
+  ],
+  "styles": {
+    "#str_attr": {
+        "--attr-focus-color": "#EF4444"
+      }
+  }
 }
 ```
 
