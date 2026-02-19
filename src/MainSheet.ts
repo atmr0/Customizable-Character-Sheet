@@ -5,15 +5,16 @@ import { attributesColors } from './lib/theme';
 // build the nested sub-sheet first
 const subSheet = new SheetBuilder('Subgrid Sheet')
   .id('informations')
-  .rows(2)
-  .cols(6)
+  .lines(2)
+  .lineLength(6)
+  // .columnBasedLayout()
   .row(r => r
-    .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', colspan: 5 })
-    .add({ type: 'ImageField', id: 'profile_picture', colspan: 1, rowspan: 2 })
+    .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', linespan: 5 })
+    .add({ type: 'ImageField', id: 'profile_picture', linespan: 1, crossLineSpan: 2 })
   )
   .row(r => r
-    .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', colspan: 3 })
-    .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], colspan: 2 })
+    .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', linespan: 3 })
+    .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], linespan: 2 })
   )
   // .withStyle({ '*': { background: 'red' },
   // StaticText: { background: 'blue' } })
@@ -24,8 +25,8 @@ type keys = keyof typeof attributesColors;
 // build the main sheet using the subSheet
 const mainSheet = new SheetBuilder('Character Sheet')
   .id('test_sheet')
-  .cols(6)
-  .row(r => r.subGrid({ id: 'subgrid1', label: 'Informations', colspan: 6 }, subSheet))
+  .lineLength(6)
+  .row(r => r.subGrid({ id: 'subgrid1', label: 'Informations', linespan: 6 }, subSheet))
   .row(r => r
     .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
     .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10 })
@@ -41,9 +42,9 @@ const mainSheet = new SheetBuilder('Character Sheet')
     },
   })
   .row(r => r
-    .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', colspan: 1 })
+    .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', linespan: 1 })
     .listField({
-      id: 'skills', label: 'Skills', colspan: 5, editable: true,
+      id: 'skills', label: 'Skills', linespan: 5, editable: true,
       itemTemplate: [
         { type: Constants.InputField, placeholder: 'Skill name', inputType: 'text' },
         { type: Constants.ComputedText, expr: "cha_attr_mod + 5" }

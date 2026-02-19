@@ -39,31 +39,32 @@ export class RowBuilder {
 export class SheetBuilder {
   private sheet: CM.Sheet;
   private rowIndex: number = 0;
+  public columnBased: boolean = false;
   constructor(title?: string) {
-    this.sheet = { title, id: undefined, numberOfRows: 0, cols: 1, rows: [], styles: styleObj } as CM.Sheet;
+    this.sheet = { title, id: undefined, numberOfLines: 0, lineLength: 1, lines: [], styles: styleObj } as CM.Sheet;
   }
 
   id(v: string) { this.sheet.id = v; return this; }
   title(v: string) { this.sheet.title = v; return this; }
-  cols(n: number) { this.sheet.cols = n; return this; }
-  rows(n: number) { this.sheet.numberOfRows = n; return this; }
-
+  lineLength(n: number) { this.sheet.lineLength = n; return this; }
+  lines(n: number) { this.sheet.numberOfLines = n; return this; }
+  columnBasedLayout(enabled: boolean = true) { this.columnBased = enabled; return this; }
   row(fn: (r: RowBuilder) => RowBuilder) {
     const rb = new RowBuilder();
     fn(rb);
-    this.sheet.rows.push(rb.build());
+    this.sheet.lines!.push(rb.build());
     this.rowIndex += 1;
     return this;
   }
 
-  rowsFrom(rows: CM.ComponentOps[][]) {
-    for (const r of rows) this.sheet.rows.push(r);
+  rowsFrom(rows: Partial<CM.ComponentOps>[][]) {
+    for (const r of rows) this.sheet.lines!.push(r);
     this.rowIndex += rows.length;
     return this;
   }
 
   // apply a single string rule: add to styleObj and set inline style on row cells
-  private applyStringRule(targetClass: string, rowId: string, key: string, value: string, rowCells: CM.ComponentOps[]) {
+  private applyStringRule(targetClass: string, rowId: string, key: string, value: string, rowCells: Partial<CM.ComponentOps>[]) {
     styleObj[rowId] = { ...styleObj[rowId], [key]: value };
     for (let cell of rowCells) {
       let styleToAppend:any = { [key]: value };
@@ -73,9 +74,9 @@ export class SheetBuilder {
   }
 
   // apply a function rule per cell: evaluate function, set selector-level rule and inline style
-  private applyFunctionRule(targetClass: string, key: string, fn: Function, rowCells: CM.ComponentOps[]) {
+  private applyFunctionRule(targetClass: string, key: string, fn: Function, rowCells: Partial<CM.ComponentOps>[]) {
     for (let cell of rowCells) {
-      const value = fn(cell as CM.ComponentOps);
+      const value = fn(cell as Partial<CM.ComponentOps>);
       const selector = this.createSelector(targetClass, cell);
         styleObj[selector] = { ...styleObj[selector], [key]: value };
 
@@ -97,7 +98,7 @@ export class SheetBuilder {
 
   withStyle(style: Record<string, any> | Record<string, Record<string, Function>>, targetClass: string = "") {
     const rowId = this.createSelector(targetClass);
-    const rowCells = this.sheet.rows[this.rowIndex - 1] || [];
+    const rowCells = this.sheet.lines![this.rowIndex - 1] || [];
 
     for (const key in style) {
       if (!style[key]) continue;
@@ -123,7 +124,7 @@ export class SheetBuilder {
     return this;
   }
 
-  createSelector(targetClass: string, cell: CM.ComponentOps | null = null) {
+  createSelector(targetClass: string, cell: Partial<CM.ComponentOps> | null = null) {
     let selector = `#${this.sheet.id}-row-${this.rowIndex}`;
     if (cell) selector += ` #${cell.id}`;
     if (targetClass) selector += ` ${targetClass}`;
@@ -141,6 +142,10 @@ export class SheetBuilder {
   }
 
   build() {
+    if(this.columnBased) {
+      styleObj[".grid"] = { ...styleObj[".grid"], "grid-auto-flow": "column" };
+      styleObj[".row"] = { ...styleObj[".row"], "display": "grid", "grid-auto-flow": "inherit !important" };
+    }
     this.sheet.styles = { ...(this.sheet.styles || {}), ...styleObj };
     this.sheet.styleTag = SheetBuilder.convertStyleObjToTag(this.sheet.styles);
     return this.sheet;

@@ -3,12 +3,34 @@
   import { ComponentOps, type Sheet } from "../../Scripts/ComponentsMap";
   export let sheet: any;
   let built: Sheet;
-  $: built = sheet ? buildGrid(sheet) : { };
-
+  $: built = sheet ? buildGrid(sheet) : {};
+  console.log("built grid:", sheet);
   function gridStyle() {
-    let style = `grid-template-columns: repeat(${built.cols || 1}, 1fr); `;
-    if (built.numberOfRows)
-      style += `grid-template-rows: repeat(${built.numberOfRows}, 1fr);`;
+    let columns = built.columnBased
+      ? built.numberOfLines || 1
+      : built.lineLength || 1;
+    let rows = built.columnBased
+      ? built.lineLength || 1
+      : built.numberOfLines || 1;
+
+    let style = `grid-template-columns: repeat(${columns}, 1fr); `;
+    if (built.numberOfLines)
+      style += `grid-template-rows: repeat(${rows}, 1fr);`;
+    return style;
+  }
+
+  function cellGridStyle(cell) {
+    let colspan = built.columnBased
+      ? cell.crossLineSpan || 1
+      : cell.linespan || 1;
+    let rowspan = built.columnBased
+      ? cell.linespan || 1
+      : cell.crossLineSpan || 1;
+    let style = "";
+    style += `grid-row: span ${rowspan}; `;
+    style += `grid-column: span ${colspan}; `;
+
+    // console.log(cell.id, style);
     return style;
   }
 
@@ -33,24 +55,24 @@
     css += `}\n`;
     return css;
   }
-
 </script>
 
 {#if built}
   <div class="grid" style={gridStyle()}>
-    {#each built.rows as row, rowIndex}
-      <div class="row" id={`${sheet.id}-row-${rowIndex + 1}`}>
-        {#each row as cell}
+    {#each built.lines as line, lineIndex}
+      <div class="line" id={`${sheet.id}-line-${lineIndex + 1}`}>
+        {#each line as cell}
+          {@const cellC = cell as ComponentOps}
           <div
             class="sheet-cell"
-            style={` grid-column: span ${cell.colspan || 1}; grid-row: span ${cell.rowspan || 1};`}
-            id="cell-{cell.id}"
+            style={cellGridStyle(cellC)}
+            id="cell-{cellC.id}"
           >
-            {@html innerStyleTag(cell)
-              ? `<style>${innerStyleTag(cell)}</style>`
+            {@html innerStyleTag(cellC)
+              ? `<style>${innerStyleTag(cellC)}</style>`
               : ""}
-            {#if cell.Component}
-              <svelte:component this={cell.Component} {...cell.props} />
+            {#if cellC.Component}
+              <svelte:component this={cellC.Component} {...cellC.props} />
             {:else}
               <div>Unknown component: {cell.type}</div>
             {/if}

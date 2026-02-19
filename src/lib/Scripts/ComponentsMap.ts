@@ -25,19 +25,20 @@ export const componentsMap: Record<string, any> = {
 export type Sheet = {
   title?: string;
   id?: string;
-  numberOfRows?: number;
-  cols?: number;
-  rows?: ComponentOps[][];
+  numberOfLines?: number;
+  lineLength?: number;
+  lines?: Partial<ComponentOps>[][];
   styles?: Record<string, any>;
   styleTag?: string;
+  columnBased?: boolean;
 };
 
 export class ComponentOps{
   type?: string;
   id?: string;
   label?: string;
-  colspan?: number;
-  rowspan?: number;
+  linespan?: number;
+  crossLineSpan?: number;
   style: Record<string, any> = {};
 
   [k: string]: any;
