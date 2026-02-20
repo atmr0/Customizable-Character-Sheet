@@ -1,11 +1,10 @@
 <script lang="ts">
   import { buildGrid } from "../../Scripts/GridBuilder";
-  import { ComponentOps, type Sheet } from "../../Scripts/ComponentsMap";
+  import { type ComponentOps, type Sheet } from "../../Scripts/ComponentsMap";
   export let sheet: any;
   let built: Sheet;
   $: built = buildGrid(sheet) || {};
-  console.log("AAAAAA", sheet.id);
-  console.log("built grid:", sheet);
+
   function gridStyle() {
     let columns = built.columnBased
       ? built.numberOfLines || 1
@@ -23,7 +22,6 @@
   function cellGridStyle(cell: ComponentOps) {
     let style: string;
     if (built.columnBased) {
-      console.log("yesyesyesyes");
       let colspan = cell.crossLineSpan || 1;
       let rowspan = cell.linespan || 1;
       style = `grid-row: ${cell.secondaryIndex} / span ${rowspan}; grid-column: ${cell.primaryIndex} / span ${colspan};`;

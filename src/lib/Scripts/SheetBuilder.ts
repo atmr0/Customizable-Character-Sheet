@@ -7,12 +7,12 @@ function ensureId(prefix = 'cell') {
   return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-export class RowBuilder {
-  private row: Partial<CM.ComponentOps>[] = [];
-  private last: Partial<CM.ComponentOps> | null = null;
-  add(cell: Partial<CM.ComponentOps>) {
+export class LineBuilder {
+  private line: CM.ComponentOps[] = [];
+  private last: CM.ComponentOps | null = null;
+  add(cell: CM.ComponentOps) {
     if (!cell.id) cell.id = ensureId(cell.type || 'cell');
-    this.row.push(cell);
+    this.line.push(cell);
     this.last = cell;
     return this;
   }
@@ -33,12 +33,12 @@ export class RowBuilder {
     }
     return this;
   }
-  build() { return this.row; }
+  build() { return this.line; }
 }
 
 export class SheetBuilder {
   private sheet: CM.Sheet;
-  private rowIndex: number = 0;
+  private lineIndex: number = 0;
   constructor(title?: string) {
     this.sheet = { title, id: undefined, numberOfLines: 0, lineLength: 1, lines: [], styles: styleObj } as CM.Sheet;
   }
@@ -48,17 +48,22 @@ export class SheetBuilder {
   lineLength(n: number) { this.sheet.lineLength = n; return this; }
   lines(n: number) { this.sheet.numberOfLines = n; return this; }
   columnBasedLayout(enabled: boolean = true) { this.sheet.columnBased = enabled; return this; }
-  row(fn: (r: RowBuilder) => RowBuilder) {
-    const rb = new RowBuilder();
+  line(fn: (r: LineBuilder) => LineBuilder) {
+    const rb = new LineBuilder();
     fn(rb);
     this.sheet.lines!.push(rb.build());
-    this.rowIndex += 1;
+    this.lineIndex += 1;
+    return this;
+  }
+  ignoreLineInLayout() {
+    if (!this.sheet.ignoreLineInLayout) this.sheet.ignoreLineInLayout = [];
+    this.sheet.ignoreLineInLayout.push(this.lineIndex-1);
     return this;
   }
 
-  rowsFrom(rows: Partial<CM.ComponentOps>[][]) {
+  rowsFrom(rows: CM.ComponentOps[][]) {
     for (const r of rows) this.sheet.lines!.push(r);
-    this.rowIndex += rows.length;
+    this.lineIndex += rows.length;
     return this;
   }
 
@@ -97,7 +102,7 @@ export class SheetBuilder {
 
   withStyle(style: Record<string, any> | Record<string, Record<string, Function>>, targetClass: string = "") {
     const rowId = this.createSelector(targetClass);
-    const rowCells = this.sheet.lines![this.rowIndex - 1] || [];
+    const rowCells = this.sheet.lines![this.lineIndex - 1] || [];
 
     for (const key in style) {
       if (!style[key]) continue;
@@ -124,7 +129,7 @@ export class SheetBuilder {
   }
 
   createSelector(targetClass: string, cell: Partial<CM.ComponentOps> | null = null) {
-    let selector = `#${this.sheet.id}-row-${this.rowIndex}`;
+    let selector = `#${this.sheet.id}-row-${this.lineIndex}`;
     if (cell) selector += ` #${cell.id}`;
     if (targetClass) selector += ` ${targetClass}`;
 

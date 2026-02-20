@@ -1,4 +1,4 @@
-import { ComponentOps } from './lib/Scripts/ComponentsMap';
+import { type ComponentOps } from './lib/Scripts/ComponentsMap';
 import SheetBuilder from './lib/Scripts/SheetBuilder';
 import { Constants } from './lib/constants';
 import { attributesColors } from './lib/theme';
@@ -8,11 +8,11 @@ const subSheet = new SheetBuilder('Subgrid Sheet')
   .lines(2)
   .lineLength(6)
   // .columnBasedLayout()
-  .row(r => r
+  .line(r => r
     .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', linespan: 5 })
     .add({ type: 'ImageField', id: 'profile_picture', linespan: 1, crossLineSpan: 2 })
   )
-  .row(r => r
+  .line(r => r
     .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', linespan: 3 })
     .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], linespan: 2 })
   )
@@ -25,10 +25,11 @@ type keys = keyof typeof attributesColors;
 // build the main sheet using the subSheet
 const mainSheet = new SheetBuilder('Character Sheet')
   .id('test_sheet')
-  // .columnBasedLayout()
+  .columnBasedLayout()
   .lineLength(6)
-  .row(r => r.subGrid({ id: 'subgrid1', label: 'Informations', linespan: 6 }, subSheet))
-  .row(r => r
+  .line(r => r.subGrid({ id: 'subgrid1', label: 'Informations', crossLineSpan: 6 }, subSheet))
+  .ignoreLineInLayout()
+  .line(r => r
     .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
     .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10 })
     .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10 })
@@ -42,7 +43,7 @@ const mainSheet = new SheetBuilder('Character Sheet')
       "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
     },
   })
-  .row(r => r
+  .line(r => r
     .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', linespan: 1 })
     .listField({
       id: 'skills', label: 'Skills', linespan: 5, editable: true,

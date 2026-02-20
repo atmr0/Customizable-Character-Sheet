@@ -1,6 +1,5 @@
 
-import { Component } from 'svelte';
-import { ComponentOps, componentsMap } from './ComponentsMap';
+import { type ComponentOps, componentsMap } from './ComponentsMap';
 import { Sheet } from './ComponentsMap';
 
 // Copies sheet and adds the actual Svelte component to each cell based on its type
@@ -13,8 +12,9 @@ import { Sheet } from './ComponentsMap';
 export function buildGrid(sheet: Sheet) {
 
   if (!sheet.lines) return undefined;
+  console.log(sheet.ignoreLineInLayout)
   let grid = [] as any[][];
-
+  let offset = 0;
   let startLine = 0;
   let startColumn = 0;
 
@@ -33,9 +33,13 @@ export function buildGrid(sheet: Sheet) {
       }
 
       const Component = componentsMap[cell.type!] || null;
-      sheet.lines![i][j] = { ...cell, Component, props: { ...cell }, primaryIndex: startLine + 1, secondaryIndex: startColumn + 1,  };
+      sheet.lines![i][j] = { ...cell, Component, props: { ...cell }, primaryIndex: startLine + 1 - offset, secondaryIndex: startColumn + 1, };
       fillGrid(grid, startLine, startColumn, cell);
       startColumn += cell.linespan || 1;
+    }
+    if (sheet.ignoreLineInLayout?.includes(i)) {
+      console.log("ignoring line in layout:", i);
+      offset += 1;
     }
     startLine += 1;
   }
@@ -43,7 +47,7 @@ export function buildGrid(sheet: Sheet) {
   return sheet;
 }
 
-function fillGrid(grid: any[][], startLine: number, startColumn: number, cell: Partial<ComponentOps>) {
+function fillGrid(grid: any[][], startLine: number, startColumn: number, cell: ComponentOps) {
   const lineSpan = cell.linespan || 1;
   const crossLineSpan = cell.crossLineSpan || 1;
   let firstFilled = false;
