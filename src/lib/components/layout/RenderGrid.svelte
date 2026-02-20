@@ -3,7 +3,8 @@
   import { ComponentOps, type Sheet } from "../../Scripts/ComponentsMap";
   export let sheet: any;
   let built: Sheet;
-  $: built = sheet ? buildGrid(sheet) : {};
+  $: built = buildGrid(sheet) || {};
+  console.log("AAAAAA", sheet.id);
   console.log("built grid:", sheet);
   function gridStyle() {
     let columns = built.columnBased
@@ -19,22 +20,22 @@
     return style;
   }
 
-  function cellGridStyle(cell) {
-    let colspan = built.columnBased
-      ? cell.crossLineSpan || 1
-      : cell.linespan || 1;
-    let rowspan = built.columnBased
-      ? cell.linespan || 1
-      : cell.crossLineSpan || 1;
-    let style = "";
-    style += `grid-row: span ${rowspan}; `;
-    style += `grid-column: span ${colspan}; `;
-
-    // console.log(cell.id, style);
+  function cellGridStyle(cell: ComponentOps) {
+    let style: string;
+    if (built.columnBased) {
+      console.log("yesyesyesyes");
+      let colspan = cell.crossLineSpan || 1;
+      let rowspan = cell.linespan || 1;
+      style = `grid-row: ${cell.secondaryIndex} / span ${rowspan}; grid-column: ${cell.primaryIndex} / span ${colspan};`;
+      return style
+    }
+    let colspan = cell.linespan || 1;
+    let rowspan = cell.crossLineSpan || 1;
+    style = `grid-row: ${cell.primaryIndex} / span ${rowspan}; grid-column: ${cell.secondaryIndex} / span ${colspan}`;
     return style;
   }
 
-  function innerStyleTag(cell) {
+  function innerStyleTag(cell: ComponentOps) {
     if (!cell.style) return "";
     const cid = `#cell-${cell.id}`;
     let css = cid + ` {\n`;
@@ -63,20 +64,23 @@
       <div class="line" id={`${sheet.id}-line-${lineIndex + 1}`}>
         {#each line as cell}
           {@const cellC = cell as ComponentOps}
-          <div
-            class="sheet-cell"
-            style={cellGridStyle(cellC)}
-            id="cell-{cellC.id}"
-          >
-            {@html innerStyleTag(cellC)
-              ? `<style>${innerStyleTag(cellC)}</style>`
-              : ""}
-            {#if cellC.Component}
-              <svelte:component this={cellC.Component} {...cellC.props} />
-            {:else}
-              <div>Unknown component: {cell.type}</div>
-            {/if}
-          </div>
+          <!-- empty cell, do nothing -->
+          {#if !cell.isPlaceholder}
+            <div
+              class="sheet-cell"
+              style={cellGridStyle(cellC)}
+              id="cell-{cellC.id}"
+            >
+              {@html innerStyleTag(cellC)
+                ? `<style>${innerStyleTag(cellC)}</style>`
+                : ""}
+              {#if cellC.Component}
+                <svelte:component this={cellC.Component} {...cellC.props} />
+              {:else}
+                <div>Unknown component: {cell.type}</div>
+              {/if}
+            </div>
+          {/if}
         {/each}
       </div>
     {/each}

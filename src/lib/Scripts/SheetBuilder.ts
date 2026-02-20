@@ -39,7 +39,6 @@ export class RowBuilder {
 export class SheetBuilder {
   private sheet: CM.Sheet;
   private rowIndex: number = 0;
-  public columnBased: boolean = false;
   constructor(title?: string) {
     this.sheet = { title, id: undefined, numberOfLines: 0, lineLength: 1, lines: [], styles: styleObj } as CM.Sheet;
   }
@@ -48,7 +47,7 @@ export class SheetBuilder {
   title(v: string) { this.sheet.title = v; return this; }
   lineLength(n: number) { this.sheet.lineLength = n; return this; }
   lines(n: number) { this.sheet.numberOfLines = n; return this; }
-  columnBasedLayout(enabled: boolean = true) { this.columnBased = enabled; return this; }
+  columnBasedLayout(enabled: boolean = true) { this.sheet.columnBased = enabled; return this; }
   row(fn: (r: RowBuilder) => RowBuilder) {
     const rb = new RowBuilder();
     fn(rb);
@@ -142,7 +141,7 @@ export class SheetBuilder {
   }
 
   build() {
-    if(this.columnBased) {
+    if(this.sheet.columnBased) {
       styleObj[".grid"] = { ...styleObj[".grid"], "grid-auto-flow": "column" };
       styleObj[".row"] = { ...styleObj[".row"], "display": "grid", "grid-auto-flow": "inherit !important" };
     }

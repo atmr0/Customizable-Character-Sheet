@@ -25,6 +25,7 @@ type keys = keyof typeof attributesColors;
 // build the main sheet using the subSheet
 const mainSheet = new SheetBuilder('Character Sheet')
   .id('test_sheet')
+  // .columnBasedLayout()
   .lineLength(6)
   .row(r => r.subGrid({ id: 'subgrid1', label: 'Informations', linespan: 6 }, subSheet))
   .row(r => r

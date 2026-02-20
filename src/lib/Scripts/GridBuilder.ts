@@ -1,21 +1,58 @@
 
 import { Component } from 'svelte';
-import { componentsMap } from './ComponentsMap';
+import { ComponentOps, componentsMap } from './ComponentsMap';
 import { Sheet } from './ComponentsMap';
 
-
 // Copies sheet and adds the actual Svelte component to each cell based on its type
-// maybe there's a better way to do this
+// It creates a matrix representing the grid layout, for example: 
+// [[c1, c1, c2], [c1, c1, c3]], containing the props and Svelte Component
+
+// Maybe there's a better, more efficient way to do this. 
+// But a character sheet is not going to be huge, so it doesn't matter that much.
+
 export function buildGrid(sheet: Sheet) {
-  const out = { ...sheet, lines: [] as Component[][] };
-  for (const row of sheet.lines || []) {
-    const newRow: any[] = [];
-    for (const cell of row || []) {
-      const type = cell.type!;
-      const Component = componentsMap[type] || null;
-      newRow.push({ ...cell, Component, props: cell });
+
+  if (!sheet.lines) return undefined;
+  let grid = [] as any[][];
+
+  let startLine = 0;
+  let startColumn = 0;
+
+  for (let i = 0; i < (sheet.lines?.length || 1); i += 1) {
+    const line = sheet.lines![i];
+    startColumn = 0;
+    if (grid.length < sheet.lines!.length)
+      grid.push(new Array(sheet.lineLength).fill(undefined));
+
+    for (let j = 0; j < line.length; j += 1) {
+      const cell = sheet.lines?.[i]?.[j];
+      if (!cell) continue
+
+      while (grid[startLine][startColumn]) {
+        startColumn += 1;
+      }
+
+      const Component = componentsMap[cell.type!] || null;
+      sheet.lines![i][j] = { ...cell, Component, props: { ...cell }, primaryIndex: startLine + 1, secondaryIndex: startColumn + 1,  };
+      fillGrid(grid, startLine, startColumn, cell);
+      startColumn += cell.linespan || 1;
     }
-    out.lines.push(newRow);
+    startLine += 1;
   }
-  return out;
+
+  return sheet;
+}
+
+function fillGrid(grid: any[][], startLine: number, startColumn: number, cell: Partial<ComponentOps>) {
+  const lineSpan = cell.linespan || 1;
+  const crossLineSpan = cell.crossLineSpan || 1;
+  let firstFilled = false;
+  for (let i = startLine; i < startLine + crossLineSpan; i += 1) {
+    if (!grid[i]) grid.push(new Array(grid[0]?.length).fill(undefined));
+    for (let j = startColumn; j < startColumn + lineSpan; j += 1) {
+      if (!firstFilled)
+        firstFilled = true;
+      else grid[i][j] = { 'id': cell.id, 'isPlaceholder': true };
+    }
+  }
 }

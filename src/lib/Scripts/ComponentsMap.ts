@@ -37,6 +37,8 @@ export class ComponentOps{
   type?: string;
   id?: string;
   label?: string;
+  primaryIndex?: number;
+  secondaryIndex?: number;
   linespan?: number;
   crossLineSpan?: number;
   style: Record<string, any> = {};
