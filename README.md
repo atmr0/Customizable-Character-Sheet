@@ -11,26 +11,27 @@ npm run dev
 ## Documentation
 
 ### Components
-The sheet is built using a grid. You create each row specifying which component it has. You can create subgrids inside a row for easier positioning.
+The sheet is built using a flexible layout model. The renderer prefers a `flex`-based row layout for sheets that don't require vertical spanning (simpler and responsive), and will automatically switch to a CSS Grid "grid-mode" when any cell requests vertical spans (`linespan` / `crossLineSpan`). This preserves `rowspan`-like behaviour where needed while keeping most sheets simple.
 
-**All components have, none of them are obligatory:**
+**All components have (none are obligatory):**
 - `id` — Useful for styling. Also used for accessing its value in other places;
-- `label` — A label displayed at the top/left by default, the `checkbox` is a exception;
-- `colspan` — It defines how many columns it will occupy. 1 by default;
-- `rowspan` — It defines how many rows it will occupy. 1 by default;
+- `label` — A label displayed at the top/left by default (the `checkbox` is an exception);
+- `linespan` — Logical span along the sheet's primary axis. When the sheet is not transposed this behaves like `colspan` (default `1`). When transposed it maps to the other axis.
+- `crossLineSpan` — Logical span across the primary axis (complement of `linespan`, default `1`). Together `linespan` and `crossLineSpan` replace `colspan`/`rowspan` and make the model axis-agnostic.
 - `style` — An object based on CSS that customizes the component;
 - `(literally anything)` — You can add any attribute and value, but you will have to code to implement it;
 
 
-**Current built-in components, and its attributes:**
-- `StaticText` — Literally just a text;
-- `ComputedText` — A text which its value is dynamic based on a expression given;
-- `InputField` — By default it is a simple text input, it can be only numbers as well. Its value can be used for computing other's;
-- `SelectField` — A dropdown menu with pre-defined options;
-- `ListField` — A list where you can add items according to a given template;
-- `CheckboxField` — A checkbox;
-- `ImageField` — You can upload a image to it. 
---- 
+**Current built-in components and their key attributes:**
+- `StaticText` — static text;
+- `ComputedText` — dynamic text evaluated from an expression;
+- `InputField` — text or numeric input (see component for props);
+- `SelectField` — dropdown menu with predefined options;
+- `ListField` — list of items using an item template;
+- `CheckboxField` — checkbox control;
+- `ImageField` — upload/preview image (can request `linespan` / `crossLineSpan` to occupy more space);
+
+---
 ### Component attributes (detailed)
 Specific component attributes:
 - `StaticText`
@@ -43,7 +44,7 @@ Specific component attributes:
 - `InputField` (see `src/lib/components/basic components/InputField.svelte`)
   - `value` (string|number): initial value.
   - `placeholder` (string)
-  - `inputType` (string): `'text'` or `'number'` (component uses `inputType` prop; renders `type="number"` when numeric).
+  - `inputType` (string): `'text'` or `'number'`.
   - `allowFloat` (boolean): allow fractional numbers when numeric.
   - `step`, `min`, `max` (number|string): native input constraints.
   - `oninput` (function): callback invoked on raw input events.
@@ -58,11 +59,11 @@ Specific component attributes:
 
 - `CheckboxField`
   - `value` / `checked` (boolean): initial state.
-  - Style tokens for checkboxes are prefixed with `--cb-`.
 
 - `ImageField`
   - `src` (string): optional preloaded image URL.
   - Upload/preview UX is implemented in the component; the `style` object can adjust appearance.
+  - `linespan` / `crossLineSpan`: the `ImageField` (e.g. profile picture) can request vertical spanning — the renderer will switch to grid-mode when vertical spans are required.
 
 - `CharacterAttribute` (see `src/lib/components/CharacterAttribute.svelte`)
   - `value` (number): initial attribute value.
@@ -76,25 +77,26 @@ The builder API is a lightweight DSL to build sheet models in code. Files: [src/
 
 RowBuilder (used inside `.row(r => ...)`) — convenience helpers to add row cells. Each method returns the `RowBuilder` so you can chain multiple cells in one row.
 - `add(cell)` — add any `ComponentOps` object directly.
-- `{componentType}(opts)` — add an cell with that type of component. `opts` are `ComponentOps` (see `ComponentsMap.ts`), the attributes previously mentioned.
+- `{componentType}(opts)` — add a cell with that type of component. `opts` are `ComponentOps` (see `ComponentsMap.ts`), the attributes previously mentioned.
 - `withStyle(style)` — attach a `style` object to the last-added cell in the row (convenience inline style).
 
 SheetBuilder (chainable, returns `this`):
 - `new SheetBuilder(title?)` — create a new builder instance.
 - `id(v)` — set the sheet `id` (used in selector generation).
 - `title(v)` — set sheet title.
-- `cols(n)` — set number of grid columns for layout.
-- `rows(n)` — set expected number of rows (informational/helpful for layout builders).
-- `row(fn)` — add a row. `fn` receives a `RowBuilder` instance and should return it after adding cells. Example:
+- `lineLength(n)` — set expected number of columns per line (used when rendering non-transposed layouts).
+- `lines(n)` — set expected number of lines (informational/helpful for layout builders).
+- `columnBasedLayout(enabled?)` — switch the sheet to column-based coordinates (transposed behavior).
+- `line(fn)` — add a line. `fn` receives a `RowBuilder` instance and should return it after adding cells. Example:
 
 ```js
-sheet.row(r => r
+sheet.line(r => r
   .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
   .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 12 })
 )
 ```
 
-- `rowsFrom(rows)` — append pre-built rows (array of `ComponentOps[]`).
+- `linesFrom(lines)` — append pre-built rows (array of `ComponentOps[]`).
 - `withStyle(style, targetClass?)` — attach style rules in three supported forms:
   - string value: will be added to the selector-level `styles` and also applied to each cell in the current row as inline cell `style`.
   - function: evaluated per cell (receives the cell) and result is applied as a style value; useful for per-cell color generation.
@@ -102,9 +104,9 @@ sheet.row(r => r
   Example of a nested object using selectors.
   ```js
   .withStyle({
-	".input-field": {
-		"--attr-focus-color": "#FF00FF"
-	}
+    ".input-field": {
+      "--attr-focus-color": "#FF00FF"
+    }
   })
   ```
 
@@ -117,6 +119,10 @@ sheet.row(r => r
   ```
 
 - `build()` — finalize and return the `Sheet` model. The builder collects selector-level styles into `sheet.styles` and exposes `sheet.styleTag` (a CSS string) as a convenience for injecting into the DOM.
+
+Layout model
+- The internal model is axis-agnostic: use `linespan` and `crossLineSpan` (and optionally `primaryIndex` / `secondaryIndex`) to describe position and spans.
+- `primaryIndex` would be the row index in a row based layout, `secondaryIndex` would be the column index.
 
 Implementation notes:
 - The builder maintains an internal `styleObj` while building; `withStyle` may write both to `styleObj` (selector-level) and attach inline `cell.style` entries for convenience and serialization.
@@ -131,18 +137,16 @@ Example of a JSON sheet:
 {
   "title": "Character Sheet",
   "id": "test_sheet",
-  "numberOfRows": 0,
-  "cols": 6,
-  "rows": 
-  [
-      [
-        {
+  "lineLength": 6,
+  "lines": [
+    [
+      {
         "type": "InputField",
         "id": "player_name",
         "label": "Player Name",
         "placeholder": "John Doe",
-        "colspan": 5
-        }
+        "linespan": 5
+      }
     ],
     [
       {
@@ -153,16 +157,16 @@ Example of a JSON sheet:
         "style": {
           "--attr-focus-color": "#EF4444"
         }
-        }
+      }
     ]
   ],
   "styles": {
     "#str_attr": {
-        "--attr-focus-color": "#EF4444"
-      }
+      "--attr-focus-color": "#EF4444"
+    }
   }
 }
 ```
 
 There is a redundancy of the style in this example, only to show the available options.
-**Important**: If the sheet "styles" has the same selector as the specific component style (str_attr), the specific component will overwrite it. Else, the most specific selector will overwrite, like CSS usually does. e.g.: "`#test_sheet-row-2 #str_attr`" would overwrite the component specific style.
+**Important**: If the sheet `styles` has the same selector as the specific component style (str_attr), the specific component will overwrite it. Else, the most specific selector will overwrite, like CSS usually does. e.g.: `#test_sheet-row-2 #str_attr` would overwrite the component specific style.
