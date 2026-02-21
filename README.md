@@ -41,7 +41,7 @@ Specific component attributes:
   - `expr` (string): expression evaluated using the values store (e.g. `cha_attr_mod + 5`).
   - `format` (function): optional formatter called with the computed value.
 
-- `InputField` (see `src/lib/components/basic components/InputField.svelte`)
+- `InputField` (see `src/core/components/basic components/InputField.svelte`)
   - `value` (string|number): initial value.
   - `placeholder` (string)
   - `inputType` (string): `'text'` or `'number'`.
@@ -65,7 +65,7 @@ Specific component attributes:
   - Upload/preview UX is implemented in the component; the `style` object can adjust appearance.
   - `linespan` / `crossLineSpan`: the `ImageField` (e.g. profile picture) can request vertical spanning — the renderer will switch to grid-mode when vertical spans are required.
 
-- `CharacterAttribute` (see `src/lib/components/CharacterAttribute.svelte`)
+- `CharacterAttribute` (see `src/core/components/CharacterAttribute.svelte`)
   - `value` (number): initial attribute value.
   - `label` (string): label above the circular control.
   - The component wires its numeric input into the central values store using the cell `id`.
@@ -73,7 +73,7 @@ Specific component attributes:
 
 ---
 ### `SheetBuilder` & `RowBuilder` methods 
-The builder API is a lightweight DSL to build sheet models in code. Files: [src/lib/Scripts/SheetBuilder.ts](src/lib/Scripts/SheetBuilder.ts) and [src/lib/Scripts/ComponentsMap.ts](src/lib/Scripts/ComponentsMap.ts).
+The builder API is a lightweight DSL to build sheet models in code. Files: [src/core/Scripts/SheetBuilder.ts](src/core/Scripts/SheetBuilder.ts) and [src/core/Scripts/ComponentsMap.ts](src/core/Scripts/ComponentsMap.ts).
 
 RowBuilder (used inside `.row(r => ...)`) — convenience helpers to add row cells. Each method returns the `RowBuilder` so you can chain multiple cells in one row.
 - `add(cell)` — add any `ComponentOps` object directly.

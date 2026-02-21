@@ -1,13 +1,13 @@
 <script>
-  import {RenderGrid} from "./lib/components/componentsIndex";
-  import sheetJson from "./Sheet/exported_sheet_json.json";
+  import {RenderGrid} from "./core/components/componentsIndex";
   import { mainSheet } from "./MainSheet";
-    import SheetBuilder from "./lib/Scripts/SheetBuilder";
+  import SheetBuilder from "./core/Scripts/SheetBuilder";
+  import { applyTheme } from "./core/theme";
   // let sheet = sheetJson;
   // let styleTag = sheet.styleTag || "";
   let sheet = mainSheet;
   let styleTag = sheet.styleTag || SheetBuilder.convertStyleObjToTag(sheet.styles || {});
-
+  applyTheme()
 </script>
 
 <main class="app">

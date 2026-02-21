@@ -1,7 +1,7 @@
-import { type ComponentOps } from './lib/Scripts/ComponentsMap';
-import SheetBuilder from './lib/Scripts/SheetBuilder';
-import { Constants } from './lib/constants';
-import { attributesColors } from './lib/theme';
+import { type ComponentOps } from './core/Scripts/ComponentsMap';
+import SheetBuilder from './core/Scripts/SheetBuilder';
+import { Constants } from './core/constants';
+import { attributesColors } from './core/theme';
 // build the nested sub-sheet first
 const subSheet = new SheetBuilder('Subgrid Sheet')
   .id('informations')

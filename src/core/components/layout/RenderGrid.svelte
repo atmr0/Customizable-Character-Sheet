@@ -61,19 +61,18 @@
     {#each built.lines as line, lineIndex}
       <div class="line" id={`${sheet.id}-line-${lineIndex + 1}`}>
         {#each line as cell}
-          {@const cellC = cell as ComponentOps}
           <!-- empty cell, do nothing -->
           {#if !cell.isPlaceholder}
             <div
               class="sheet-cell"
-              style={cellGridStyle(cellC)}
-              id="cell-{cellC.id}"
+              style={cellGridStyle(cell)}
+              id="cell-{cell.id}"
             >
-              {@html innerStyleTag(cellC)
-                ? `<style>${innerStyleTag(cellC)}</style>`
+              {@html innerStyleTag(cell)
+                ? `<style>${innerStyleTag(cell)}</style>`
                 : ""}
-              {#if cellC.Component}
-                <svelte:component this={cellC.Component} {...cellC.props} />
+              {#if cell.Component}
+                <svelte:component this={cell.Component} {...cell.props} />
               {:else}
                 <div>Unknown component: {cell.type}</div>
               {/if}

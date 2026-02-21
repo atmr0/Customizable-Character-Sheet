@@ -13,7 +13,7 @@ export function buildGrid(sheet: Sheet) {
 
   if (!sheet.lines) return undefined;
   console.log(sheet.ignoreLineInLayout)
-  let grid = [] as any[][];
+  let grid = [] as ComponentOps[][];
   let offset = 0;
   let startLine = 0;
   let startColumn = 0;
@@ -47,13 +47,14 @@ export function buildGrid(sheet: Sheet) {
   return sheet;
 }
 
-function fillGrid(grid: any[][], startLine: number, startColumn: number, cell: ComponentOps) {
+function fillGrid(grid: ComponentOps[][], startLine: number, startColumn: number, cell: ComponentOps) {
   const lineSpan = cell.linespan || 1;
   const crossLineSpan = cell.crossLineSpan || 1;
   let firstFilled = false;
   for (let i = startLine; i < startLine + crossLineSpan; i += 1) {
     if (!grid[i]) grid.push(new Array(grid[0]?.length).fill(undefined));
     for (let j = startColumn; j < startColumn + lineSpan; j += 1) {
+      // to reduce memory use and facilitate in RenderGrid, we only keep the full cell props in the first cell
       if (!firstFilled)
         firstFilled = true;
       else grid[i][j] = { 'id': cell.id, 'isPlaceholder': true };
