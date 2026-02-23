@@ -12,7 +12,6 @@ import { Sheet } from './ComponentsMap';
 export function buildGrid(sheet: Sheet) {
 
   if (!sheet.lines) return undefined;
-  console.log(sheet.ignoreLineInLayout)
   let grid = [] as ComponentOps[][];
   let offset = 0;
   let startLine = 0;
@@ -38,7 +37,6 @@ export function buildGrid(sheet: Sheet) {
       startColumn += cell.linespan || 1;
     }
     if (sheet.ignoreLineInLayout?.includes(i)) {
-      console.log("ignoring line in layout:", i);
       offset += 1;
     }
     startLine += 1;

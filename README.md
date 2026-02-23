@@ -11,13 +11,13 @@ npm run dev
 ## Documentation
 
 ### Components
-The sheet is built using a flexible layout model. The renderer prefers a `flex`-based row layout for sheets that don't require vertical spanning (simpler and responsive), and will automatically switch to a CSS Grid "grid-mode" when any cell requests vertical spans (`linespan` / `crossLineSpan`). This preserves `rowspan`-like behaviour where needed while keeping most sheets simple.
+The sheet is built using a flexible layout model. The renderer prefers a `flex`-based line layout for sheets that don't require vertical spanning (simpler and responsive), and will automatically switch to a CSS Grid "grid-mode" when any cell requests vertical spans (`linespan` / `crossLineSpan`). This preserves `linespan`-like behaviour where needed while keeping most sheets simple.
 
 **All components have (none are obligatory):**
 - `id` — Useful for styling. Also used for accessing its value in other places;
 - `label` — A label displayed at the top/left by default (the `checkbox` is an exception);
 - `linespan` — Logical span along the sheet's primary axis. When the sheet is not transposed this behaves like `colspan` (default `1`). When transposed it maps to the other axis.
-- `crossLineSpan` — Logical span across the primary axis (complement of `linespan`, default `1`). Together `linespan` and `crossLineSpan` replace `colspan`/`rowspan` and make the model axis-agnostic.
+- `crossLineSpan` — Logical span across the primary axis (complement of `linespan`, default `1`). Together `linespan` and `crossLineSpan` replace `colspan`/`linespan` and make the model axis-agnostic.
 - `style` — An object based on CSS that customizes the component;
 - `(literally anything)` — You can add any attribute and value, but you will have to code to implement it;
 
@@ -54,7 +54,7 @@ Specific component attributes:
   - `value` (string|number): initial selection.
 
 - `ListField`
-  - `itemTemplate` (array): array defining components for each row of the list (use ComponentOps objects).
+  - `itemTemplate` (array): array defining components for each line of the list (use ComponentOps objects).
   - The `ListField` renderer instantiates items from this template and keeps them in the sheet model.
 
 - `CheckboxField`
@@ -72,13 +72,13 @@ Specific component attributes:
   - Attribute-related CSS tokens are prefixed with `--attr-` (ex.: `--attr-focus-color`, `--attr-size`).
 
 ---
-### `SheetBuilder` & `RowBuilder` methods 
+### `SheetBuilder` & `LineBuilder` methods 
 The builder API is a lightweight DSL to build sheet models in code. Files: [src/core/Scripts/SheetBuilder.ts](src/core/Scripts/SheetBuilder.ts) and [src/core/Scripts/ComponentsMap.ts](src/core/Scripts/ComponentsMap.ts).
 
-RowBuilder (used inside `.row(r => ...)`) — convenience helpers to add row cells. Each method returns the `RowBuilder` so you can chain multiple cells in one row.
+LineBuilder (used inside `.line(r => ...)`) — convenience helpers to add line cells. Each method returns the `LineBuilder` so you can chain multiple cells in one line.
 - `add(cell)` — add any `ComponentOps` object directly.
 - `{componentType}(opts)` — add a cell with that type of component. `opts` are `ComponentOps` (see `ComponentsMap.ts`), the attributes previously mentioned.
-- `withStyle(style)` — attach a `style` object to the last-added cell in the row (convenience inline style).
+- `withStyle(style)` — attach a `style` object to the last-added cell in the line (convenience inline style).
 
 SheetBuilder (chainable, returns `this`):
 - `new SheetBuilder(title?)` — create a new builder instance.
@@ -87,7 +87,7 @@ SheetBuilder (chainable, returns `this`):
 - `lineLength(n)` — set expected number of columns per line (used when rendering non-transposed layouts).
 - `lines(n)` — set expected number of lines (informational/helpful for layout builders).
 - `columnBasedLayout(enabled?)` — switch the sheet to column-based coordinates (transposed behavior).
-- `line(fn)` — add a line. `fn` receives a `RowBuilder` instance and should return it after adding cells. Example:
+- `line(fn)` — add a line. `fn` receives a `LineBuilder` instance and should return it after adding cells. Example:
 
 ```js
 sheet.line(r => r
@@ -96,9 +96,9 @@ sheet.line(r => r
 )
 ```
 
-- `linesFrom(lines)` — append pre-built rows (array of `ComponentOps[]`).
+- `linesFrom(lines)` — append pre-built lines (array of `ComponentOps[]`).
 - `withStyle(style, targetClass?)` — attach style rules in three supported forms:
-  - string value: will be added to the selector-level `styles` and also applied to each cell in the current row as inline cell `style`.
+  - string value: will be added to the selector-level `styles` and also applied to each cell in the current line as inline cell `style`.
   - function: evaluated per cell (receives the cell) and result is applied as a style value; useful for per-cell color generation.
   - nested object: used to create nested selectors (delegates back into `withStyle` logic).
   Example of a nested object using selectors.
@@ -122,7 +122,7 @@ sheet.line(r => r
 
 Layout model
 - The internal model is axis-agnostic: use `linespan` and `crossLineSpan` (and optionally `primaryIndex` / `secondaryIndex`) to describe position and spans.
-- `primaryIndex` would be the row index in a row based layout, `secondaryIndex` would be the column index.
+- `primaryIndex` would be the line index in a line based layout, `secondaryIndex` would be the column index.
 
 Implementation notes:
 - The builder maintains an internal `styleObj` while building; `withStyle` may write both to `styleObj` (selector-level) and attach inline `cell.style` entries for convenience and serialization.
@@ -131,7 +131,7 @@ Implementation notes:
 
 ---
 ### Creating the sheet
-You can use the `SheetBuilder` and `RowBuilder` explained above, or you can use pure JSON.
+You can use the `SheetBuilder` and `LineBuilder` explained above, or you can use pure JSON.
 Example of a JSON sheet:
 ```json
 {
@@ -169,4 +169,4 @@ Example of a JSON sheet:
 ```
 
 There is a redundancy of the style in this example, only to show the available options.
-**Important**: If the sheet `styles` has the same selector as the specific component style (str_attr), the specific component will overwrite it. Else, the most specific selector will overwrite, like CSS usually does. e.g.: `#test_sheet-row-2 #str_attr` would overwrite the component specific style.
+**Important**: If the sheet `styles` has the same selector as the specific component style (str_attr), the specific component will overwrite it. Else, the most specific selector will overwrite, like CSS usually does. e.g.: `#test_sheet-line-2 #str_attr` would overwrite the component specific style.

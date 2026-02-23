@@ -52,7 +52,7 @@
   }
 
   function getIdItem(tpl: ComponentOps, i: number, j: number) {
-    if(i<items.length && items[i][j].id) return items[i][j].id;
+    if (i < items.length && items[i][j].id) return items[i][j].id;
     let answer = `${id}`;
     if (tpl.id) answer += `-${tpl.id}-${i}`;
     else {
@@ -75,7 +75,7 @@
         <li class="list-item">
           {#each itemTemplate as tpl, j}
             {@const itemId = getIdItem(tpl, i, j)}
-            {@const itemProp = i<items.length ? items[i][j] : tpl}
+            {@const itemProp = i < items.length ? items[i][j] : tpl}
             {#if localComponentsMap && localComponentsMap[tpl.type]}
               <svelte:component
                 this={localComponentsMap[tpl.type]}

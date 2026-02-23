@@ -67,10 +67,10 @@ export class SheetBuilder {
     return this;
   }
 
-  // apply a single string rule: add to styleObj and set inline style on row cells
-  private applyStringRule(targetClass: string, rowId: string, key: string, value: string, rowCells: Partial<CM.ComponentOps>[]) {
-    styleObj[rowId] = { ...styleObj[rowId], [key]: value };
-    for (let cell of rowCells) {
+  // apply a single string rule: add to styleObj and set inline style on line cells
+  private applyStringRule(targetClass: string, lineId: string, key: string, value: string, lineCells: Partial<CM.ComponentOps>[]) {
+    styleObj[lineId] = { ...styleObj[lineId], [key]: value };
+    for (let cell of lineCells) {
       let styleToAppend:any = { [key]: value };
       if (targetClass) styleToAppend = { [this.createSelector(targetClass, cell)]: styleToAppend };
       cell.style = { ...(cell.style || {}), ...styleToAppend };
@@ -129,7 +129,7 @@ export class SheetBuilder {
   }
 
   createSelector(targetClass: string, cell: Partial<CM.ComponentOps> | null = null) {
-    let selector = `#${this.sheet.id}-row-${this.lineIndex}`;
+    let selector = `#${this.sheet.id}-line-${this.lineIndex}`;
     if (cell) selector += ` #${cell.id}`;
     if (targetClass) selector += ` ${targetClass}`;
 
@@ -146,10 +146,6 @@ export class SheetBuilder {
   }
 
   build() {
-    if(this.sheet.columnBased) {
-      styleObj[".grid"] = { ...styleObj[".grid"], "grid-auto-flow": "column" };
-      styleObj[".row"] = { ...styleObj[".row"], "display": "grid", "grid-auto-flow": "inherit !important" };
-    }
     this.sheet.styles = { ...(this.sheet.styles || {}), ...styleObj };
     this.sheet.styleTag = SheetBuilder.convertStyleObjToTag(this.sheet.styles);
     return this.sheet;
