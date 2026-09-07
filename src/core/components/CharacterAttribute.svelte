@@ -1,6 +1,6 @@
 <script>
   import { BaseComponent, ComputedText } from "./componentsIndex.js";
-  import { setValue, valuesStore } from "../valuesStore.js";
+  import { setValue, valuesStore } from "../valuesStore";
   import { Constants } from "../constants.ts";
     import InputField from "./basic components/InputField.svelte";
   export let id;

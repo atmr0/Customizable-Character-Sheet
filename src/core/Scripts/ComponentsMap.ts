@@ -14,7 +14,7 @@ export const componentsMap: Record<string, any> = {
   [Constants.CharacterAttribute]: CharacterAttribute,
   [Constants.CheckboxField]: CheckboxField,
   [Constants.ComputedText]: ComputedText,
-  [Constants.ImageField]: ImageField, 
+  [Constants.ImageField]: ImageField,
   [Constants.InputField]: InputField,
   [Constants.ListField]: ListField,
   [Constants.SelectField]: SelectField,
@@ -27,10 +27,10 @@ export class FullComponentOps {
   type?: string;
   id?: string;
   label?: string;
-  primaryIndex?: number;
-  secondaryIndex?: number;
-  linespan?: number;
-  crossLineSpan?: number;
+  row?: number;
+  col?: number;
+  height?: number;
+  width?: number;
   style: Record<string, any> = {};
 
   // allow extra arbitrary props
@@ -50,7 +50,7 @@ export type Sheet = {
   numberOfLines?: number;
   lineLength?: number;
   // use Partial<FullComponentOps> for the grid model
-  lines?: Partial<FullComponentOps>[][];
+  components?: ComponentOps[];
   styles?: Record<string, any>;
   styleTag?: string;
   columnBased?: boolean;

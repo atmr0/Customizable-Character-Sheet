@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { buildGrid } from "../../Scripts/GridBuilder";
-  import { type ComponentOps, type Sheet } from "../../Scripts/ComponentsMap";
+  // import { buildGrid } from "../../Scripts/GridBuilder";
+  import { type ComponentOps, type Sheet, componentsMap} from "../../Scripts/ComponentsMap";
   export let sheet: any;
-  let built: Sheet;
-  $: built = buildGrid(sheet) || {};
+  let built: Sheet = sheet;
+  // $: built = buildGrid(sheet) || {};
 
   function gridStyle() {
     let columns = built.columnBased
@@ -21,15 +21,10 @@
 
   function cellGridStyle(cell: ComponentOps) {
     let style: string;
-    if (built.columnBased) {
-      let colspan = cell.crossLineSpan || 1;
-      let rowspan = cell.linespan || 1;
-      style = `grid-row: ${cell.secondaryIndex} / span ${rowspan}; grid-column: ${cell.primaryIndex} / span ${colspan};`;
-      return style
-    }
-    let colspan = cell.linespan || 1;
-    let rowspan = cell.crossLineSpan || 1;
-    style = `grid-row: ${cell.primaryIndex} / span ${rowspan}; grid-column: ${cell.secondaryIndex} / span ${colspan}`;
+
+    let colspan = cell.colspan || 1;
+    let rowspan = cell.rowSpan || 1;
+    style = `grid-row: ${cell.row} / span ${rowspan}; grid-column: ${cell.col} / span ${colspan}`;
     return style;
   }
 
@@ -58,27 +53,20 @@
 
 {#if built}
   <div class="grid" style={gridStyle()}>
-    {#each built.lines as line, lineIndex}
-      <div class="line" id={`${sheet.id}-line-${lineIndex + 1}`}>
-        {#each line as cell}
-          <!-- empty cell, do nothing -->
-          {#if !cell.isPlaceholder}
-            <div
-              class="sheet-cell"
-              style={cellGridStyle(cell)}
-              id="cell-{cell.id}"
-            >
-              {@html innerStyleTag(cell)
-                ? `<style>${innerStyleTag(cell)}</style>`
-                : ""}
-              {#if cell.Component}
-                <svelte:component this={cell.Component} {...cell.props} />
-              {:else}
-                <div>Unknown component: {cell.type}</div>
-              {/if}
-            </div>
-          {/if}
-        {/each}
+    {#each built.components as cell}
+      <div
+        class="sheet-cell"
+        style={cellGridStyle(cell)}
+        id="cell-{cell.id}"
+      >
+        {@html innerStyleTag(cell)
+          ? `<style>${innerStyleTag(cell)}</style>`
+          : ""}
+        {#if componentsMap[cell.type]}
+          <svelte:component this={componentsMap[cell.type]} {...cell} />
+        {:else}
+          <div>Unknown component: {cell && cell.type}</div>
+        {/if}
       </div>
     {/each}
   </div>

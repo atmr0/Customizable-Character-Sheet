@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BaseComponent } from "../componentsIndex.js";
-  import { setValue, valuesStore } from "../../valuesStore.js";
+  import { setValue, valuesStore } from "../../valuesStore";
   import { evaluateExpression } from "../../utils/compute.js";
   import { Constants } from "../../constants";
 

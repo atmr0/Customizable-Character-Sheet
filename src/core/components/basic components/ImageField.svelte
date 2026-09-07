@@ -1,7 +1,7 @@
 <script lang="ts">
   import { BaseComponent } from "../componentsIndex.js";
 
-  import { valuesStore, setValue } from "../../valuesStore.js";
+  import { valuesStore, setValue } from "../../valuesStore";
   import { Constants } from "../../constants";
 
   export let id: string | undefined;

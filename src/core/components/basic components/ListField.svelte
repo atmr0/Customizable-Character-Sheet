@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { BaseComponent } from "../componentsIndex";
-  import { valuesStore, setValue } from "../../valuesStore.js";
+  import { valuesStore, setValue } from "../../valuesStore";
   import type { ComponentOps } from "../../Scripts/ComponentsMap";
   import { get } from "svelte/store";
 

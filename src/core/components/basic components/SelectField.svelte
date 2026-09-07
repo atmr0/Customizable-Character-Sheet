@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BaseComponent } from "../componentsIndex.js";
-  import { setValue } from "../../valuesStore.js";
+  import { setValue } from "../../valuesStore";
   import { Constants } from "../../constants";
 
 

@@ -11,13 +11,13 @@ npm run dev
 ## Documentation
 
 ### Components
-The sheet is built using a flexible layout model. The renderer prefers a `flex`-based line layout for sheets that don't require vertical spanning (simpler and responsive), and will automatically switch to a CSS Grid "grid-mode" when any cell requests vertical spans (`linespan` / `crossLineSpan`). This preserves `linespan`-like behaviour where needed while keeping most sheets simple.
+The sheet is built using a flexible layout model. The renderer prefers a `flex`-based line layout for sheets that don't require vertical spanning (simpler and responsive), and will automatically switch to a CSS Grid "grid-mode" when any cell requests vertical spans (`colspan` / `rowSpan`). This preserves `colspan`-like behaviour where needed while keeping most sheets simple.
 
 **All components have (none are obligatory):**
 - `id` — Useful for styling. Also used for accessing its value in other places;
 - `label` — A label displayed at the top/left by default (the `checkbox` is an exception);
-- `linespan` — Logical span along the sheet's primary axis. When the sheet is not transposed this behaves like `colspan` (default `1`). When transposed it maps to the other axis.
-- `crossLineSpan` — Logical span across the primary axis (complement of `linespan`, default `1`). Together `linespan` and `crossLineSpan` replace `colspan`/`linespan` and make the model axis-agnostic.
+- `colspan` — Logical span along the sheet's primary axis. When the sheet is not transposed this behaves like `colspan` (default `1`). When transposed it maps to the other axis.
+- `rowSpan` — Logical span across the primary axis (complement of `colspan`, default `1`). Together `colspan` and `rowSpan` replace `colspan`/`colspan` and make the model axis-agnostic.
 - `style` — An object based on CSS that customizes the component;
 - `(literally anything)` — You can add any attribute and value, but you will have to code to implement it;
 
@@ -29,7 +29,7 @@ The sheet is built using a flexible layout model. The renderer prefers a `flex`-
 - `SelectField` — dropdown menu with predefined options;
 - `ListField` — list of items using an item template;
 - `CheckboxField` — checkbox control;
-- `ImageField` — upload/preview image (can request `linespan` / `crossLineSpan` to occupy more space);
+- `ImageField` — upload/preview image (can request `colspan` / `rowSpan` to occupy more space);
 
 ---
 ### Component attributes (detailed)
@@ -63,7 +63,7 @@ Specific component attributes:
 - `ImageField`
   - `src` (string): optional preloaded image URL.
   - Upload/preview UX is implemented in the component; the `style` object can adjust appearance.
-  - `linespan` / `crossLineSpan`: the `ImageField` (e.g. profile picture) can request vertical spanning — the renderer will switch to grid-mode when vertical spans are required.
+  - `colspan` / `rowSpan`: the `ImageField` (e.g. profile picture) can request vertical spanning — the renderer will switch to grid-mode when vertical spans are required.
 
 - `CharacterAttribute` (see `src/core/components/CharacterAttribute.svelte`)
   - `value` (number): initial attribute value.
@@ -72,61 +72,40 @@ Specific component attributes:
   - Attribute-related CSS tokens are prefixed with `--attr-` (ex.: `--attr-focus-color`, `--attr-size`).
 
 ---
-### `SheetBuilder` & `LineBuilder` methods 
-The builder API is a lightweight DSL to build sheet models in code. Files: [src/core/Scripts/SheetBuilder.ts](src/core/Scripts/SheetBuilder.ts) and [src/core/Scripts/ComponentsMap.ts](src/core/Scripts/ComponentsMap.ts).
+### `SheetBuilder` (grid-based) 
+The project now uses a grid-based `SheetBuilder` that places components directly into rows and columns (instead of the previous line-first DSL). The implementation lives in [src/core/Scripts/SheetBuilder.ts](src/core/Scripts/SheetBuilder.ts) and produces a model where components are stored in `sheet.components` with explicit `row`, `col`, `colspan`, `rowSpan` and metadata.
 
-LineBuilder (used inside `.line(r => ...)`) — convenience helpers to add line cells. Each method returns the `LineBuilder` so you can chain multiple cells in one line.
-- `add(cell)` — add any `ComponentOps` object directly.
-- `{componentType}(opts)` — add a cell with that type of component. `opts` are `ComponentOps` (see `ComponentsMap.ts`), the attributes previously mentioned.
-- `withStyle(style)` — attach a `style` object to the last-added cell in the line (convenience inline style).
+Key ideas and API
+- **Grid coordinates:** components may include `row` and `col` (1-based) to explicitly position them. If omitted, the builder places components automatically scanning left→right, top→bottom.
+- **Default size:** if no span is specified, a component is `1x1` (`colspan = 1`, `rowSpan = 1`).
+- **Occupancy tracking:** the builder tracks occupied grid cells and will throw an error when an explicit placement conflicts with existing components (or you can detect/handle that in your code).
+- **Primary methods:**
+  - **`new SheetBuilder(title?)`** — create a builder instance.
+  - **`setRowLength(n)`** — set the number of columns per row (required to control automatic placement width).
+  - **`add(cell)`** — add a `ComponentOps` object. The builder sets `cell.id` if missing, assigns `row`/`col` if omitted (automatic placement), and records `colspan`/`rowSpan`
+  - **`withStyle(style)`** — attach sheet-level styles (keeps previous `styleTag` generation).
+  - **`build()`** — finalize and return the `Sheet` model. The sheet includes `components` (flat list) and metadata (`lineLength`, `numberOfLines`, `styleTag`).
 
-SheetBuilder (chainable, returns `this`):
-- `new SheetBuilder(title?)` — create a new builder instance.
-- `id(v)` — set the sheet `id` (used in selector generation).
-- `title(v)` — set sheet title.
-- `lineLength(n)` — set expected number of columns per line (used when rendering non-transposed layouts).
-- `lines(n)` — set expected number of lines (informational/helpful for layout builders).
-- `columnBasedLayout(enabled?)` — switch the sheet to column-based coordinates (transposed behavior).
-- `line(fn)` — add a line. `fn` receives a `LineBuilder` instance and should return it after adding cells. Example:
-
+Example
 ```js
-sheet.line(r => r
-  .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
-  .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 12 })
-)
+const sheet = new SheetBuilder('Character Sheet')
+  .setRowLength(6)
+  .add({ type: 'SubGrid', id: 'subgrid1', row: 1, col: 1, colspan: 6 })
+  .add({ type: 'CharacterAttribute', id: 'str_attr', row: 2, col: 1, value: 10 })
+  .add({ type: 'CharacterAttribute', id: 'dex_attr', value: 10 }) // automatic placement
+  .build();
 ```
 
-- `linesFrom(lines)` — append pre-built lines (array of `ComponentOps[]`).
-- `withStyle(style, targetClass?)` — attach style rules in three supported forms:
-  - string value: will be added to the selector-level `styles` and also applied to each cell in the current line as inline cell `style`.
-  - function: evaluated per cell (receives the cell) and result is applied as a style value; useful for per-cell color generation.
-  - nested object: used to create nested selectors (delegates back into `withStyle` logic).
-  Example of a nested object using selectors.
-  ```js
-  .withStyle({
-    ".input-field": {
-      "--attr-focus-color": "#FF00FF"
-    }
-  })
-  ```
+Notes
+- The builder ensures components do not overlap when placed; if a conflict occurs on explicit placement it throws an error.
+- The builder will fill `sheet.components` (a flat array). The renderer expects `components` and resolves the actual Svelte component for each entry from the registry.
 
-  Example using a function to set per-attribute focus color:
+Renderer changes
+- The previous `GridBuilder` is no longer required. The renderer (`src/core/components/layout/RenderGrid.svelte`) resolves component constructors dynamically using the `componentsMap` registry (`src/core/Scripts/ComponentsMap.ts`) and instantiates components with the cell object as props.
 
-  ```js
-  .withStyle({
-    "--attr-focus-color": (cell) => attributesColors[cell.id]
-  })
-  ```
-
-- `build()` — finalize and return the `Sheet` model. The builder collects selector-level styles into `sheet.styles` and exposes `sheet.styleTag` (a CSS string) as a convenience for injecting into the DOM.
-
-Layout model
-- The internal model is axis-agnostic: use `linespan` and `crossLineSpan` (and optionally `primaryIndex` / `secondaryIndex`) to describe position and spans.
-- `primaryIndex` would be the line index in a line based layout, `secondaryIndex` would be the column index.
-
-Implementation notes:
-- The builder maintains an internal `styleObj` while building; `withStyle` may write both to `styleObj` (selector-level) and attach inline `cell.style` entries for convenience and serialization.
-- `SheetBuilder.convertStyleObjToTag()` produces a concatenated CSS string from the selector-style map. The renderer or `App.svelte` can inject `sheet.styleTag` into the page to apply the generated CSS.
+Migration tips
+- Replace previous `line(...).characterAttribute(...)` patterns by calling `setRowLength(...)` then `add(...)` with optional `row`/`col` coordinates.
+- If you relied on `ignoreLineInLayout` previously, implement the same behavior by positioning an element at row `1` with `colspan` spanning the full width and then placing subsequent items at row `2` explicitly or by allowing automatic placement to fill left-to-right starting at row 2.
 
 
 ---
@@ -145,7 +124,7 @@ Example of a JSON sheet:
         "id": "player_name",
         "label": "Player Name",
         "placeholder": "John Doe",
-        "linespan": 5
+        "colspan": 5
       }
     ],
     [
