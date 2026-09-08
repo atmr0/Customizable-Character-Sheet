@@ -1,69 +1,34 @@
 <script lang="ts">
   // import { buildGrid } from "../../Scripts/GridBuilder";
   import { type ComponentOps, type Sheet, componentsMap} from "../../Scripts/ComponentsMap";
-  export let sheet: any;
-  let built: Sheet = sheet;
-  // $: built = buildGrid(sheet) || {};
+  export let sheet: Sheet;
 
   function gridStyle() {
-    let columns = built.columnBased
-      ? built.numberOfLines || 1
-      : built.rowLength || 1;
-    let rows = built.columnBased
-      ? built.rowLength || 1
-      : built.numberOfLines || 1;
+    let columns = sheet.rowLength
+    let rows = sheet.numberOfLines
 
     let style = `grid-template-columns: repeat(${columns}, 1fr); `;
-    if (built.numberOfLines)
+    if (sheet.numberOfLines)
       style += `grid-template-rows: repeat(${rows}, 1fr);`;
     return style;
   }
 
   function cellGridStyle(cell: ComponentOps) {
-    let style: string;
-
     let colspan = cell.width || 1;
     let rowspan = cell.height || 1;
-    style = `grid-row: ${cell.row} / span ${rowspan}; grid-column: ${cell.col} / span ${colspan}`;
-    return style;
-  }
-
-  function innerStyleTag(cell: ComponentOps) {
-    if (!cell.style) return "";
-    const cid = `#cell-${cell.id}`;
-    let css = cid + ` {\n`;
-    for (const sel in cell.style) {
-      const rules = cell.style[sel];
-      if (typeof rules === "string") {
-        css += `${sel}: ${rules};\n`;
-        continue;
-      }
-      // ensure selector starts with . or # or element; default to class
-      const selector = sel.match(/^[.#]/) ? sel : `.${sel}`;
-      css += `${selector} { `;
-      for (const k in rules) {
-        css += `${k}: ${rules[k]}; `;
-      }
-      css += `}\n`;
-    }
-    css += `}\n`;
-    console.log('innerStyleTag: '+css)
-    return css;
+    return `grid-row: ${cell.row} / span ${rowspan}; grid-column: ${cell.col} / span ${colspan}`;
   }
 </script>
 
-{#if built}
-  <div id = {built.id} class="grid" style={gridStyle()}>
-    {#each built.components as cell}
+{#if sheet}
+{@html `<style type="text/css">${sheet.styleTag || ""}</style>`}
+  <div id = {sheet.id} class="grid" style={gridStyle()}>
+    {#each sheet.components as cell}
       <div
         class="sheet-cell"
         style={cellGridStyle(cell)}
         id="cell-{cell.id}"
       >
-  <!-- {@html `<style type="text/css">${built.styleTag || ""}</style>`} -->
-        {@html innerStyleTag(cell)
-          ? `<style>${innerStyleTag(cell)}</style>`
-          : ""}
         {#if componentsMap[cell.type]}
           <svelte:component this={componentsMap[cell.type]} {...cell} />
         {:else}

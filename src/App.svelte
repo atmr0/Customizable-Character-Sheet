@@ -7,7 +7,7 @@
   // let sheet = sheetJson;
   // let styleTag = sheet.styleTag || "";
   let sheet = mainSheet;
-  let styleTag = sheet.styleTag || SheetBuilder.convertStyleObjToTag(sheet.styles || {});
+  let styleTag = sheet.styleTag ;
   applyTheme()
 </script>
 

@@ -6,8 +6,6 @@ import { attributesColors } from './core/theme';
 const subSheet = new SheetBuilder('Subgrid Sheet')
   .id('informations')
   .setRowLength(6)
-  // .columnBasedLayout()
-  .withStyle({ background: 'red' })//StaticText: { background: 'blue' } }
   .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', width: 5 })
   .add({ type: 'ImageField', id: 'profile_picture', width: 1, height: 2 })
   .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', width: 3 })
@@ -20,20 +18,18 @@ type keys = keyof typeof attributesColors;
 const mainSheet = new SheetBuilder('Character Sheet')
   .id('test_sheet')
   .setRowLength(6)
-  .withStyle({
-    ".character-attribute":
-    {
-      "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
-    },
-  })
   .subGrid({ id: 'subgrid1', label: 'Informations', width: 6 }, subSheet)
-  // .line(r => r
-  .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
-  .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10 })
-  .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10 })
-  .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10 })
-  .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10 })
-  .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10})
+  .section("teste", b => b
+    .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
+    .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10 })
+    .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10 })
+    .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10 })
+    .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10 })
+    .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10 })
+  )
+  .withStyle({
+    "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
+  })
   // )
   // .line(r => r
   //   .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', height: 1 })

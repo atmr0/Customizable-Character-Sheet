@@ -22,7 +22,6 @@ export const componentsMap: Record<string, any> = {
   [Constants.SubGrid]: SubGrid,
 };
 
-// full set of properties for a component (single source of truth)
 export class FullComponentOps {
   type?: string;
   id?: string;
@@ -49,7 +48,6 @@ export type Sheet = {
   id?: string;
   numberOfLines?: number;
   rowLength?: number;
-  // use Partial<FullComponentOps> for the grid model
   components?: ComponentOps[];
   styles?: Record<string, any>;
   styleTag?: string;
@@ -57,7 +55,6 @@ export type Sheet = {
   ignoreLineInLayout?: number[];
 };
 
-// concrete ops classes can extend FullComponentOps and provide defaults / specific props
 export class InputFieldOps extends FullComponentOps {
   type: string = Constants.InputField;
   value?: string | number;
@@ -67,51 +64,38 @@ export class InputFieldOps extends FullComponentOps {
   step: number | string = this.allowFloat ? 'any' : 1;
   min: number | undefined = undefined;
   max: number | undefined = undefined;
-
-  constructor(init?: Partial<FullComponentOps & InputFieldOps>) {
-    super(init);
-    Object.assign(this, init);
-  }
 }
 
 export class StaticTextOps extends FullComponentOps {
   type: string = Constants.StaticText;
   text?: string;
-
-  constructor(init?: Partial<FullComponentOps & StaticTextOps>) { super(init); Object.assign(this, init); }
 }
 
 export class SubGridOps extends FullComponentOps {
   type: string = Constants.SubGrid;
   sheet?: Sheet;
-
-  constructor(init?: Partial<FullComponentOps & SubGridOps>) { super(init); Object.assign(this, init); }
+  constructor(opts: Partial<FullComponentOps & SubGridOps>, sheet: Sheet) {
+    super(opts);
+    this.sheet = sheet;
+  }
 }
 
 export class ComputedTextOps extends FullComponentOps {
   type: string = Constants.ComputedText;
   expr?: string;
-
-  constructor(init?: Partial<FullComponentOps & ComputedTextOps>) { super(init); Object.assign(this, init); }
 }
 
 export class ListFieldOps extends FullComponentOps {
   type: string = Constants.ListField;
-  itemTemplate?: Partial<FullComponentOps>[];
-
-  constructor(init?: Partial<FullComponentOps & ListFieldOps>) { super(init); Object.assign(this, init); }
+  itemTemplate?: ComponentOps[];
 }
 
 export class SelectFieldOps extends FullComponentOps {
   type: string = Constants.SelectField
   options?: string[];
   value?: string | number;
-
-  constructor(init?: Partial<FullComponentOps & SelectFieldOps>) { super(init); Object.assign(this, init); }
 }
 
 export class CheckboxFieldOps extends FullComponentOps {
   type: string = Constants.CheckboxField;
-
-  constructor(init?: Partial<FullComponentOps & CheckboxFieldOps>) { super(init); Object.assign(this, init); }
 }
