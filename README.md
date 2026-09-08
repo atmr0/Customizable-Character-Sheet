@@ -84,7 +84,7 @@ Key ideas and API
   - **`setRowLength(n)`** — set the number of columns per row (required to control automatic placement width).
   - **`add(cell)`** — add a `ComponentOps` object. The builder sets `cell.id` if missing, assigns `row`/`col` if omitted (automatic placement), and records `colspan`/`rowSpan`
   - **`withStyle(style)`** — attach sheet-level styles (keeps previous `styleTag` generation).
-  - **`build()`** — finalize and return the `Sheet` model. The sheet includes `components` (flat list) and metadata (`lineLength`, `numberOfLines`, `styleTag`).
+  - **`build()`** — finalize and return the `Sheet` model. The sheet includes `components` (flat list) and metadata (`rowLength`, `numberOfLines`, `styleTag`).
 
 Example
 ```js
@@ -116,7 +116,7 @@ Example of a JSON sheet:
 {
   "title": "Character Sheet",
   "id": "test_sheet",
-  "lineLength": 6,
+  "rowLength": 6,
   "lines": [
     [
       {

@@ -8,9 +8,9 @@
   function gridStyle() {
     let columns = built.columnBased
       ? built.numberOfLines || 1
-      : built.lineLength || 1;
+      : built.rowLength || 1;
     let rows = built.columnBased
-      ? built.lineLength || 1
+      ? built.rowLength || 1
       : built.numberOfLines || 1;
 
     let style = `grid-template-columns: repeat(${columns}, 1fr); `;
@@ -22,8 +22,8 @@
   function cellGridStyle(cell: ComponentOps) {
     let style: string;
 
-    let colspan = cell.colspan || 1;
-    let rowspan = cell.rowSpan || 1;
+    let colspan = cell.width || 1;
+    let rowspan = cell.height || 1;
     style = `grid-row: ${cell.row} / span ${rowspan}; grid-column: ${cell.col} / span ${colspan}`;
     return style;
   }
@@ -47,18 +47,20 @@
       css += `}\n`;
     }
     css += `}\n`;
+    console.log('innerStyleTag: '+css)
     return css;
   }
 </script>
 
 {#if built}
-  <div class="grid" style={gridStyle()}>
+  <div id = {built.id} class="grid" style={gridStyle()}>
     {#each built.components as cell}
       <div
         class="sheet-cell"
         style={cellGridStyle(cell)}
         id="cell-{cell.id}"
       >
+  <!-- {@html `<style type="text/css">${built.styleTag || ""}</style>`} -->
         {@html innerStyleTag(cell)
           ? `<style>${innerStyleTag(cell)}</style>`
           : ""}

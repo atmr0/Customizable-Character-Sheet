@@ -48,7 +48,7 @@ export type Sheet = {
   title?: string;
   id?: string;
   numberOfLines?: number;
-  lineLength?: number;
+  rowLength?: number;
   // use Partial<FullComponentOps> for the grid model
   components?: ComponentOps[];
   styles?: Record<string, any>;

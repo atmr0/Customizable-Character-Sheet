@@ -3,22 +3,16 @@ import SheetBuilder from './core/Scripts/SheetBuilder';
 import { Constants } from './core/constants';
 import { attributesColors } from './core/theme';
 // build the nested sub-sheet first
-// const subSheet = new SheetBuilder('Subgrid Sheet')
-//   .id('informations')
-//   .lines(2)
-//   .lineLength(6)
-//   // .columnBasedLayout()
-//   .line(r => r
-//     .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', height: 5 })
-//     .add({ type: 'ImageField', id: 'profile_picture', height: 1, width: 2 })
-//   )
-//   .line(r => r
-//     .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', height: 3 })
-//     .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], height: 2 })
-//   )
-//   // .withStyle({ '*': { background: 'red' },
-//   // StaticText: { background: 'blue' } })
-//   .build();
+const subSheet = new SheetBuilder('Subgrid Sheet')
+  .id('informations')
+  .setRowLength(6)
+  // .columnBasedLayout()
+  .withStyle({ background: 'red' })//StaticText: { background: 'blue' } }
+  .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', width: 5 })
+  .add({ type: 'ImageField', id: 'profile_picture', width: 1, height: 2 })
+  .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', width: 3 })
+  .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], width: 2 })
+  .build();
 
 
 type keys = keyof typeof attributesColors;
@@ -26,23 +20,21 @@ type keys = keyof typeof attributesColors;
 const mainSheet = new SheetBuilder('Character Sheet')
   .id('test_sheet')
   .setRowLength(6)
-  // .subGrid({ id: 'subgrid1', label: 'Informations', width: 6 }, subSheet).placeAt({ row: 1, col: 1, rowSpan: 6 }))
-  // .line(r => r
-  .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
-  .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10 })
-  .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10 })
-  .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10 })
-  .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10 })
-  .characterAttribute({ id: 'ba_attr', label: 'bau', value: 10 })
-  .characterAttribute({ id: 'ba_attr', label: 'bau', value: 10,row:3 })
-  .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10, row:2, col:3,height:2 })
-  // )
   .withStyle({
     ".character-attribute":
     {
       "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
     },
   })
+  .subGrid({ id: 'subgrid1', label: 'Informations', width: 6 }, subSheet)
+  // .line(r => r
+  .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10 })
+  .characterAttribute({ id: 'dex_attr', label: 'Dexterity', value: 10 })
+  .characterAttribute({ id: 'con_attr', label: 'Constitution', value: 10 })
+  .characterAttribute({ id: 'int_attr', label: 'Intelligence', value: 10 })
+  .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10 })
+  .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10})
+  // )
   // .line(r => r
   //   .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', height: 1 })
   //   .listField({
@@ -67,6 +59,5 @@ const mainSheet = new SheetBuilder('Character Sheet')
 //
 
 // const mainSheet = new SheetBuilder().setRowLength(6).staticText({text: 'tchau'}).build()
-console.log(mainSheet)
 export default mainSheet;
 export { mainSheet };
