@@ -34,14 +34,14 @@ export class SheetBuilder {
     this.sheet.components!.push(component)
     return this;
   }
-  InputField(opts: Partial<CM.InputFieldOps>): this { return this.add(new CM.InputFieldOps(opts)); }
-  staticText(opts: Partial<CM.StaticTextOps>): this { return this.add(new CM.StaticTextOps(opts)); }
-  subGrid(opts: Partial<CM.SubGridOps>, sheet: Partial<CM.Sheet>): this { return this.add(new CM.SubGridOps(opts, sheet)); }
+  InputField(opts: Partial<CM.InputField>): this { return this.add(new CM.InputField(opts)); }
+  staticText(opts: Partial<CM.StaticText>): this { return this.add(new CM.StaticText(opts)); }
+  subGrid(opts: Partial<CM.SubGrid>, sheet: Partial<CM.Sheet>): this { return this.add(new CM.SubGrid(opts, sheet)); }
   characterAttribute(opts: Partial<CM.ComponentOps>): this { return this.add({ type: Constants.CharacterAttribute, ...opts }); }
-  computedText(opts: Partial<CM.ComputedTextOps>): this { return this.add(new CM.ComputedTextOps(opts)); }
-  listField(opts: Partial<CM.ListFieldOps>): this { return this.add(new CM.ListFieldOps(opts)); }
-  selectField(opts: Partial<CM.SelectFieldOps>): this { return this.add(new CM.SelectFieldOps(opts)); }
-  checkboxField(opts: Partial<CM.CheckboxFieldOps>): this { return this.add(new CM.CheckboxFieldOps(opts)); }
+  computedText(opts: Partial<CM.ComputedText>): this { return this.add(new CM.ComputedText(opts)); }
+  listField(opts: Partial<CM.ListField>): this { return this.add(new CM.ListField(opts)); }
+  selectField(opts: Partial<CM.SelectField>): this { return this.add(new CM.SelectField(opts)); }
+  checkboxField(opts: Partial<CM.CheckboxField>): this { return this.add(new CM.CheckboxField(opts)); }
 
   // OLD STUFF
 
@@ -75,7 +75,6 @@ export class SheetBuilder {
   }
 
   public withStyle(style: Record<string, any> | Record<string, Record<string, Function>>, targetClass: string = ""): this {
-    console.log("Entrando withStyle")
     for (const key in style) {
       if (!style[key]) continue;
 
@@ -86,7 +85,6 @@ export class SheetBuilder {
       }
 
       if (typeof val === 'function') {
-        console.log("FUNCTION")
         sheetStyler.applyFunctionRule(targetClass, key, val as Function);
         continue;
       }

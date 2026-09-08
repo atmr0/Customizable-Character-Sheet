@@ -44,7 +44,6 @@ export default class SheetStyler {
   }
 
   public applySimpleStyle(targetClass: string, key: string, value: string): void {
-    console.log(this.currentComponent)
     if (!this.currentComponent) {
 
       if (this.lastSection) {
@@ -60,7 +59,6 @@ export default class SheetStyler {
 
     const comp = this.currentComponent as CM.ComponentOps;
     const selector = this.createSelector(targetClass, comp);
-    console.log(selector)
     this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
     // comp.style = { ...(comp.style || {}), [key]: value };
   }
@@ -104,7 +102,6 @@ export default class SheetStyler {
     for (const [selector, rules] of Object.entries(target)) {
       tag += `${selector} { ${Object.entries(rules).map(([prop, value]) => `${prop}: ${value};`).join(' ')} }\n`;
     }
-    console.log(tag)
     return tag;
   }
 }

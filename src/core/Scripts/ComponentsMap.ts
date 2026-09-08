@@ -1,25 +1,25 @@
-import InputField from "../components/basic components/InputField.svelte";
-import StaticText from "../components/basic components/StaticText.svelte";
-import SubGrid from "../components/layout/SubGrid.svelte";
-import ComputedText from "../components/basic components/ComputedText.svelte";
-import ListField from "../components/basic components/ListField.svelte";
-import CharacterAttribute from "../components/CharacterAttribute.svelte";
-import SelectField from "../components/basic components/SelectField.svelte";
-import ImageField from "../components/basic components/ImageField.svelte";
-import CheckboxField from "../components/basic components/CheckboxField.svelte";
+import InputFieldSvelte from "../components/basic components/InputField.svelte";
+import StaticTextSvelte from "../components/basic components/StaticTextComponent.svelte";
+import SubGridSvelte from "../components/layout/SubGrid.svelte";
+import ComputedTextSvelte from "../components/basic components/ComputedText.svelte";
+import ListFieldSvelte from "../components/basic components/ListField.svelte";
+import CharacterAttributeSvelte from "../components/CharacterAttribute.svelte";
+import SelectFieldSvelte from "../components/basic components/SelectField.svelte";
+import ImageFieldSvelte from "../components/basic components/ImageField.svelte";
+import CheckboxFieldSvelte from "../components/basic components/CheckboxField.svelte";
 import { Constants } from "../constants";
 
 
 export const componentsMap: Record<string, any> = {
-  [Constants.CharacterAttribute]: CharacterAttribute,
-  [Constants.CheckboxField]: CheckboxField,
-  [Constants.ComputedText]: ComputedText,
-  [Constants.ImageField]: ImageField,
-  [Constants.InputField]: InputField,
-  [Constants.ListField]: ListField,
-  [Constants.SelectField]: SelectField,
-  [Constants.StaticText]: StaticText,
-  [Constants.SubGrid]: SubGrid,
+  [Constants.CharacterAttribute]: CharacterAttributeSvelte,
+  [Constants.CheckboxField]: CheckboxFieldSvelte,
+  [Constants.ComputedText]: ComputedTextSvelte,
+  [Constants.ImageField]: ImageFieldSvelte,
+  [Constants.InputField]: InputFieldSvelte,
+  [Constants.ListField]: ListFieldSvelte,
+  [Constants.SelectField]: SelectFieldSvelte,
+  [Constants.StaticText]: StaticTextSvelte,
+  [Constants.SubGrid]: SubGridSvelte,
 };
 
 export class FullComponentOps {
@@ -55,7 +55,7 @@ export type Sheet = {
   ignoreLineInLayout?: number[];
 };
 
-export class InputFieldOps extends FullComponentOps {
+export class InputField extends FullComponentOps {
   type: string = Constants.InputField;
   value?: string | number;
   placeholder?: string;
@@ -66,36 +66,36 @@ export class InputFieldOps extends FullComponentOps {
   max: number | undefined = undefined;
 }
 
-export class StaticTextOps extends FullComponentOps {
+export class StaticText extends FullComponentOps {
   type: string = Constants.StaticText;
   text?: string;
 }
 
-export class SubGridOps extends FullComponentOps {
+export class SubGrid extends FullComponentOps {
   type: string = Constants.SubGrid;
   sheet?: Sheet;
-  constructor(opts: Partial<FullComponentOps & SubGridOps>, sheet: Sheet) {
+  constructor(opts: Partial<FullComponentOps & SubGrid>, sheet: Sheet) {
     super(opts);
     this.sheet = sheet;
   }
 }
 
-export class ComputedTextOps extends FullComponentOps {
+export class ComputedText extends FullComponentOps {
   type: string = Constants.ComputedText;
   expr?: string;
 }
 
-export class ListFieldOps extends FullComponentOps {
+export class ListField extends FullComponentOps {
   type: string = Constants.ListField;
   itemTemplate?: ComponentOps[];
 }
 
-export class SelectFieldOps extends FullComponentOps {
+export class SelectField extends FullComponentOps {
   type: string = Constants.SelectField
   options?: string[];
   value?: string | number;
 }
 
-export class CheckboxFieldOps extends FullComponentOps {
+export class CheckboxField extends FullComponentOps {
   type: string = Constants.CheckboxField;
 }
