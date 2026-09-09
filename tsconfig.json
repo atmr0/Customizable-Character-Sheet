@@ -9,7 +9,13 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "types": ["svelte"]
+    "types": ["svelte"],
+    "baseUrl": "src",
+    "paths": {
+      "@ui/*": ["ui/*"],
+      "@builder/*": ["core/builder/*"],
+      "@core/*": ["core/*"]
+    }
   },
   "include": ["src/**/*", "svelte.config.js"],
   "exclude": ["node_modules", "dist"]

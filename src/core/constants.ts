@@ -4,7 +4,7 @@ export class Constants{
   static ComputedText = 'ComputedText';
   static ImageField = 'ImageField';
   static InputField = 'InputField';
-  static ListField = 'ListField';
+  static ItemList = 'ItemList';
   static SelectField = 'SelectField';
   static StaticText = 'StaticText';
   static SubGrid = 'SubGrid';

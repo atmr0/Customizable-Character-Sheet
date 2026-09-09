@@ -1,8 +1,8 @@
 <script>
-  import {RenderGrid} from "./core/components/componentsIndex";
+  import {RenderGrid} from "./ui";
   import { mainSheet } from "./MainSheet";
-  import SheetBuilder from "./core/Scripts/SheetBuilder";
-  import { applyTheme } from "./core/theme";
+  // import SheetBuilder from "@builder/SheetBuilder";
+  import { applyTheme } from "@core/theme";
   import ThemeConfiguration from "./configurations/ThemeConfiguration.svelte";
   // let sheet = sheetJson;
   // let styleTag = sheet.styleTag || "";

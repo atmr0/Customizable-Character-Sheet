@@ -4,21 +4,16 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import { BaseComponent, SubGrid } from "../componentsIndex";
-  import { valuesStore, setValue } from "../../valuesStore";
-  import type { ComponentOps } from "../../Scripts/ComponentsMap";
+  import { BaseComponent, SubGrid } from "@ui/components/index.js";
+  import { valuesStore, setValue } from "../../../core/valuesStore";
   import { get } from "svelte/store";
-
-  let localComponentsMap: Record<string, any> = {};
+  import type { ItemList, SheetSection } from "../../../core/builder";
 
   export let id: string | undefined;
   export let label: string | undefined;
-  export let items: Sheet[] = [];
+  export let items: SheetSection[] = [];
   export let editable: boolean = true;
-  export let onadd: ((row: ComponentOps[], all: ComponentOps[][]) => void) | undefined = undefined;
-  export let teste:ListField|undefined;
-  //export let onremove: ((removed: ComponentOps[] | null, rowId: string, all: ComponentOps[][]) => void) | undefined = undefined;
-  console.log("SVELTE BEING", teste)
+  export let teste:ItemList|undefined;
   onMount(() => {
     const store = get(valuesStore);
     if (id && !store[id] && items && items.length) {
@@ -26,16 +21,14 @@
     }
     (async () => {
       try {
-        const mod = await import("../../Scripts/ComponentsMap");
-        localComponentsMap = mod.componentsMap || {};
+        const mod = await import("../../../core/builder");
       } catch (err) {
         console.warn("Failed to load components map dynamically", err);
-        localComponentsMap = {};
       }
     })();
   });
 
-  $: storeItems = id ? $valuesStore[id] || [] : items; // TODO change it to something better
+  $: storeItems = id ? $valuesStore[id] || [] : items;
 
   let nextRowId = 1;
 
@@ -50,11 +43,10 @@
   function addItem() {
     if (!editable) return;
     const current = storeItems || [];
-    const newRow = teste.buildItemFromValues()
+    const newRow = teste!.buildItemFromValues()
     const next = [...current, newRow];
     if (id) setValue(id, next);
     else items = next;
-    onadd?.(newRow, next);
   }
 
   function removeItem(rowId: string) {
@@ -63,10 +55,6 @@
     const next = current.filter((r: any) => r.__rowId !== rowId);
     if (id) setValue(id, next);
     else items = next;
-    //                                                                                  dd/mm/yyyy
-    // i dont really know why i did this before, maybe ill findout in the future (today 08/09/2026)
-    // const removed = current.find((r: any) => r.__rowId === rowId) || null;
-    // onremove?.(removed, rowId, next);
   }
 </script>
 
@@ -75,7 +63,6 @@
       <ul class="list-all-items" >
       {#each rows as row, i (row.__rowId)}
         <li class="list-item">
-        {console.log("SVELTE: ",row)}
           <SubGrid sheet={row}  ></SubGrid>
           {#if editable}
             <button

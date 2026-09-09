@@ -1,12 +1,13 @@
 import { Input } from 'postcss';
-import { ComputedText, InputField, ListField, type ComponentOps,  } from './core/Scripts/ComponentsMap';
-import SheetBuilder from './core/Scripts/SheetBuilder';
+import { ComputedText, InputField, type ComponentOptions, } from './core/builder';
+import SheetBuilder from './core/builder/SheetBuilder';
 import { Constants } from './core/constants';
 import { attributesColors } from './core/theme';
+import { ItemList } from './core/builder/components/ItemList';
 
-type keys = keyof typeof attributesColors;
+type colors = keyof typeof attributesColors;
 
-const skillSpec: ComponentOps[] = [
+const skillSpec: ComponentOptions[] = [
   { type: Constants.InputField, placeholder: 'Skill name', width: 3, value: '$2' },
   { type: Constants.ComputedText, expr: '$1', width: 1 },
 ];
@@ -31,28 +32,26 @@ const mainSheet = new SheetBuilder('Character Sheet')
     .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10, col: 1, row: 8, })
   )
   .withStyle({
-    "--attr-focus-color": (cell: ComponentOps) => attributesColors[cell.id as keys],
+    "--attr-focus-color": (cell: ComponentOptions) => attributesColors[cell.id as colors],
   })
-  // )
   .section("talents", r => r
     .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', height: 1 })
     .listField({
       id: 'skills', label: 'Skills', width: 2, height: 5, editable: true,
-      itemTemplate: ListField.buildTemplateFromSpec(skillSpec,['cha_attr_mod + 2']),
+      itemTemplate: ItemList.buildTemplateFromSpec(skillSpec, ['cha_attr_mod + 2']),
       items: [
-        ListField.buildItemFromValues(['str_attr_mod + 5','Atletismo' ])
+        ItemList.buildItemFromValues(['str_attr_mod + 5', 'Atletismo'])
       ]
     })
     .listField({
       id: 'aaa', label: 'Skills', width: 2, height: 5, editable: true,
-      itemTemplate: ListField.buildTemplateFromSpec(skillSpec,['cha_attr_mod + 2']),
+      itemTemplate: ItemList.buildTemplateFromSpec(skillSpec, ['cha_attr_mod + 2']),
       items: [
-        ListField.buildItemFromValues(['str_attr_mod + 5','Carismo' ])
+        ItemList.buildItemFromValues(['str_attr_mod + 5', 'Carismo'])
       ]
     })
   )
   .build();
-//
 
 // const mainSheet = new SheetBuilder().setRowLength(6).staticText({text: 'tchau'}).build()
 export default mainSheet;

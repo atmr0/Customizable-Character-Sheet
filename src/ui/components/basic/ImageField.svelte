@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { BaseComponent } from "../componentsIndex.js";
+  import { BaseComponent } from "@ui/components/index.js";
 
-  import { valuesStore, setValue } from "../../valuesStore";
-  import { Constants } from "../../constants";
+  import { valuesStore, setValue } from "@core/valuesStore";
+  import { Constants } from "@core/constants";
 
   export let id: string | undefined;
   export let label: string | undefined;
   export let accept: string = "image/*";
-  export let maxSizeBytes: number | undefined = undefined; // optional max size
+  export let maxSizeBytes: number | undefined = undefined;
   export let placeholder: string = "";
   export let onupload = undefined;
   let componentClass = Constants.ImageField;
@@ -15,7 +15,6 @@
   let fileInput: HTMLInputElement | null = null;
   let previewOpen = false;
 
-  // derived image src from store
   $: currentImage = id ? $valuesStore[id] || "" : "";
 
   function openPicker() {
@@ -43,7 +42,6 @@
     const f = target.files && target.files[0];
     if (!f) return;
     if (maxSizeBytes && f.size > maxSizeBytes) {
-      // dispatch("error", { message: "file_too_large", file: f });
       return;
     }
     const reader = new FileReader();

@@ -124,7 +124,7 @@
         "colspan": 1
       },
       {
-        "type": "ListField",
+        "type": "ItemList",
         "id": "skills",
         "label": "Skills",
         "colspan": 5,

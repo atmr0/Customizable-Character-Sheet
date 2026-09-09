@@ -1,1 +1,1 @@
-[ ] Find a better name for "ComponentOps" and alike
+[ ] Find a better name for "ComponentOptions" and alike

@@ -1,8 +1,8 @@
 <script>
-  import { BaseComponent, ComputedText } from "./componentsIndex.js";
-  import { setValue, valuesStore } from "../valuesStore";
-  import { Constants } from "../constants.ts";
-    import InputField from "./basic components/InputField.svelte";
+  import { BaseComponent, ComputedText } from "@ui/components/index.js";
+  import { setValue, valuesStore } from "@core/valuesStore";
+  import { Constants } from "@core/constants.ts";
+    import InputField from "../basic/InputField.svelte";
   export let id;
   export let label;
   export let value = "";
@@ -11,7 +11,6 @@
 
   let idField = id ? `${id}_field` : undefined;
   let idComputed = id ? `${id}_mod` : undefined;
-  // atualiza store quando o campo muda
   function onInput(e) {
     value = e.target.value;
     if (id) setValue(id, Number(value));
@@ -25,7 +24,6 @@
   };
 
   let modificator;
-  // calcula dinamicamente a expressão com os valores do store
   $: $valuesStore;
 </script>
 

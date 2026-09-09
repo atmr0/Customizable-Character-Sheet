@@ -1,24 +1,23 @@
-import * as CM from "./ComponentsMap";
+import * as BuilderIndex from "./";
 
 export default class SheetStyler {
   private styleObj: Record<string, any> = { '*': {} };
-  private sheet: CM.Sheet;
+  private sheet: BuilderIndex.Sheet;
 
-  private sectionStack: CM.ComponentOps[][] = [];
+  private sectionStack: BuilderIndex.ComponentOptions[][] = [];
   private inSection: boolean = false;
   private sectionNameStack: string[] = [];
   private stackSize: number = 0;
-  private lastSectionName: string | undefined;
-  private lastSection: CM.ComponentOps[] | undefined;
+  private lastSection: BuilderIndex.ComponentOptions[] | undefined;
 
-  private currentComponent: CM.ComponentOps | undefined;
+  private currentComponent: BuilderIndex.ComponentOptions | undefined;
 
 
-  public setSheet(sheet:CM.Sheet){
+  public setSheet(sheet:BuilderIndex.Sheet){
     this.sheet = sheet;
 
   }
-  public addComponent(component: CM.ComponentOps): void {
+  public addComponent(component: BuilderIndex.ComponentOptions): void {
     if (this.inSection)
       this.sectionStack[this.stackSize - 1].push(component);
     this.currentComponent = component;
@@ -32,7 +31,6 @@ export default class SheetStyler {
   }
 
   public endSection(): void {
-    this.lastSectionName = this.sectionNameStack.pop();
     this.lastSection = this.sectionStack.pop();
     this.stackSize -= 1;
     if (this.stackSize == 0) this.inSection = false;
@@ -57,10 +55,9 @@ export default class SheetStyler {
       return;
     }
 
-    const comp = this.currentComponent as CM.ComponentOps;
+    const comp = this.currentComponent as BuilderIndex.ComponentOptions;
     const selector = this.createSelector(targetClass, comp);
     this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
-    // comp.style = { ...(comp.style || {}), [key]: value };
   }
 
   public applyStyleToSection(targetClass: string, key: string, value: string) {
@@ -88,7 +85,7 @@ export default class SheetStyler {
     }
   }
 
-  public createSelector(targetClass: string, component: CM.ComponentOps | null = null): string {
+  public createSelector(targetClass: string, component: BuilderIndex.ComponentOptions | null = null): string {
     let selector = `#${this.sheet.id}`;
     if (component) selector += ` #${component.id}`;
     if (targetClass) selector += ` ${targetClass}`;

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { BaseComponent } from "../componentsIndex.js";
+  import { BaseComponent } from "@ui/components/index.js";
 
-  import { setValue, valuesStore } from "../../valuesStore";
-  import { Constants } from "../../constants";
-    import { onMount } from "svelte";
-    import { get } from "svelte/store";
+  import { setValue, valuesStore } from "@core/valuesStore";
+  import { Constants } from "@core/constants";
+  import { onMount } from "svelte";
+  import { get } from "svelte/store";
 
   export let value: any = "";
   export let label: string | undefined;
@@ -17,18 +17,16 @@
   export let step: number | string = allowFloat ? "any" : 1;
   export let min: number | undefined = undefined;
   export let max: number | undefined = undefined;
-  export let oninput = undefined;
   
   let componentClass = Constants.InputField;
-  function parseNumeric(raw) {
+  function parseNumeric(raw:string) {
     if (raw === "" || raw === null || raw === undefined) return "";
-    // replace comma with dot for locales
     const normalized = String(raw).replace(",", ".");
     const num = allowFloat ? Number(normalized) : parseInt(normalized, 10);
     return isNaN(num) ? "" : num;
   }
 
-  function handleInput(e) {
+  function handleInput(e:any) {
     const raw = e.target.value;
 
     if (inputType === "number") {
@@ -39,7 +37,6 @@
       value = raw;
       if (id) setValue(id, value);
     }
-    oninput?.(e);
   }
   onMount(() => {
     if (!id) return;

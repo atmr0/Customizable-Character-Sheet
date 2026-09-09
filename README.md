@@ -27,7 +27,7 @@ The sheet is built using a flexible layout model. The renderer prefers a `flex`-
 - `ComputedText` — dynamic text evaluated from an expression;
 - `InputField` — text or numeric input (see component for props);
 - `SelectField` — dropdown menu with predefined options;
-- `ListField` — list of items using an item template;
+- `ItemList` — list of items using an item template;
 - `CheckboxField` — checkbox control;
 - `ImageField` — upload/preview image (can request `colspan` / `rowSpan` to occupy more space);
 
@@ -41,7 +41,7 @@ Specific component attributes:
   - `expr` (string): expression evaluated using the values store (e.g. `cha_attr_mod + 5`).
   - `format` (function): optional formatter called with the computed value.
 
-- `InputField` (see `src/core/components/basic components/InputField.svelte`)
+- `InputField` (see `src/core/svelte components/basic components/InputField.svelte`)
   - `value` (string|number): initial value.
   - `placeholder` (string)
   - `inputType` (string): `'text'` or `'number'`.
@@ -53,9 +53,9 @@ Specific component attributes:
   - `options` (string[]): available options.
   - `value` (string|number): initial selection.
 
-- `ListField`
-  - `itemTemplate` (array): array defining components for each line of the list (use ComponentOps objects).
-  - The `ListField` renderer instantiates items from this template and keeps them in the sheet model.
+- `ItemList`
+  - `itemTemplate` (array): array defining components for each line of the list (use ComponentOptions objects).
+  - The `ItemList` renderer instantiates items from this template and keeps them in the sheet model.
 
 - `CheckboxField`
   - `value` / `checked` (boolean): initial state.
@@ -65,7 +65,7 @@ Specific component attributes:
   - Upload/preview UX is implemented in the component; the `style` object can adjust appearance.
   - `colspan` / `rowSpan`: the `ImageField` (e.g. profile picture) can request vertical spanning — the renderer will switch to grid-mode when vertical spans are required.
 
-- `CharacterAttribute` (see `src/core/components/CharacterAttribute.svelte`)
+- `CharacterAttribute` (see `src/core/svelte components/CharacterAttribute.svelte`)
   - `value` (number): initial attribute value.
   - `label` (string): label above the circular control.
   - The component wires its numeric input into the central values store using the cell `id`.
@@ -73,7 +73,7 @@ Specific component attributes:
 
 ---
 ### `SheetBuilder` (grid-based) 
-The project now uses a grid-based `SheetBuilder` that places components directly into rows and columns (instead of the previous line-first DSL). The implementation lives in [src/core/Scripts/SheetBuilder.ts](src/core/Scripts/SheetBuilder.ts) and produces a model where components are stored in `sheet.components` with explicit `row`, `col`, `colspan`, `rowSpan` and metadata.
+The project now uses a grid-based `SheetBuilder` that places components directly into rows and columns (instead of the previous line-first DSL). The implementation lives in [src/core/builder/SheetBuilder.ts](src/core/builder/SheetBuilder.ts) and produces a model where components are stored in `sheet.components` with explicit `row`, `col`, `colspan`, `rowSpan` and metadata.
 
 Key ideas and API
 - **Grid coordinates:** components may include `row` and `col` (1-based) to explicitly position them. If omitted, the builder places components automatically scanning left→right, top→bottom.
@@ -82,7 +82,7 @@ Key ideas and API
 - **Primary methods:**
   - **`new SheetBuilder(title?)`** — create a builder instance.
   - **`setRowLength(n)`** — set the number of columns per row (required to control automatic placement width).
-  - **`add(cell)`** — add a `ComponentOps` object. The builder sets `cell.id` if missing, assigns `row`/`col` if omitted (automatic placement), and records `colspan`/`rowSpan`
+  - **`add(cell)`** — add a `ComponentOptions` object. The builder sets `cell.id` if missing, assigns `row`/`col` if omitted (automatic placement), and records `colspan`/`rowSpan`
   - **`withStyle(style)`** — attach sheet-level styles (keeps previous `styleTag` generation).
   - **`build()`** — finalize and return the `Sheet` model. The sheet includes `components` (flat list) and metadata (`rowLength`, `numberOfLines`, `styleTag`).
 
@@ -101,7 +101,7 @@ Notes
 - The builder will fill `sheet.components` (a flat array). The renderer expects `components` and resolves the actual Svelte component for each entry from the registry.
 
 Renderer changes
-- The previous `GridBuilder` is no longer required. The renderer (`src/core/components/layout/RenderGrid.svelte`) resolves component constructors dynamically using the `componentsMap` registry (`src/core/Scripts/ComponentsMap.ts`) and instantiates components with the cell object as props.
+- The previous `GridBuilder` is no longer required. The renderer (`src/core/svelte components/layout/RenderGrid.svelte`) resolves component constructors dynamically using the `componentsMap` registry (`src/core/builder/ComponentsMap.ts`) and instantiates components with the cell object as props.
 
 Migration tips
 - Replace previous `line(...).characterAttribute(...)` patterns by calling `setRowLength(...)` then `add(...)` with optional `row`/`col` coordinates.

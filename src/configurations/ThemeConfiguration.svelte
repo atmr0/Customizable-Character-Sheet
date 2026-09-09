@@ -1,5 +1,5 @@
 <script>
-  import { componentsMap } from "../core/Scripts/ComponentsMap";
+  import { componentsMap } from "@builder";
   import { cssVariables, applyTheme } from "../core/theme.js";
   let componentTypes = componentsMap;
 

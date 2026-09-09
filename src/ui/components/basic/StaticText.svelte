@@ -1,6 +1,6 @@
 <script>
-  import { BaseComponent } from "../componentsIndex.js";
-  import { Constants } from "../../constants.ts";
+  import { BaseComponent } from "@ui/components/index.js";
+  import { Constants } from "@core/constants.ts";
 
   export let text = "";
   let componentClass = Constants.StaticText;

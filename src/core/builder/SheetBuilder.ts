@@ -1,4 +1,4 @@
-import * as CM from "./ComponentsMap";
+import * as BuilderIndex from "./";
 import { Constants } from "../constants";
 import OrganizingGrid from "./OrganizingGrid";
 import SheetStyler from "./SheetStyler";
@@ -10,11 +10,11 @@ function ensureId(prefix = 'cell') {
 }
 
 export class SheetBuilder {
-  private sheet: CM.Sheet;
+  private sheet: BuilderIndex.Sheet;
   private organizingGrid: OrganizingGrid = new OrganizingGrid(1)
   private sheetStyler:SheetStyler = new SheetStyler();
   constructor(title?: string) {
-    this.sheet = { title, id: undefined, numberOfLines: 0, rowLength: 1, components: [] } as CM.Sheet;
+    this.sheet = { title, id: undefined, numberOfLines: 0, rowLength: 1, components: [] } as BuilderIndex.Sheet;
     this.sheetStyler.setSheet(this.sheet)
   }
 
@@ -23,7 +23,7 @@ export class SheetBuilder {
     this.sheet.rowLength = length;
     return this
   }
-  add(component: CM.ComponentOps): this {
+  add(component: BuilderIndex.ComponentOptions): this {
     if (!component.id) component.id = ensureId(component.type || 'cell');
     let defaultPosition = this.organizingGrid.checkFirstEmpty()
     component.row = component.row ?? defaultPosition[0]
@@ -34,14 +34,14 @@ export class SheetBuilder {
     this.sheet.components!.push(component)
     return this;
   }
-  InputField(opts: Partial<CM.InputField>): this { return this.add(new CM.InputField(opts)); }
-  staticText(opts: Partial<CM.StaticText>): this { return this.add(new CM.StaticText(opts)); }
-  subGrid(opts: Partial<CM.SubGrid>, sheet: Partial<CM.Sheet>): this { return this.add(new CM.SubGrid(opts, sheet)); }
-  characterAttribute(opts: Partial<CM.ComponentOps>): this { return this.add({ type: Constants.CharacterAttribute, ...opts }); }
-  computedText(opts: Partial<CM.ComputedText>): this { return this.add(new CM.ComputedText(opts)); }
-  listField(opts: Partial<CM.ListField>): this { return this.add(new CM.ListField(opts)); }
-  selectField(opts: Partial<CM.SelectField>): this { return this.add(new CM.SelectField(opts)); }
-  checkboxField(opts: Partial<CM.CheckboxField>): this { return this.add(new CM.CheckboxField(opts)); }
+  InputField(opts: Partial<BuilderIndex.InputField>): this { return this.add(new BuilderIndex.InputField(opts)); }
+  staticText(opts: Partial<BuilderIndex.StaticText>): this { return this.add(new BuilderIndex.StaticText(opts)); }
+  subGrid(opts: Partial<BuilderIndex.SubGrid>, sheet: Partial<BuilderIndex.Sheet>): this { return this.add(new BuilderIndex.SubGrid(opts, sheet)); }
+  characterAttribute(opts: Partial<BuilderIndex.ComponentOptions>): this { return this.add({ type: Constants.CharacterAttribute, ...opts }); }
+  computedText(opts: Partial<BuilderIndex.ComputedText>): this { return this.add(new BuilderIndex.ComputedText(opts)); }
+  listField(opts: Partial<BuilderIndex.ItemList>): this { return this.add(new BuilderIndex.ItemList(opts)); }
+  selectField(opts: Partial<BuilderIndex.SelectField>): this { return this.add(new BuilderIndex.SelectField(opts)); }
+  checkboxField(opts: Partial<BuilderIndex.CheckboxField>): this { return this.add(new BuilderIndex.CheckboxField(opts)); }
 
   // OLD STUFF
 
@@ -95,7 +95,7 @@ export class SheetBuilder {
   }
 
 
-  public build(): CM.Sheet {
+  public build(): BuilderIndex.Sheet {
     // this.sheet.styles = { ...(this.sheet.styles || {}), ...this.sheetStyler. };
     this.sheet.styleTag = this.sheetStyler.getStyleTag(this.sheet.styles);
     return this.sheet;

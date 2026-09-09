@@ -1,10 +1,9 @@
 <script lang="ts">
-  // import { buildGrid } from "../../Scripts/GridBuilder";
   import {
-    type ComponentOps,
+    type ComponentOptions,
     type Sheet,
     componentsMap,
-  } from "../../Scripts/ComponentsMap";
+  } from "@builder";
   export let sheet: Sheet;
 
   function gridStyle() {
@@ -17,7 +16,7 @@
     return style;
   }
 
-  function cellGridStyle(cell: ComponentOps) {
+  function cellGridStyle(cell: ComponentOptions) {
     let colspan = cell.width || 1;
     let rowspan = cell.height || 1;
     return `grid-row: ${cell.row} / span ${rowspan}; grid-column: ${cell.col} / span ${colspan}`;
@@ -29,11 +28,8 @@
   <div id={sheet.id} class="grid" style={gridStyle()}>
     {#each sheet.components as cell}
       <div class="sheet-cell" style={cellGridStyle(cell)} id="cell-{cell.id}">
-        {#if componentsMap[cell.type]}
-          <svelte:component this={componentsMap[cell.type]} {...cell} />
-          {#if cell.type == "ListField"}
-            {console.log("RENDER GRID:", cell)}
-          {/if}
+        {#if componentsMap[cell.type!]}
+          <svelte:component this={componentsMap[cell.type!]} {...cell} />
         {:else}
           <div>Unknown component: {cell && cell.type}</div>
         {/if}
