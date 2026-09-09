@@ -9,6 +9,7 @@ import ImageFieldSvelte from "../components/basic components/ImageField.svelte";
 import CheckboxFieldSvelte from "../components/basic components/CheckboxField.svelte";
 import { Constants } from "../constants";
 import { SheetBuilder } from "./SheetBuilder";
+import { makeUid } from "../utils/values";
 
 
 export const componentsMap: Record<string, any> = {
@@ -80,7 +81,7 @@ export class SubGrid extends FullComponentOps {
   constructor(opts: Partial<FullComponentOps & SubGrid>, sheet: Sheet) {
     super(opts);
     this.sheet = sheet;
-    
+
   }
 }
 
@@ -92,8 +93,65 @@ export class ComputedText extends FullComponentOps {
 export class ListField extends FullComponentOps {
   type: string = Constants.ListField;
   itemTemplate?: Sheet;
+  items?: Sheet[];
+
+  teste:ListField = this
+
+  private static __cachedSpec: ComponentOps[] = [];
+  private static __cachedRowLength: number = 1
   constructor(opts: Partial<FullComponentOps & ListField>) {
     super(opts)
+  }
+
+  public static buildTemplateFromSpec(spec: ComponentOps[], defaults: any[] = [], rowLength: number = 4): Sheet {
+    ListField.__cachedSpec = spec;
+    ListField.__cachedRowLength = rowLength;
+    const b = new SheetBuilder('').setRowLength(rowLength);
+    let nSpec = ListField.replaceValuesInObjectList(spec, defaults)
+    nSpec.forEach((f: ComponentOps) => {
+      b.add(f);
+    });
+    return b.build();
+  }
+  // basically the same as buildTemplateFromSpec, but with id
+  public static buildItemFromValues(values: any[] = []): Sheet {
+    const b = new SheetBuilder('').setRowLength(ListField.__cachedRowLength);
+    let nSpec = ListField.replaceValuesInObjectList(ListField.__cachedSpec, values)
+    nSpec.forEach((f: ComponentOps) => {
+      f.id = f.id ?? makeUid('listSubItem')
+      b.add(f);
+    });
+    b.id(makeUid('listItem'))
+    return b.build();
+  }
+  // the same as the static, but it's used in the Svelte component
+  public buildItemFromValues(values: any[] = []): Sheet {
+    const b = new SheetBuilder('').setRowLength(this.itemTemplate!.rowLength!);
+    b.id(makeUid('listItem'))
+    let nSpec = ListField.replaceValuesInObjectList(this.itemTemplate!.components!, values)
+    nSpec.forEach((f: ComponentOps) => {
+      f.id = makeUid('listSubItem')
+      console.log('fid',f.id)
+      b.add(f);
+    });
+    return b.build();
+  }
+
+  private static replaceValuesInObjectList(obj: Record<string, any>[], values: string[] = []): Record<string, any> {
+    let newObjList = [];
+    for (let i = 0; i < obj.length; i += 1) {
+      let newObj = { ...obj[i] };
+      for (const key in newObj) {
+        if (typeof newObj[key] !== 'string') continue
+        if (!newObj[key].startsWith('$')) continue;
+
+        let index = parseInt(newObj[key].slice(1)) - 1
+        const v = values[index] ?? ''
+        newObj[key] = v
+      }
+      newObjList.push(newObj)
+    }
+    return newObjList
   }
 }
 

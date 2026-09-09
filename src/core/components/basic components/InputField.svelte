@@ -46,6 +46,13 @@
     if(get(valuesStore)[id] === undefined)
       setValue(id, value);
   });
+
+  $: if (id) {
+    const storeVal = $valuesStore[id];
+    if (storeVal !== undefined && storeVal !== value) {
+      value = storeVal;
+    }
+  }
 </script>
 
 <BaseComponent {id} {label} {componentClass}>

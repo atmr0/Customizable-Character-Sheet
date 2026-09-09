@@ -8,6 +8,6 @@ export function toNumberOrEmpty(raw: string | null | undefined) {
   return isNaN(n) ? 0 : n;
 }
 
-export function makeUid(prefix: string, id: string) {
-  return `${prefix}-${id}-${Math.random().toString(36).slice(2, 7)}`;
+export function makeUid(prefix: string) {
+  return `${prefix}-${Math.random().toString(36).slice(2, 7)}`;
 }

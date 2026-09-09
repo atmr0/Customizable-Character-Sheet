@@ -13,13 +13,12 @@
 
   export let id: string | undefined;
   export let label: string | undefined;
-  export let itemTemplate: ComponentOps[] = [];
-  export let itemWidth:number = 1;
-  export let items: ComponentOps[][] = [];
+  export let items: Sheet[] = [];
   export let editable: boolean = true;
   export let onadd: ((row: ComponentOps[], all: ComponentOps[][]) => void) | undefined = undefined;
-  export let onremove: ((removed: ComponentOps[] | null, rowId: string, all: ComponentOps[][]) => void) | undefined = undefined;
-
+  export let teste:ListField|undefined;
+  //export let onremove: ((removed: ComponentOps[] | null, rowId: string, all: ComponentOps[][]) => void) | undefined = undefined;
+  console.log("SVELTE BEING", teste)
   onMount(() => {
     const store = get(valuesStore);
     if (id && !store[id] && items && items.length) {
@@ -51,15 +50,7 @@
   function addItem() {
     if (!editable) return;
     const current = storeItems || [];
-    const i = current.length;
-    const newRow:Sheet = {... itemTemplate}
-    newRow.id = ensureRowId(newRow, i).__rowId
-    newRow.components = itemTemplate.components.map((template, j) => {
-      const clone: ComponentOps = { ...(template || {}) };
-      clone.id = clone.id ?? `${id ?? 'list'}-item-${i}-${j}`;
-      return clone;
-    });
-    (newRow as any).__rowId = `row-${nextRowId++}-${i}`;
+    const newRow = teste.buildItemFromValues()
     const next = [...current, newRow];
     if (id) setValue(id, next);
     else items = next;
@@ -81,10 +72,10 @@
 
 <BaseComponent {id} {label}>
   <div class="list-field">
-    <ul class="list-all-items" >
+      <ul class="list-all-items" >
       {#each rows as row, i (row.__rowId)}
-      {console.log(row, i)}
         <li class="list-item">
+        {console.log("SVELTE: ",row)}
           <SubGrid sheet={row}  ></SubGrid>
           {#if editable}
             <button
