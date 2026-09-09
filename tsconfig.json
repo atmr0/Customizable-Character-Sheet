@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": ["svelte"],
+    "baseUrl": "src",
+    "paths": {
+      "@ui/*": ["ui/*"],
+      "@builder/*": ["core/builder/*"],
+      "@core/*": ["core/*"]
+    }
+  },
+  "include": ["src/**/*", "svelte.config.js"],
+  "exclude": ["node_modules", "dist"]
+}

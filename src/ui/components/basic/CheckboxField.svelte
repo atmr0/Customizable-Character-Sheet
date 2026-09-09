@@ -1,31 +1,24 @@
 <script lang="ts">
-  import { BaseComponent } from "../componentsIndex.js";
-  import { valuesStore, setValue } from "../../valuesStore.js";
+  import { BaseComponent } from "@ui/components/index.js";
+  import { valuesStore, setValue } from "@core/valuesStore";
 
   export let id: string | undefined;
   export let label: string | undefined;
   export let checked: boolean = false;
   export let disabled: boolean = false;
-  export let onchange = undefined;
+  // export let onchange = undefined;
 
   if (id) setValue(id, checked);
 
   $: storeVal = id ? ($valuesStore[id] ?? checked) : checked;
   $: inputId = id ? `${id}_cb` : undefined;
-  function onChange(e) {
+  function onChange(e:any) {
     const v = e.target.checked;
     checked = v;
     if (id) setValue(id, v);
-    onchange?.(v, e);
+    // onchange?.(v, e);
   }
 </script>
-
-<!-- 
-INSPIRED BY Himalaiya Singh's Code Pen:
-https://codepen.io/singhimalaya/pen/dBJBMO
-
-Access in 02/2026
--->
 
 <BaseComponent {id} componentClass="checkbox-field">
   <div class="checkbox-wrapper">

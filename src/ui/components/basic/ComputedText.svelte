@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { BaseComponent } from "../componentsIndex.js";
-  import { setValue, valuesStore } from "../../valuesStore.js";
-  import { evaluateExpression } from "../../utils/compute.js";
-  import { Constants } from "../../constants";
+  import { BaseComponent } from "@ui/components/index.js";
+  import { setValue, valuesStore } from "@core/valuesStore";
+  import { evaluateExpression } from "@core/utils/compute.js";
+  import { Constants } from "@core/constants";
 
-  export let expr = ""; // expression string, e.g. "player_strength % 10"
+  export let expr = "";
   export let label = undefined;
-  export let format = (v) => v; // optional formatter
+  export let format = (v) => v;
   export let id: string | undefined = undefined;
   let componentClass = Constants.ComputedText;
   let computed = "";
   let lastValue = ""
-  $: $valuesStore; // ensure reactive dependency
+  $: $valuesStore;
   $: if (expr) {
     try {
       const val = evaluateExpression(expr, $valuesStore || {});

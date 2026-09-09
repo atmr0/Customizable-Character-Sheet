@@ -4,8 +4,6 @@
   export let noBackground: boolean = true;
   export let componentClass = ''; 
 
-  // allows for better styling other components
-  // other components will have a class that can be used for styling inner elements
   if(componentClass) componentClass = componentClass+"-wrapper";
 </script>
 

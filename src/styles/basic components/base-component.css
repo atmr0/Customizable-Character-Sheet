@@ -18,7 +18,7 @@
 }
 
 .no-bg {
-  background: transparent;
+  background: none;
   box-shadow: none;
   border: none;
 }

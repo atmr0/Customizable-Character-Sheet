@@ -1,5 +1,5 @@
 <script>
-  import { componentsMap } from "../core/Scripts/ComponentsMap";
+  import { componentsMap } from "@builder";
   import { cssVariables, applyTheme } from "../core/theme.js";
   let componentTypes = componentsMap;
 
@@ -42,7 +42,7 @@
 
         {#each Object.keys(cssVariables[type]) as variable}
           <div class="theme-variable">
-            <label for={variable}>{type == "general" ? formatName(variable, false) :  formatName(type, true) }</label>
+            <label for={variable}>{type == "general" ? formatName(variable, false) :  formatName(variable, true) }</label>
             <input
               type={variable.includes("color") ? "color" : "text"}
               id={variable}
