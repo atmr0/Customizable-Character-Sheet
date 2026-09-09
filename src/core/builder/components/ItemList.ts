@@ -16,7 +16,7 @@ export class ItemList extends BaseComponent {
     super(opts)
   }
 
-  public static buildTemplateFromSpec(spec: ComponentOptions[], defaults: any[] = [], rowLength: number = 4): SheetSection {
+  public static buildTemplateFromSpec(spec: ComponentOptions[], defaults: any[] = [], rowLength: number = 4, opts:(b: any) => SheetBuilder = (b) => b): SheetSection {
     ItemList.__cachedSpec = spec;
     ItemList.__cachedRowLength = rowLength;
     const b = new SheetBuilder('').setRowLength(rowLength);
@@ -24,6 +24,7 @@ export class ItemList extends BaseComponent {
     nSpec.forEach((f: ComponentOptions) => {
       b.add(f);
     });
+    opts(b);
     return b.build();
   }
   // basically the same as buildTemplateFromSpec, but with id

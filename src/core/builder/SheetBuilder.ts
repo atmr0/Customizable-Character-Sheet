@@ -14,7 +14,7 @@ export class SheetBuilder {
   private organizingGrid: OrganizingGrid = new OrganizingGrid(1)
   private sheetStyler:SheetStyler = new SheetStyler();
   constructor(title?: string) {
-    this.sheet = { title, id: undefined, numberOfLines: 0, rowLength: 1, components: [] } as BuilderIndex.Sheet;
+    this.sheet = { title, id: undefined, rowLength: 1, components: [] } as BuilderIndex.Sheet;
     this.sheetStyler.setSheet(this.sheet)
   }
 
@@ -39,7 +39,7 @@ export class SheetBuilder {
   subGrid(opts: Partial<BuilderIndex.SubGrid>, sheet: Partial<BuilderIndex.Sheet>): this { return this.add(new BuilderIndex.SubGrid(opts, sheet)); }
   characterAttribute(opts: Partial<BuilderIndex.ComponentOptions>): this { return this.add({ type: Constants.CharacterAttribute, ...opts }); }
   computedText(opts: Partial<BuilderIndex.ComputedText>): this { return this.add(new BuilderIndex.ComputedText(opts)); }
-  listField(opts: Partial<BuilderIndex.ItemList>): this { return this.add(new BuilderIndex.ItemList(opts)); }
+  itemList(opts: Partial<BuilderIndex.ItemList>): this { return this.add(new BuilderIndex.ItemList(opts)); }
   selectField(opts: Partial<BuilderIndex.SelectField>): this { return this.add(new BuilderIndex.SelectField(opts)); }
   checkboxField(opts: Partial<BuilderIndex.CheckboxField>): this { return this.add(new BuilderIndex.CheckboxField(opts)); }
 
