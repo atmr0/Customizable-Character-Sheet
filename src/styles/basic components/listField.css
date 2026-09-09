@@ -17,6 +17,10 @@
   gap: var(--list-gap-right);
 }
 
+.list-item .sub-grid-wrapper{
+  padding:0;
+}
+
 .remove-btn {
   background: transparent;
   border: none;

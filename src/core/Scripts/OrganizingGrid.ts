@@ -9,7 +9,7 @@ export default class OrganizingGrid {
   }
 
   addItem(row: number, col: number, w: number = 1, h: number = 1) {
-    if (this.currentColumn + w - 1 > this.rowLength) console.error("Elemento passando da linha")
+    if (col + w - 1 > this.rowLength) console.error("Elemento passando da linha")
     for (let i = row; i < row + h; i += 1) {
       for (let j = col; j < col + w; j += 1) {
         if (this.ocuppiedPositions.has(`${i}, ${j}`)) {
@@ -19,7 +19,6 @@ export default class OrganizingGrid {
         else this.ocuppiedPositions.add(`${i}, ${j}`)
       }
     }
-    this.increasePosition(w)
   }
 
   increasePosition(w: number = 1) {

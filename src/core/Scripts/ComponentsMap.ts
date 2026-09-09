@@ -8,6 +8,7 @@ import SelectFieldSvelte from "../components/basic components/SelectField.svelte
 import ImageFieldSvelte from "../components/basic components/ImageField.svelte";
 import CheckboxFieldSvelte from "../components/basic components/CheckboxField.svelte";
 import { Constants } from "../constants";
+import { SheetBuilder } from "./SheetBuilder";
 
 
 export const componentsMap: Record<string, any> = {
@@ -37,6 +38,8 @@ export class FullComponentOps {
 
   constructor(init?: Partial<FullComponentOps>) {
     if (init) Object.assign(this, init);
+    if (!this.width) this.width = 1;
+    if (!this.height) this.height = 1;
   }
 }
 
@@ -77,6 +80,7 @@ export class SubGrid extends FullComponentOps {
   constructor(opts: Partial<FullComponentOps & SubGrid>, sheet: Sheet) {
     super(opts);
     this.sheet = sheet;
+    
   }
 }
 
@@ -87,7 +91,10 @@ export class ComputedText extends FullComponentOps {
 
 export class ListField extends FullComponentOps {
   type: string = Constants.ListField;
-  itemTemplate?: ComponentOps[];
+  itemTemplate?: Sheet;
+  constructor(opts: Partial<FullComponentOps & ListField>) {
+    super(opts)
+  }
 }
 
 export class SelectField extends FullComponentOps {

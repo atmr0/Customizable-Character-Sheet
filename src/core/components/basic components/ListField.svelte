@@ -1,10 +1,10 @@
 <!--
-  Some of this code was AI generated. I coded it a long time ago and didn't remember exactly how it worked, and how to fix a particular problem
+  Some of this code was AI generated. I don't understand very much why the __rowId, but it works. Differently of just row.id.
 -->
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import { BaseComponent } from "../componentsIndex";
+  import { BaseComponent, SubGrid } from "../componentsIndex";
   import { valuesStore, setValue } from "../../valuesStore";
   import type { ComponentOps } from "../../Scripts/ComponentsMap";
   import { get } from "svelte/store";
@@ -14,24 +14,22 @@
   export let id: string | undefined;
   export let label: string | undefined;
   export let itemTemplate: ComponentOps[] = [];
+  export let itemWidth:number = 1;
   export let items: ComponentOps[][] = [];
   export let editable: boolean = true;
   export let onadd: ((row: ComponentOps[], all: ComponentOps[][]) => void) | undefined = undefined;
   export let onremove: ((removed: ComponentOps[] | null, rowId: string, all: ComponentOps[][]) => void) | undefined = undefined;
 
-  // Initialize store value if missing and load components map dynamically to avoid circular imports
   onMount(() => {
     const store = get(valuesStore);
     if (id && !store[id] && items && items.length) {
       setValue(id, items);
     }
-
     (async () => {
       try {
         const mod = await import("../../Scripts/ComponentsMap");
         localComponentsMap = mod.componentsMap || {};
       } catch (err) {
-        // if dynamic import fails, leave map empty — template will guard render
         console.warn("Failed to load components map dynamically", err);
         localComponentsMap = {};
       }
@@ -50,14 +48,14 @@
 
   $: rows = (storeItems || []).map((r: any, idx: number) => ensureRowId(r, idx));
 
-  $: columnsStyle = `grid-template-columns: repeat(${(rows && rows.length) || 1}, 1fr)`;
-
   function addItem() {
     if (!editable) return;
     const current = storeItems || [];
     const i = current.length;
-    const newRow: ComponentOps[] = itemTemplate.map((tpl, j) => {
-      const clone: ComponentOps = { ...(tpl || {}) };
+    const newRow:Sheet = {... itemTemplate}
+    newRow.id = ensureRowId(newRow, i).__rowId
+    newRow.components = itemTemplate.components.map((template, j) => {
+      const clone: ComponentOps = { ...(template || {}) };
       clone.id = clone.id ?? `${id ?? 'list'}-item-${i}-${j}`;
       return clone;
     });
@@ -72,42 +70,22 @@
     if (!editable) return;
     const current = storeItems || [];
     const next = current.filter((r: any) => r.__rowId !== rowId);
-    const removed = current.find((r: any) => r.__rowId === rowId) || null;
     if (id) setValue(id, next);
     else items = next;
-    onremove?.(removed, rowId, next);
-  }
-
-  function ensureId(prefix = 'list-item') {
-    return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
-  }
-
-  function getIdItem(row: any, tpl: ComponentOps, i: number, j: number) {
-    if (row && row[j] && row[j].id) return row[j].id;
-    const base = row && row.__rowId ? row.__rowId : `${id ?? 'list'}-${i}`;
-    if (tpl.id) return `${base}-${tpl.id}`;
-    if (tpl.label) return `${base}-${tpl.label.replace(/\s+/g, '_').toLowerCase()}`;
-    return `${base}-${j}`;
+    //                                                                                  dd/mm/yyyy
+    // i dont really know why i did this before, maybe ill findout in the future (today 08/09/2026)
+    // const removed = current.find((r: any) => r.__rowId === rowId) || null;
+    // onremove?.(removed, rowId, next);
   }
 </script>
 
 <BaseComponent {id} {label}>
   <div class="list-field">
-    <ul class="list-all-items" style={columnsStyle}>
+    <ul class="list-all-items" >
       {#each rows as row, i (row.__rowId)}
+      {console.log(row, i)}
         <li class="list-item">
-          {#each row as tpl, j}
-            {@const itemId = getIdItem(row, tpl, i, j)}
-            {@const itemProp = row[j] || tpl}
-            {#if localComponentsMap && localComponentsMap[tpl.type]}
-              <svelte:component
-                this={localComponentsMap[tpl.type]}
-                {...itemProp}
-                id={itemId}
-              />
-            {/if}
-          {/each}
-
+          <SubGrid sheet={row}  ></SubGrid>
           {#if editable}
             <button
               type="button"

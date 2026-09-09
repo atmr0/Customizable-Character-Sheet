@@ -3,7 +3,7 @@ import { Constants } from "../constants";
 import OrganizingGrid from "./OrganizingGrid";
 import SheetStyler from "./SheetStyler";
 
-let sheetStyler: SheetStyler = new SheetStyler();
+// let sheetStyler: SheetStyler = new SheetStyler();
 
 function ensureId(prefix = 'cell') {
   return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
@@ -12,10 +12,10 @@ function ensureId(prefix = 'cell') {
 export class SheetBuilder {
   private sheet: CM.Sheet;
   private organizingGrid: OrganizingGrid = new OrganizingGrid(1)
-
+  private sheetStyler:SheetStyler = new SheetStyler();
   constructor(title?: string) {
     this.sheet = { title, id: undefined, numberOfLines: 0, rowLength: 1, components: [] } as CM.Sheet;
-    sheetStyler.setSheet(this.sheet)
+    this.sheetStyler.setSheet(this.sheet)
   }
 
   setRowLength(length: number): this {
@@ -30,7 +30,7 @@ export class SheetBuilder {
     component.col = component.col ?? defaultPosition[1]
 
     this.organizingGrid.addItem(component.row, component.col, component.width ?? 1, component.height ?? 1)
-    sheetStyler.addComponent(component)
+    this.sheetStyler.addComponent(component)
     this.sheet.components!.push(component)
     return this;
   }
@@ -60,17 +60,17 @@ export class SheetBuilder {
   // }
 
   public startSection(name: string): this {
-    sheetStyler.startSection(name)
+    this.sheetStyler.startSection(name)
     return this;
   }
   public section(name: string, fn: (b: SheetBuilder) => SheetBuilder) {
-    sheetStyler.startSection(name)
+    this.sheetStyler.startSection(name)
     fn(this)
-    sheetStyler.endSection()
+    this.sheetStyler.endSection()
     return this;
   }
   public endSection(): this {
-    sheetStyler.endSection()
+    this.sheetStyler.endSection()
     return this;
   }
 
@@ -80,24 +80,24 @@ export class SheetBuilder {
 
       const val = style[key];
       if (typeof val === 'string') {
-        sheetStyler.applySimpleStyle(targetClass, key, val);
+        this.sheetStyler.applySimpleStyle(targetClass, key, val);
         continue;
       }
 
       if (typeof val === 'function') {
-        sheetStyler.applyFunctionRule(targetClass, key, val as Function);
+        this.sheetStyler.applyFunctionRule(targetClass, key, val as Function);
         continue;
       }
     }
 
-    sheetStyler.syncInstanceStyles();
+    this.sheetStyler.syncInstanceStyles();
     return this;
   }
 
 
   public build(): CM.Sheet {
-    // this.sheet.styles = { ...(this.sheet.styles || {}), ...sheetStyler. };
-    this.sheet.styleTag = sheetStyler.getStyleTag(this.sheet.styles);
+    // this.sheet.styles = { ...(this.sheet.styles || {}), ...this.sheetStyler. };
+    this.sheet.styleTag = this.sheetStyler.getStyleTag(this.sheet.styles);
     return this.sheet;
   }
 }
