@@ -6,6 +6,7 @@
   import ThemeConfiguration from "./configurations/ThemeConfiguration.svelte";
   import exportSheet from './Sheet/exportSheet';
   import { importSheetFromFile } from './Sheet/importSheet';
+  import { SHEET_BASE, GIT_OWNER, GIT_REPO, GIT_BRANCH, GIT_TOKEN } from './config.js';
   import { valuesStore } from '@core/valuesStore';
   // let sheet = sheetJson;
   // let styleTag = sheet.styleTag || "";
@@ -29,6 +30,36 @@
   let fileInput = null;
   function openFilePicker() {
     if (fileInput) fileInput.click();
+  }
+  
+  // GitHub settings for client-side commits (managed by GitRepoManager)
+  import GitRepoManager from './core/GitRepoManager';
+
+  const gitManager = new GitRepoManager({ owner: GIT_OWNER, repo: GIT_REPO, branch: GIT_BRANCH, token: GIT_TOKEN });
+  let { owner: gitOwner, repo: gitRepo, branch: gitBranch, token: gitToken } = gitManager.getSettings();
+
+  let saving = false;
+
+  function saveSettings() {
+    gitManager.saveSettings({ owner: gitOwner, repo: gitRepo, branch: gitBranch, token: gitToken });
+    alert('Configurações salvas localmente (sessionStorage).');
+  }
+
+  async function saveToRepo() {
+    if (!sheet) return alert('Sheet não definida');
+    saving = true;
+    const path = SHEET_BASE || 'sheets/sheet.json';
+    const currentValues = get(valuesStore);
+    const contentObj = { ...(sheet || {}), values: currentValues };
+    try {
+      await gitManager.saveSheet(path, contentObj, `Update sheet ${path}`);
+      alert('Salvo no repositório com sucesso.');
+    } catch (e) {
+      console.error(e);
+      alert('Erro ao salvar: ' + (e?.message || String(e)));
+    } finally {
+      saving = false;
+    }
   }
 
   async function handleFileChange(e) {
@@ -67,7 +98,25 @@
     <div class="sheet-controls">
       <button on:click={handleExport} title="Exportar sheet como JSON">Exportar Sheet</button>
       <button on:click={openFilePicker} title="Importar sheet a partir de arquivo JSON">Importar Sheet</button>
+      <button on:click={saveToRepo} disabled={saving} title="Salvar sheet no repositório GitHub">{saving ? 'Salvando...' : 'Salvar no GitHub'}</button>
       <input bind:this={fileInput} type="file" accept="application/json,.json" on:change={handleFileChange} style="display:none" />
+
+      <details>
+        <summary>Configurações GitHub (opcional, para salvar)</summary>
+        <label>Owner (usuário/org):
+          <input type="text" bind:value={gitOwner} placeholder="github-username" />
+        </label>
+        <label>Repo:
+          <input type="text" bind:value={gitRepo} placeholder="repo-name" />
+        </label>
+        <label>Branch:
+          <input type="text" bind:value={gitBranch} placeholder="main" />
+        </label>
+        <label>Personal Access Token (coloque com escopo repo/public_repo):
+          <input type="password" bind:value={gitToken} placeholder="ghp_xxx..." />
+        </label>
+        <button on:click={saveSettings}>Salvar configurações</button>
+      </details>
     </div>
     {#key sheetKey}
       <RenderGrid {sheet} />
