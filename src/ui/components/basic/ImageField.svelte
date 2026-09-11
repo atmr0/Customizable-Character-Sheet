@@ -9,7 +9,6 @@
   export let accept: string = "image/*";
   export let maxSizeBytes: number | undefined = undefined;
   export let placeholder: string = "";
-  export let onupload = undefined;
   let componentClass = Constants.ImageField;
 
   let fileInput: HTMLInputElement | null = null;
@@ -48,7 +47,6 @@
     reader.onload = () => {
       const dataUrl = reader.result as string;
       if (id) setValue(id, dataUrl);
-      onupload?.(dataUrl, f);
     };
     reader.readAsDataURL(f);
   }

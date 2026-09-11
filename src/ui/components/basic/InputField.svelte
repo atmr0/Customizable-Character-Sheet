@@ -6,14 +6,16 @@
   import { onMount } from "svelte";
   import { get } from "svelte/store";
 
+  type InputType = "text" | "number";
+
   export let value: any = "";
   export let label: string | undefined;
   export let placeholder: string = "";
   export let id: string;
   
   // input mode/type controls
-  export let inputType: string = "text"; // 'text'|'number'
-  export let allowFloat: boolean = false; // allow decimals when numeric
+  export let inputType: InputType = "text";
+  export let allowFloat: boolean = false;
   export let step: number | string = allowFloat ? "any" : 1;
   export let min: number | undefined = undefined;
   export let max: number | undefined = undefined;
@@ -58,7 +60,7 @@
     bind:value
     {placeholder}
     oninput={handleInput}
-    class="input-field"
+    class={Constants.InputField}
     type={inputType === "number" ? "number" : "text"}
     {step}
     {min}

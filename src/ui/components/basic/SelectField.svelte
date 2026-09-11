@@ -9,11 +9,9 @@
   export let options: Array<string> | Array<{ value: any; label: string }> = [];
   export let value: any = "";
   export let placeholder: string = "Select...";
-  export let onchange = undefined;
   let componentClass = Constants.SelectField;
-  function handleChange(e) {
+  function handleChange(e:any) {
     value = e.target.value;
-    onchange?.(e);
     if (id) setValue(id, value);
   }
   if (id) setValue(id, value);

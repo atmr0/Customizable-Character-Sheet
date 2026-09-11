@@ -28,7 +28,7 @@
 </script>
 
 <BaseComponent {id} {componentClass}>
-  <div class="character-attribute">
+  <div class={Constants.CharacterAttribute}>
     {#if label}
       <div class="label">{label}</div>
     {/if}
@@ -37,7 +37,7 @@
       bind:value
       {placeholder}
       oninput={onInput}
-      class="input-field"
+      class={Constants.InputField}
       inputType="number"
     />
     <ComputedText bind:this={modificator} expr="{id} % 10" id={idComputed} {format} />

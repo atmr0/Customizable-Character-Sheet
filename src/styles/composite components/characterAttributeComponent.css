@@ -1,4 +1,4 @@
-.character-attribute {
+.CharacterAttribute {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,7 +9,7 @@
     color: var(--text-secondary);
   }
   
-  .input-field {
+  .InputField {
     font-size: var(--attr-input-font-size);
     text-align: center;
     border-radius: var(--attr-input-border-radius);

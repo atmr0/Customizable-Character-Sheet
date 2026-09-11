@@ -6,7 +6,7 @@
 
   export let expr = "";
   export let label = undefined;
-  export let format = (v) => v;
+  export let formatText = (v) => v;
   export let id: string | undefined = undefined;
   let componentClass = Constants.ComputedText;
   let computed = "";
@@ -31,5 +31,5 @@
 <BaseComponent {id} {label} {componentClass}>
   <div
     class="computed-text"
-  >{format(computed)}</div>
+  >{formatText(computed)}</div>
 </BaseComponent>

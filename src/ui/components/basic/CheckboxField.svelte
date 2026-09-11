@@ -1,11 +1,13 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
   import { valuesStore, setValue } from "@core/valuesStore";
+    import { Constants } from "@core/constants";
 
   export let id: string | undefined;
   export let label: string | undefined;
   export let checked: boolean = false;
   export let disabled: boolean = false;
+  export let componentClass:string = Constants.CheckboxField
   // export let onchange = undefined;
 
   if (id) setValue(id, checked);
@@ -20,7 +22,7 @@
   }
 </script>
 
-<BaseComponent {id} componentClass="checkbox-field">
+<BaseComponent {id} {componentClass}>
   <div class="checkbox-wrapper">
     <label class="checkbox-root" for={inputId}>
       <input

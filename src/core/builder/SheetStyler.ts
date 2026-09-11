@@ -1,5 +1,7 @@
 import * as BuilderIndex from "./";
 
+// Uses CSS to apply styles.
+// In the future, maybe I'll use a canvas instead of HTTP DOM
 export default class SheetStyler {
   private styleObj: Record<string, any> = { '*': {} };
   private sheet: BuilderIndex.Sheet;
@@ -13,7 +15,7 @@ export default class SheetStyler {
   private currentComponent: BuilderIndex.ComponentOptions | undefined;
 
 
-  public setSheet(sheet:BuilderIndex.Sheet){
+  public setSheet(sheet: BuilderIndex.Sheet) {
     this.sheet = sheet;
 
   }
@@ -23,6 +25,7 @@ export default class SheetStyler {
     this.currentComponent = component;
   }
 
+  // Apply style to multiple components within the current section
   public startSection(name: string): void {
     this.inSection = true;
     this.sectionNameStack.push(name);
@@ -36,12 +39,14 @@ export default class SheetStyler {
     if (this.stackSize == 0) this.inSection = false;
     this.currentComponent = undefined;
   }
-  // persist instance styleObj into sheet.styles for serialization
+
+  // Don't remember why this exists
   public syncInstanceStyles(): void {
     this.sheet.styles = { ...(this.sheet.styles || {}), ...this.styleObj };
   }
 
   public applySimpleStyle(targetClass: string, key: string, value: string): void {
+    console.log(this.currentComponent)
     if (!this.currentComponent) {
 
       if (this.lastSection) {
@@ -50,6 +55,8 @@ export default class SheetStyler {
       }
 
       const selector = this.createSelector(targetClass);
+      console.log(targetClass)
+      console.log('sheetstyler', selector)
 
       this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
       return;
@@ -88,7 +95,7 @@ export default class SheetStyler {
   public createSelector(targetClass: string, component: BuilderIndex.ComponentOptions | null = null): string {
     let selector = `#${this.sheet.id}`;
     if (component) selector += ` #${component.id}`;
-    if (targetClass) selector += ` ${targetClass}`;
+    if (targetClass) selector += ` .${targetClass}`;
 
     return selector;
   }

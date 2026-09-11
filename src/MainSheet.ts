@@ -8,7 +8,7 @@ import { ItemList } from './core/builder/components/ItemList';
 type colors = keyof typeof attributesColors;
 
 const skillSpec: ComponentOptions[] = [
-  { type: Constants.InputField, placeholder: 'Skill name', width: 3, value: '$2' },
+  { type: Constants.InputField, id:'skillName', placeholder: 'Skill name', width: 3, value: '$2' },
   { type: Constants.ComputedText, expr: '$1', width: 1 },
 ];
 
@@ -17,11 +17,15 @@ const skillSpec: ComponentOptions[] = [
 const mainSheet = new SheetBuilder('Character Sheet')
   .id('test_sheet')
   .setRowLength(6)
-  .section("Informacoes", b => b
+  // .section('information',(b) => b
+  .subGrid({id:'informations',width:6}, 
+    new SheetBuilder().setRowLength(6).id('informations')
+    .withStyle({background: 'red'},Constants.InputField)
     .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', width: 5 })
     .add({ type: 'ImageField', id: 'profile_picture', width: 1, height: 2 })
     .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', width: 3 })
     .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], width: 2 })
+    .build()
   )
   .section("teste", b => b
     .characterAttribute({ id: 'str_attr', label: 'Strength', value: 10, col: 1, row: 3, })

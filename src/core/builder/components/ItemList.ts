@@ -11,19 +11,32 @@ export class ItemList extends BaseComponent {
 
   teste: ItemList = this
 
+  /*
+  * This allow us to not need to create instances when building the sheet in code
+  * ex.: [...].itemList({
+  *   itemTemplate: ItemList.buildTemplateFromSpec(...),
+  *   items: [
+  *     ItemList.buildItemFromValues([...]),
+  *     ItemList.buildItemFromValues([...])
+  *   ]
+  * })
+  */
   private static __cachedSpec: ComponentOptions[] = [];
   private static __cachedRowLength: number = 1
   private static __cachedId: string = "";
   private static __numberOfItens: number = 0;
   constructor(opts: Partial<BaseComponent & ItemList>) {
     super(opts)
+
+    // resetting so the count doesn't continue in other lists
+    ItemList.__numberOfItens = 0;
+
     if(!this.itemTemplate || !this.itemTemplate.components || this.itemTemplate.components.length === 0) {
       console.error('Item template is not set for ItemList');
       return;
     }
     if(!this.items) return
     this.numberOfItens = this.items.length * this.itemTemplate.components.length;
-    console.log(this.items.length, this.itemTemplate.components.length, this.numberOfItens)
   }
 
   public static buildTemplateFromSpec(id: string, spec: ComponentOptions[], defaults: any[] = [], rowLength: number = 4, opts: (b: any) => SheetBuilder = (b) => b): SheetSection {
@@ -33,6 +46,8 @@ export class ItemList extends BaseComponent {
     const b = new SheetBuilder('').id(id).setRowLength(rowLength);
     let nSpec = ItemList.replaceValuesInObjectList(spec, defaults)
     nSpec.forEach((f: ComponentOptions) => {
+      f.idTemplate = f.id;
+      f.id = '' // avoid conflicts for "repeating" the same id 
       b.add(f);
     });
     opts(b);
@@ -45,10 +60,9 @@ export class ItemList extends BaseComponent {
     let nSpec = ItemList.replaceValuesInObjectList(ItemList.__cachedSpec, values)
     let id = ItemList.__cachedId
     const itemId = `${id}-item`;
-    console.log(id, itemId)
     nSpec.forEach((f: ComponentOptions) => {
       if (!id) console.error('Cached id is not set for ItemList');
-      f.id = `${itemId}-${f.type}-${ItemList.__numberOfItens++}`;
+      f.id = `${itemId}-${f.idTemplate ?? f.type}-${ItemList.__numberOfItens++}`;
       b.add(f);
     });
     b.id(itemId)
