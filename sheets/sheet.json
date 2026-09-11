@@ -1,0 +1,334 @@
+{
+  "title": "Character Sheet",
+  "id": "test_sheet",
+  "rowLength": 6,
+  "components": [
+    {
+      "style": {},
+      "id": "player_name",
+      "label": "Player Name",
+      "placeholder": "John Doe",
+      "width": 5,
+      "height": 1,
+      "type": "InputField",
+      "inputType": "text",
+      "allowFloat": false,
+      "step": 1,
+      "row": 1,
+      "col": 1
+    },
+    {
+      "type": "ImageField",
+      "id": "profile_picture",
+      "width": 1,
+      "height": 2,
+      "row": 1,
+      "col": 6
+    },
+    {
+      "style": {},
+      "id": "character_name",
+      "label": "Character Name",
+      "placeholder": "Gon Freecss",
+      "width": 3,
+      "height": 1,
+      "type": "InputField",
+      "inputType": "text",
+      "allowFloat": false,
+      "step": 1,
+      "row": 2,
+      "col": 1
+    },
+    {
+      "style": {},
+      "id": "nen_type",
+      "label": "Nen type",
+      "placeholder": "Not discovered yet",
+      "options": [
+        "Enhancer",
+        "Emitter",
+        "Manipulator",
+        "Transmuter",
+        "Conjurer",
+        "Specialist"
+      ],
+      "width": 2,
+      "height": 1,
+      "type": "SelectField",
+      "row": 2,
+      "col": 4
+    },
+    {
+      "type": "CharacterAttribute",
+      "id": "str_attr",
+      "label": "Strength",
+      "value": 10,
+      "col": 1,
+      "row": 3
+    },
+    {
+      "type": "CharacterAttribute",
+      "id": "dex_attr",
+      "label": "Dexterity",
+      "value": 10,
+      "col": 1,
+      "row": 4
+    },
+    {
+      "type": "CharacterAttribute",
+      "id": "con_attr",
+      "label": "Constitution",
+      "value": 10,
+      "col": 1,
+      "row": 5
+    },
+    {
+      "type": "CharacterAttribute",
+      "id": "int_attr",
+      "label": "Intelligence",
+      "value": 10,
+      "col": 1,
+      "row": 6
+    },
+    {
+      "type": "CharacterAttribute",
+      "id": "wis_attr",
+      "label": "Wisdom",
+      "value": 10,
+      "col": 1,
+      "row": 7
+    },
+    {
+      "type": "CharacterAttribute",
+      "id": "cha_attr",
+      "label": "Charisma",
+      "value": 10,
+      "col": 1,
+      "row": 8
+    },
+    {
+      "type": "CheckboxField",
+      "id": "trainded",
+      "label": "Trained",
+      "height": 1,
+      "row": 3,
+      "col": 2
+    },
+    {
+      "style": {},
+      "id": "skills",
+      "label": "Skills",
+      "width": 2,
+      "height": 5,
+      "editable": true,
+      "itemTemplate": {
+        "title": "",
+        "rowLength": 4,
+        "components": [
+          {
+            "type": "InputField",
+            "placeholder": "Skill name",
+            "width": 3,
+            "value": "",
+            "id": "InputField-ezql6k5",
+            "row": 1,
+            "col": 1
+          },
+          {
+            "type": "ComputedText",
+            "expr": "cha_attr_mod + 2",
+            "width": 1,
+            "id": "ComputedText-y7s9bl8",
+            "row": 1,
+            "col": 4
+          }
+        ],
+        "styles": {
+          "*": {},
+          "#undefined #ComputedText-y7s9bl8": {
+            "background": "red"
+          }
+        },
+        "styleTag": "* {  }\n#undefined #ComputedText-y7s9bl8 { background: red; }\n"
+      },
+      "items": [
+        {
+          "title": "",
+          "id": "listItem-kdl8f",
+          "rowLength": 4,
+          "components": [
+            {
+              "type": "InputField",
+              "placeholder": "Skill name",
+              "width": 3,
+              "value": "Atletismo",
+              "id": "listSubItem-4ff24",
+              "row": 1,
+              "col": 1
+            },
+            {
+              "type": "ComputedText",
+              "expr": "str_attr_mod + 5",
+              "width": 1,
+              "id": "listSubItem-8ux2e",
+              "row": 1,
+              "col": 4
+            }
+          ],
+          "styleTag": "* {  }\n",
+          "__rowId": "row-1-0"
+        }
+      ],
+      "type": "ItemList",
+      "teste": "[Circular]",
+      "row": 3,
+      "col": 3
+    },
+    {
+      "style": {},
+      "id": "aaa",
+      "label": "Skills",
+      "width": 2,
+      "height": 5,
+      "editable": true,
+      "itemTemplate": {
+        "title": "",
+        "rowLength": 4,
+        "components": [
+          {
+            "type": "InputField",
+            "placeholder": "Skill name",
+            "width": 3,
+            "value": "",
+            "id": "InputField-7ct27cb",
+            "row": 1,
+            "col": 1
+          },
+          {
+            "type": "ComputedText",
+            "expr": "cha_attr_mod + 2",
+            "width": 1,
+            "id": "ComputedText-6qa2il2",
+            "row": 1,
+            "col": 4
+          }
+        ],
+        "styleTag": "* {  }\n"
+      },
+      "items": [
+        {
+          "title": "",
+          "id": "listItem-7bm73",
+          "rowLength": 4,
+          "components": [
+            {
+              "type": "InputField",
+              "placeholder": "Skill name",
+              "width": 3,
+              "value": "Carismo",
+              "id": "listSubItem-lhh9h",
+              "row": 1,
+              "col": 1
+            },
+            {
+              "type": "ComputedText",
+              "expr": "str_attr_mod + 5",
+              "width": 1,
+              "id": "listSubItem-dpj35",
+              "row": 1,
+              "col": 4
+            }
+          ],
+          "styleTag": "* {  }\n",
+          "__rowId": "row-1-0"
+        }
+      ],
+      "type": "ItemList",
+      "teste": "[Circular]",
+      "row": 3,
+      "col": 5
+    }
+  ],
+  "styles": {
+    "*": {},
+    "#test_sheet #str_attr": {
+      "--attr-focus-color": "#EF4444"
+    },
+    "#test_sheet #dex_attr": {
+      "--attr-focus-color": "#F59E0B"
+    },
+    "#test_sheet #con_attr": {
+      "--attr-focus-color": "#10B981"
+    },
+    "#test_sheet #int_attr": {
+      "--attr-focus-color": "#3B82F6"
+    },
+    "#test_sheet #wis_attr": {
+      "--attr-focus-color": "#8B5CF6"
+    },
+    "#test_sheet #cha_attr": {
+      "--attr-focus-color": "#EC4899"
+    }
+  },
+  "styleTag": "* {  }\n#test_sheet #str_attr { --attr-focus-color: #EF4444; }\n#test_sheet #dex_attr { --attr-focus-color: #F59E0B; }\n#test_sheet #con_attr { --attr-focus-color: #10B981; }\n#test_sheet #int_attr { --attr-focus-color: #3B82F6; }\n#test_sheet #wis_attr { --attr-focus-color: #8B5CF6; }\n#test_sheet #cha_attr { --attr-focus-color: #EC4899; }\n",
+  "values": {
+    "nen_type": "",
+    "str_attr": 10,
+    "str_attr_mod": 0,
+    "dex_attr": 10,
+    "dex_attr_mod": 0,
+    "con_attr": 10,
+    "con_attr_mod": 0,
+    "int_attr": 10,
+    "int_attr_mod": 0,
+    "wis_attr": 10,
+    "wis_attr_mod": 0,
+    "cha_attr": 10,
+    "cha_attr_mod": 0,
+    "trainded": false,
+    "player_name": "Mario Luigi",
+    "character_name": "Wario",
+    "str_attr_field": 10,
+    "dex_attr_field": 10,
+    "con_attr_field": 10,
+    "int_attr_field": 10,
+    "wis_attr_field": 10,
+    "cha_attr_field": 10,
+    "skills": [
+      "[Circular]",
+      {
+        "title": "",
+        "id": "listItem-junab",
+        "rowLength": 4,
+        "components": [
+          {
+            "type": "InputField",
+            "placeholder": "Skill name",
+            "width": 3,
+            "value": "",
+            "id": "listSubItem-lmrs7",
+            "row": 1,
+            "col": 1
+          },
+          {
+            "type": "ComputedText",
+            "expr": "cha_attr_mod + 2",
+            "width": 1,
+            "id": "listSubItem-ne3ed",
+            "row": 1,
+            "col": 4
+          }
+        ],
+        "styleTag": "* {  }\n",
+        "__rowId": "row-1-1"
+      }
+    ],
+    "aaa": "[Circular]",
+    "listSubItem-8ux2e": 5,
+    "listSubItem-dpj35": 5,
+    "listSubItem-4ff24": "Atletismo",
+    "listSubItem-lhh9h": "Carismo",
+    "listSubItem-ne3ed": 2,
+    "listSubItem-lmrs7": "Corrida"
+  }
+}
