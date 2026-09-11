@@ -1,7 +1,10 @@
 import * as BuilderIndex from "./";
 import { Constants } from "../constants";
 import OrganizingGrid from "./OrganizingGrid";
-import SheetStyler from "./SheetStyler";
+import SheetStyler, { type styleValues } from "./SheetStyler";
+
+
+let onDevelopment = true
 
 // let sheetStyler: SheetStyler = new SheetStyler();
 
@@ -22,7 +25,7 @@ export class SheetBuilder {
   }
 
   add(component: BuilderIndex.ComponentOptions): this {
-    if (SheetBuilder.itemIds.has(component.id!)) {
+    if (!onDevelopment && SheetBuilder.itemIds.has(component.id!)) {
       throw new Error(`Component with id ${component.id} already exists in the sheet.`);
     }
     if (!component.id) component.id = ensureId(component.type);
@@ -82,25 +85,23 @@ export class SheetBuilder {
     return this;
   }
   
-  public withStyle(style: Record<string, any> | Record<string, Record<string, Function>>, targetClass: string = ""): this {
-    console.log('sheetBuilder', targetClass)
-    for (const key in style) {
-      if (!style[key]) continue;
+  public withComponentStyle(style: styleValues): this {
+    this.sheetStyler.applyStyleToComponent(style);
+    return this;
+  }
 
-      const val = style[key];
-      if (typeof val === 'string') {
-        this.sheetStyler.applySimpleStyle(targetClass, key, val);
-        continue;
-      }
+  public withSectionStyle(style: styleValues, targetClass: string = ""): this {
+    this.sheetStyler.applyStyleToSection(style, targetClass);
+    return this;
+  }
+  
+  public withSheetStyle(style: styleValues, targetClass: string = ""): this {
+    this.sheetStyler.applyStyleToSheet(style, targetClass);
+    return this;
+  }
 
-      if (typeof val === 'function') {
-        this.sheetStyler.applyFunctionRule(targetClass, key, val as Function);
-        continue;
-      }
-    }
-
-    // Don't remember why this exists.
-    this.sheetStyler.syncInstanceStyles();
+  public withStyle(style: styleValues, targetClass: string = ""): this {
+    this.sheetStyler.applyStyleContextual(style,targetClass)
     return this;
   }
 

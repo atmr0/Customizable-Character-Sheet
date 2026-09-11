@@ -1,5 +1,7 @@
 import * as BuilderIndex from "./";
 
+
+export type styleValues = Record<string, any> | Record<string, Record<string, Function>>;
 // Uses CSS to apply styles.
 // In the future, maybe I'll use a canvas instead of HTTP DOM
 export default class SheetStyler {
@@ -45,29 +47,30 @@ export default class SheetStyler {
     this.sheet.styles = { ...(this.sheet.styles || {}), ...this.styleObj };
   }
 
-  public applySimpleStyle(targetClass: string, key: string, value: string): void {
-    console.log(this.currentComponent)
-    if (!this.currentComponent) {
-
-      if (this.lastSection) {
-        this.applyStyleToSection(targetClass, key, value)
-        return
+  public applyStyleToSheet(style: Record<string, any> | Record<string, Record<string, Function>>,targetClass:string = ""): void {
+    const selector = this.createSelector(targetClass);
+    for (const [key, value] of Object.entries(style)) {
+      if (!value) continue;
+      if (typeof value === 'string') {
+        this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
+        continue;
       }
-
-      const selector = this.createSelector(targetClass);
-      console.log(targetClass)
-      console.log('sheetstyler', selector)
-
-      this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
-      return;
+      // TODO implement handling for function values
     }
-
-    const comp = this.currentComponent as BuilderIndex.ComponentOptions;
-    const selector = this.createSelector(targetClass, comp);
-    this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
   }
 
-  public applyStyleToSection(targetClass: string, key: string, value: string) {
+  public applyStyleToComponent(style: styleValues){
+    if(!this.currentComponent){
+      throw new Error("No current component to apply style to.");
+    }
+    const selector = this.createSelector("", this.currentComponent);
+    for (const [key, value] of Object.entries(style)) {
+      if (!value) continue;
+      this.applySingleStyle(selector, key, value, this.currentComponent);
+    }
+  }
+
+  public applyStyleToSection(style: styleValues, targetClass:string = "") {
     if (!this.lastSection) {
       console.error("NO LAST SECTION")
       return
@@ -75,20 +78,35 @@ export default class SheetStyler {
     for (let i = 0; i < this.lastSection.length; i += 1) {
       const component = this.lastSection[i];
       const selector = this.createSelector(targetClass, component)
-      this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
+      for (const [key, value] of Object.entries(style)) {
+        if (!value) continue;
+        this.applySingleStyle(selector, key, value, component);
+      }
     }
   }
 
-  public applyFunctionRule(targetClass: string, key: string, fn: Function): void {
-    if (!this.lastSection) {
-      console.error("NO LAST SECTION TO APPLY FUNCTION")
-      return
+   public applyStyleContextual(style:styleValues, targetClass: string = ""): void {
+    if (!this.currentComponent) {
+      if (this.lastSection) {
+        this.applyStyleToSection(style, targetClass)
+        return
+      }
+      this.applyStyleToSheet(style,targetClass)
+      return;
     }
-    for (let i = 0; i < this.lastSection.length; i += 1) {
-      const component = this.lastSection[i];
-      const value = fn(component);
-      const selector = this.createSelector(targetClass, component)
+    this.applyStyleToComponent(style);
+  }
+  
+  private applySingleStyle(selector: string, key: string, value: string | Function, component: BuilderIndex.ComponentOptions | null = null): void {
+    if (!value) return;
+    if (typeof value === 'string') {
       this.styleObj[selector] = { ...this.styleObj[selector], [key]: value };
+      return;
+    }
+    if (typeof value === 'function' && component) {
+      let result = value(component);
+      this.styleObj[selector] = { ...this.styleObj[selector], [key]: result };
+      return;
     }
   }
 

@@ -20,11 +20,11 @@ const mainSheet = new SheetBuilder('Character Sheet')
   // .section('information',(b) => b
   .subGrid({id:'informations',width:6}, 
     new SheetBuilder().setRowLength(6).id('informations')
-    .withStyle({background: 'red'},Constants.InputField)
     .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', width: 5 })
     .add({ type: 'ImageField', id: 'profile_picture', width: 1, height: 2 })
     .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', width: 3 })
     .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], width: 2 })
+    .withSheetStyle({background: 'red'},Constants.InputField)
     .build()
   )
   .section("teste", b => b
@@ -35,7 +35,7 @@ const mainSheet = new SheetBuilder('Character Sheet')
     .characterAttribute({ id: 'wis_attr', label: 'Wisdom', value: 10, col: 1, row: 7, })
     .characterAttribute({ id: 'cha_attr', label: 'Charisma', value: 10, col: 1, row: 8, })
   )
-  .withStyle({
+  .withSectionStyle({
     "--attr-focus-color": (cell: ComponentOptions) => attributesColors[cell.id as colors],
   })
   .section("talents", r => r
@@ -57,6 +57,5 @@ const mainSheet = new SheetBuilder('Character Sheet')
   )
   .build();
 
-// const mainSheet = new SheetBuilder().setRowLength(6).staticText({text: 'tchau'}).build()
 export default mainSheet;
 export { mainSheet };
