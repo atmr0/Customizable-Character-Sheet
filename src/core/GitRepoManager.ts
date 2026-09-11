@@ -38,6 +38,13 @@ export default class GitRepoManager {
   async saveSheet(path: string, contentObj: any, message = 'Update file') {
     if (!this.owner || !this.repo || !this.token) throw new Error('Git settings incomplete');
     const client = new GitHubClient({ owner: this.owner, repo: this.repo, branch: this.branch, token: this.token });
-    return client.createOrUpdateFile(path, contentObj, message);
+    try {
+      // Use commitSingleFile which handles creating or updating (it will fetch existing sha internally)
+      return await client.commitSingleFile(path, contentObj, message);
+    } catch (err: any) {
+      // Re-throw with a clearer message when possible
+      const msg = err?.message || String(err);
+      throw new Error(msg);
+    }
   }
 }

@@ -47,6 +47,8 @@
 
   async function saveToRepo() {
     if (!sheet) return alert('Sheet não definida');
+    // Sync current form values into gitManager so saveSheet sees them
+    gitManager.saveSettings({ owner: gitOwner, repo: gitRepo, branch: gitBranch, token: gitToken });
     saving = true;
     const path = SHEET_BASE || 'sheets/sheet.json';
     const currentValues = get(valuesStore);
@@ -98,7 +100,7 @@
     <div class="sheet-controls">
       <button on:click={handleExport} title="Exportar sheet como JSON">Exportar Sheet</button>
       <button on:click={openFilePicker} title="Importar sheet a partir de arquivo JSON">Importar Sheet</button>
-      <button on:click={saveToRepo} disabled={saving} title="Salvar sheet no repositório GitHub">{saving ? 'Salvando...' : 'Salvar no GitHub'}</button>
+      <button on:click={saveToRepo} disabled={!gitOwner || !gitRepo || !gitToken || saving} title="Salvar sheet no repositório GitHub">{saving ? 'Salvando...' : 'Salvar no GitHub'}</button>
       <input bind:this={fileInput} type="file" accept="application/json,.json" on:change={handleFileChange} style="display:none" />
 
       <details>
