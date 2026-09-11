@@ -38,16 +38,14 @@ const mainSheet = new SheetBuilder('Character Sheet')
     .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', height: 1 })
     .itemList({
       id: 'skills', label: 'Skills', width: 2, height: 5, editable: true,
-      itemTemplate: ItemList.buildTemplateFromSpec(skillSpec, ['cha_attr_mod + 2'],4, 
-        (b) => b.withStyle({background:'red'})
-      ),
+      itemTemplate: ItemList.buildTemplateFromSpec('skills', skillSpec, ['cha_attr_mod + 2']),
       items: [
         ItemList.buildItemFromValues(['str_attr_mod + 5', 'Atletismo'])
       ]
     })
     .itemList({
       id: 'aaa', label: 'Skills', width: 2, height: 5, editable: true,
-      itemTemplate: ItemList.buildTemplateFromSpec(skillSpec, ['cha_attr_mod + 2']),
+      itemTemplate: ItemList.buildTemplateFromSpec('aaa', skillSpec, ['cha_attr_mod + 2']),
       items: [
         ItemList.buildItemFromValues(['str_attr_mod + 5', 'Carismo'])
       ]

@@ -7,19 +7,30 @@ export class ItemList extends BaseComponent {
   type: string = Constants.ItemList;
   itemTemplate?: SheetSection;
   items?: SheetSection[];
+  numberOfItens: number = 0;
 
-  teste:ItemList = this
+  teste: ItemList = this
 
   private static __cachedSpec: ComponentOptions[] = [];
   private static __cachedRowLength: number = 1
+  private static __cachedId: string = "";
+  private static __numberOfItens: number = 0;
   constructor(opts: Partial<BaseComponent & ItemList>) {
     super(opts)
+    if(!this.itemTemplate || !this.itemTemplate.components || this.itemTemplate.components.length === 0) {
+      console.error('Item template is not set for ItemList');
+      return;
+    }
+    if(!this.items) return
+    this.numberOfItens = this.items.length * this.itemTemplate.components.length;
+    console.log(this.items.length, this.itemTemplate.components.length, this.numberOfItens)
   }
 
-  public static buildTemplateFromSpec(spec: ComponentOptions[], defaults: any[] = [], rowLength: number = 4, opts:(b: any) => SheetBuilder = (b) => b): SheetSection {
+  public static buildTemplateFromSpec(id: string, spec: ComponentOptions[], defaults: any[] = [], rowLength: number = 4, opts: (b: any) => SheetBuilder = (b) => b): SheetSection {
     ItemList.__cachedSpec = spec;
     ItemList.__cachedRowLength = rowLength;
-    const b = new SheetBuilder('').setRowLength(rowLength);
+    ItemList.__cachedId = id;
+    const b = new SheetBuilder('').id(id).setRowLength(rowLength);
     let nSpec = ItemList.replaceValuesInObjectList(spec, defaults)
     nSpec.forEach((f: ComponentOptions) => {
       b.add(f);
@@ -27,24 +38,32 @@ export class ItemList extends BaseComponent {
     opts(b);
     return b.build();
   }
+
   // basically the same as buildTemplateFromSpec, but with id
   public static buildItemFromValues(values: any[] = []): SheetSection {
     const b = new SheetBuilder('').setRowLength(ItemList.__cachedRowLength);
     let nSpec = ItemList.replaceValuesInObjectList(ItemList.__cachedSpec, values)
+    let id = ItemList.__cachedId
+    const itemId = `${id}-item`;
+    console.log(id, itemId)
     nSpec.forEach((f: ComponentOptions) => {
-      f.id = f.id ?? makeUid('listSubItem')
+      if (!id) console.error('Cached id is not set for ItemList');
+      f.id = `${itemId}-${f.type}-${ItemList.__numberOfItens++}`;
       b.add(f);
     });
-    b.id(makeUid('listItem'))
+    b.id(itemId)
     return b.build();
   }
+
   // the same as the static, but it always creates a new Id, and it is used in the Svelte component
   public buildItemFromValues(values: any[] = []): SheetSection {
     const b = new SheetBuilder('').setRowLength(this.itemTemplate!.rowLength!);
-    b.id(makeUid('listItem'))
+    const parentId = (this.id && this.id.length) ? this.id : makeUid('list');
+    const itemId = `${parentId}-item`;
+    b.id(itemId)
     let nSpec = ItemList.replaceValuesInObjectList(this.itemTemplate!.components!, values)
     nSpec.forEach((f: ComponentOptions) => {
-      f.id = makeUid('listSubItem')
+      f.id = `${itemId}-${f.type}-${this.numberOfItens++}`
       b.add(f);
     });
     return b.build();
