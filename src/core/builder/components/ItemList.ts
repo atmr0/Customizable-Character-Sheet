@@ -6,7 +6,7 @@ import { Constants } from "../../constants";
 export class ItemList extends BaseComponent {
   type: string = Constants.ItemList;
   itemTemplate?: SheetSection;
-  items?: SheetSection[]; // better for typing when creating the list using the builder
+  items?: SheetSection[]; // better for typing when creating the list using the builder. And rendering it in order of addition
   private itemsRecord: Record<string, SheetSection> = {}; // but this is the one I will be using for search
   numberOfItens: number = 0;
   editable: boolean = true;
@@ -44,14 +44,15 @@ export class ItemList extends BaseComponent {
         this.itemsRecord[item.id] = item;
       }
     }
-    // this.numberOfItens = this.items.length * Object.keys(this.itemTemplate.components).length;
+    this.numberOfItens = this.items.length;
   }
 
   public getValue(): any[] {
     if(!this.items) return [];
     let data:any[] = [];
-    for(let i = 0; i < this.items!.length; i++){
-      data.push(this.getItemValues(this.items![i].id!))
+    console.log(this.items)
+    for(const item in this.itemsRecord){
+      data.push(this.getItemValues(item))
     }
     return data;
   }
@@ -59,8 +60,9 @@ export class ItemList extends BaseComponent {
   public getItemValues(id:string):any{
     if(!this.items) return undefined;
     let item = this.itemsRecord[id];
+    console.log("Getting item values for id:", id);
     let values:any = []
-    for(const component of Object.keys(item.components!)){
+    for(const component in item.components){
       values.push(item.components![component].getValue());
     }
     return values;
@@ -86,10 +88,11 @@ export class ItemList extends BaseComponent {
     const b = new SheetBuilder('').setRowLength(ItemList.__cachedRowLength);
     let nSpec = ItemList.replaceValuesInObjectList(ItemList.__cachedSpec, values)
     let id = ItemList.__cachedId
-    const itemId = `${id}-item`;
+    const itemId = `${id}-item-${ItemList.__numberOfItens++}`;
+    let componentIndex = 0;
     nSpec.forEach((f: BaseComponent) => {
       if (!id) console.error('Cached id is not set for ItemList');
-      f.id = `${itemId}-${f.idTemplate ?? f.type}-${ItemList.__numberOfItens++}`;
+      f.id = `${itemId}-${f.idTemplate ?? f.type}-${componentIndex++}`;
       b.add(f);
     });
     b.id(itemId)
@@ -99,12 +102,13 @@ export class ItemList extends BaseComponent {
   // the same as the static, but it always creates a new Id, and it is used in the Svelte component
   public buildItemFromValues(values: any[] = []): SheetSection {
     const b = new SheetBuilder('').setRowLength(this.itemTemplate!.rowLength!);
-    const parentId = (this.id && this.id.length) ? this.id : makeUid('list');
-    const itemId = `${parentId}-item`;
+    const parentId = this.id ? this.id : makeUid('list');
+    const itemId = `${parentId}-item-${this.numberOfItens++}`;
     b.id(itemId)
     let nSpec = ItemList.replaceValuesInObjectList(this.itemTemplate!.components!, values)
+    let componentIndex = 0;
     nSpec.forEach((f: BaseComponent) => {
-      f.id = `${itemId}-${f.type}-${this.numberOfItens++}`
+      f.id = `${itemId}-${f.type}-${componentIndex++}`
       b.add(f);
     });
     return b.build();

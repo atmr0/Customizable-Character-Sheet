@@ -25,6 +25,10 @@ export class BaseComponent {
     if(this.constructor.name == "BaseComponent") return '';
     throw new Error("[BaseComponent] getValue() not implemented for " + this.constructor.name);
   }
+  public setValue(value: any): any {
+    if(this.constructor.name == "BaseComponent") return '';
+    throw new Error("[BaseComponent] setValue() not implemented for " + this.constructor.name);
+  }
 }
 
 export type ComponentOptions = BaseComponent

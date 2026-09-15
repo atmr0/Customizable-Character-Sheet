@@ -1,5 +1,7 @@
 // Most of it was AI generated, i was just lazy
 
+import { Sheet } from "@builder/components/Sheet";
+
 
 
 /**
@@ -28,16 +30,16 @@ export async function writeExportData(data: string, filename = 'sheet.json'): Pr
   // Browser: trigger download
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     try {
-      const blob = new Blob([data], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      // Some environments require the anchor to be in the DOM
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      // const blob = new Blob([data], { type: 'application/json' });
+      // const url = URL.createObjectURL(blob);
+      // const a = document.createElement('a');
+      // a.href = url;
+      // a.download = filename;
+      // // Some environments require the anchor to be in the DOM
+      // document.body.appendChild(a);
+      // a.click();
+      // a.remove();
+      // URL.revokeObjectURL(url);
       return { success: true };
     } catch (err: any) {
       return { success: false, error: err?.message || String(err) };
@@ -132,11 +134,11 @@ function buildFilteredValues(obj: Record<string, any>) {
 }
 
 // Export only the sheet data (values) — include identifying info
-export async function exportSheetData(sheetId: string | undefined, values: any, username?: string, filename?: string): Promise<ExportResult> {
-  const filteredValues = values && typeof values === 'object' ? buildFilteredValues(values) : {};
+export async function exportSheetData(sheet: Sheet,filename?: string): Promise<ExportResult> {
+  const filteredValues = sheet.exportData();
 
-  const exportObj: any = { typeExport: 'sheetData', sheetId: sheetId || null, username: username || null, values: filteredValues };
-  const fn = filename || (username ? `${username}_${sheetId || 'sheet'}.json` : `sheetdata_${sheetId || 'sheet'}.json`);
+  const exportObj: any = { typeExport: 'sheetData', sheetId: sheet.id, values: filteredValues };
+  const fn = filename || `sheetdata_${sheet.id || 'sheet'}.json`;
   const data = safeStringify(exportObj, 2);
   return writeExportData(data, fn);
 }

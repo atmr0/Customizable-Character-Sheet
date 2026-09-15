@@ -16,8 +16,9 @@ export class Sheet {
   public importData(data: any) {
     if (!this.components) return;
     for (const key in data) {
-      if (this.components[key] && this.components[key] instanceof ItemList) {
-
+      if (this.components[key]) {
+        console.log("[importing]", data[key])
+        this.components[key].setValue(data[key]);
       }
     }
   }
@@ -29,7 +30,6 @@ export class Sheet {
       let value = this.components[key].getValue();
       if(value) data[key] = value;
     }
-    console.log(this.id, data)
     return data;
   }
 }

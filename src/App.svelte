@@ -44,7 +44,7 @@
     if (!currentValues || !Object.keys(currentValues).length) return alert('Não há dados para exportar');
     const sheetId = sheet && sheet.id ? sheet.id : 'sheet';
     try {
-      const res = await exportSheetData(sheetId, currentValues, undefined, `${sheetId}_data.json`);
+      const res = await exportSheetData(sheet, `${sheetId}_data.json`);
       if (res.success) {
         alert('Export dos dados concluído' + (res.path ? `: ${res.path}` : '.'));
       } else {
