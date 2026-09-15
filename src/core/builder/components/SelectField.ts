@@ -6,4 +6,8 @@ export class SelectField extends BaseComponent {
   options?: string[];
   placeholder?: string = "Select...";
   value?: string;
+
+  public getValue(): string {
+    return this.value ?? this.placeholder!;
+  }
 }

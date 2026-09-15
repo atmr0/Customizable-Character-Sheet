@@ -6,7 +6,8 @@ import { Constants } from "../../constants";
 export class ItemList extends BaseComponent {
   type: string = Constants.ItemList;
   itemTemplate?: SheetSection;
-  items?: SheetSection[];
+  items?: SheetSection[]; // better for typing when creating the list using the builder
+  private itemsRecord: Record<string, SheetSection> = {}; // but this is the one I will be using for search
   numberOfItens: number = 0;
   editable: boolean = true;
 
@@ -37,17 +38,32 @@ export class ItemList extends BaseComponent {
       return;
     }
     if(!this.items) return
-    this.numberOfItens = this.items.length * Object.keys(this.itemTemplate.components).length;
-  }
 
-  public getItemValue(id:string):any{
-    if(!this.items) return undefined;
     for(const item of this.items){
-      if(item && item.components && item.components[id]){
-        return item.components[id];
+      if(item && item.id){
+        this.itemsRecord[item.id] = item;
       }
     }
-    return undefined;
+    // this.numberOfItens = this.items.length * Object.keys(this.itemTemplate.components).length;
+  }
+
+  public getValue(): any[] {
+    if(!this.items) return [];
+    let data:any[] = [];
+    for(let i = 0; i < this.items!.length; i++){
+      data.push(this.getItemValues(this.items![i].id!))
+    }
+    return data;
+  }
+
+  public getItemValues(id:string):any{
+    if(!this.items) return undefined;
+    let item = this.itemsRecord[id];
+    let values:any = []
+    for(const component of Object.keys(item.components!)){
+      values.push(item.components![component].getValue());
+    }
+    return values;
   }
 
   public static buildTemplateFromSpec(id: string, spec: BaseComponent[], defaults: any[] = [], rowLength: number = 4, opts: (b: any) => SheetBuilder = (b) => b): SheetSection {
@@ -92,6 +108,14 @@ export class ItemList extends BaseComponent {
       b.add(f);
     });
     return b.build();
+  }
+
+  public addItem(values:any[] = []):SheetSection {
+    let newItem = this.buildItemFromValues(values);
+    if(newItem && newItem.id){
+      this.itemsRecord[newItem.id] = newItem;
+    }
+    return newItem;
   }
 
   private static replaceValuesInObjectList(obj: Record<string, any>, values: string[] = []): Record<string, any> {

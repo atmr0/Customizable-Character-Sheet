@@ -8,13 +8,14 @@
   if(component) {
     id = component.id;
   }
-  let computed = "";
+  $: computed = "";
   let lastValue = ""
   $: $valuesStore;
   $: if (component && component.expr) {
     try {
-      const val = component.evaluateExpression($valuesStore || {});
-      computed = val === null || val === undefined ? "" : val;
+      const val = $valuesStore[""]; // it does nothing, only makes it so this block always stay updated
+      computed = String(component.getValue());
+
       if (id && computed !== lastValue) {
         setValue(id, computed);
         lastValue = computed;

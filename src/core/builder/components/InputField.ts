@@ -10,4 +10,8 @@ export class InputField extends BaseComponent {
   step: number | string = this.allowFloat ? 'any' : 1;
   min: number | undefined = undefined;
   max: number | undefined = undefined;
+
+  public getValue(): string|number|undefined {
+    return this.value;
+  }
 }

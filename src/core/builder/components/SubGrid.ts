@@ -1,13 +1,16 @@
 import { BaseComponent } from "./BaseComponent";
 import { Constants } from "../../constants";
-import { SheetSection } from "./Sheet";
+import { Sheet } from "./Sheet";
 
 export class SubGrid extends BaseComponent {
   type: string = Constants.SubGrid;
-  sheet?: SheetSection;
-  constructor(opts: Partial<BaseComponent & SubGrid>, sheet: SheetSection) {
+  sheet?: Sheet;
+  constructor(opts: Partial<BaseComponent & SubGrid>, sheet: Sheet) {
     super(opts);
-    this.sheet = sheet;
+    this.sheet = Object.assign(new Sheet(), sheet);
+  }
 
+  public getValue(){
+    return this.sheet ? this.sheet.exportData() : {};
   }
 }

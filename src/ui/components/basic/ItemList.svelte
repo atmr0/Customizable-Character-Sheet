@@ -42,7 +42,7 @@
   function addItem() {
     if (!editable) return;
     const current = storeItems || [];
-    const newRow = component!.buildItemFromValues()
+    const newRow = component!.addItem()
     const next = [...current, newRow];
     if (id) setValue(id, next);
     else component!.items = next;

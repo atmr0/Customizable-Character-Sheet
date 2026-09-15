@@ -10,19 +10,25 @@
   import { valuesStore, setSheet} from '@core/valuesStore';
   import GitRepoManager from './core/GitRepoManager';
   import { get } from 'svelte/store';
+  import { Sheet as SheetClass } from './core/builder/components/Sheet';
+  
+  let sheet = mainSheet;
+  // rehydrate to class instance so helper methods like exportData exist
+  if (sheet && typeof sheet.exportData !== 'function') {
+    sheet = Object.assign(new SheetClass(), sheet);
+  }
+  setSheet(sheet);
   // let sheet = sheetJson;
   // let styleTag = sheet.styleTag || "";
-  let sheet = mainSheet;
-  let modelsheet = {...mainSheet}
-  setSheet(sheet);
   let styleTag = sheet.styleTag ;
   let sheetKey = 0;
   applyTheme()
 
+  let a = typeof sheet.exportData === 'function' ? sheet.exportData() : {};
   async function handleExportModel() {
-    const sheetId = modelsheet && modelsheet.id ? modelsheet.id : 'sheet';
+    const sheetId = sheet && sheet.id ? sheet.id : 'sheet';
     try {
-      const res = await exportSheetModel(modelsheet, `${sheetId}_model.json`);
+      const res = await exportSheetModel(sheet, `${sheetId}_model.json`);
       if (res.success) {
         alert('Export do modelo concluído' + (res.path ? `: ${res.path}` : '.'));
       } else {

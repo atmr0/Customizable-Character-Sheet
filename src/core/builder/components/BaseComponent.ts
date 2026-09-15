@@ -1,3 +1,6 @@
+interface INeedGetValue{
+  getValue(): any;
+}
 export class BaseComponent {
   type?: string;
   id?: string;
@@ -16,7 +19,12 @@ export class BaseComponent {
     if (!this.height) this.height = 1;
   }
 
-
+  public getValue(): any {
+    // it's temporary for components not yet fully implemented
+    // if you see this, i forgot to finish it
+    if(this.constructor.name == "BaseComponent") return '';
+    throw new Error("[BaseComponent] getValue() not implemented for " + this.constructor.name);
+  }
 }
 
 export type ComponentOptions = BaseComponent

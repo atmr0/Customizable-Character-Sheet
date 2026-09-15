@@ -13,40 +13,24 @@ export class Sheet {
     if (init) Object.assign(this, init);
   }
 
-  public importData(data:any){
-    if(!this.components) return;
-    for(const key in data){
-      if(this.components[key] && this.components[key] instanceof ItemList){
-        
+  public importData(data: any) {
+    if (!this.components) return;
+    for (const key in data) {
+      if (this.components[key] && this.components[key] instanceof ItemList) {
+
       }
     }
   }
 
-  public exportData(){
+  public exportData() {
     let data: Record<string, any> = {};
-    if(!this.components) return data;
-    for(const key in this.components){
-      if(this.components[key] && this.components[key] instanceof ItemList){
-        data[key] = this.exportList(key);
-      }
+    if (!this.components) return data;
+    for (const key in this.components) {
+      let value = this.components[key].getValue();
+      if(value) data[key] = value;
     }
+    console.log(this.id, data)
     return data;
-  }
-  private exportList(key:string){
-    if(!this.components) return [];
-    let list = this.components[key] as ItemList;
-    let data = [];
-    for(let i = 0; i < list.length; i++){
-      data.push(list.get(i));
-    }
-    return data;
-  }
-
-  private importList(key:string, data:any){
-    if(!this.components) return;
-    let list = this.components[key] as ItemList;
-    for(let i = 0; i < list.length; i++){
-    }
   }
 }
 

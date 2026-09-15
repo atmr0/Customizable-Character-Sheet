@@ -1,28 +1,43 @@
 import { BaseComponent } from "./BaseComponent";
 import { Constants } from "../../constants";
 import { Parser } from 'expr-eval';
+import {valuesStore, ValuesMap} from "../../valuesStore";
 
 export class ComputedText extends BaseComponent {
   type: string = Constants.ComputedText;
   expr?: string;
   format: (value: any) => string = (value) => String(value);
+  public value: number|string = 0;
+  private unsubscribe?: () => void;
+  private currentValues: ValuesMap = {};
+
+  constructor(init?: Partial<ComputedText>) {
+    super(init);
+    this.unsubscribe = valuesStore.subscribe(v => {
+      this.currentValues = v || {};
+      if (this.expr) {
+        try {
+          this.evaluateExpression(this.currentValues);
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    });
+  }
   public evaluateExpression(values = {}): string {
     if (!this.expr) return ''
     try {
-      // Normaliza "Math.floor(...)" -> "floor(...)" para compatibilidade com expr-eval
       const normalized = String(this.expr).replace(/Math\./g, '');
 
       const parser = new Parser();
       const parsed = parser.parse(normalized);
 
       const scope: any = {};
-      // converte valores para números (fallback 0)
       for (const [k, v] of Object.entries(values || {})) {
         const num = v === '' || v === null || v === undefined ? 0 : Number(v);
         scope[k] = isNaN(num) ? 0 : num;
       }
 
-      // expõe funções matemáticas usadas nas expressões
       scope.abs = Math.abs;
       scope.ceil = Math.ceil;
       scope.floor = Math.floor;
@@ -35,9 +50,18 @@ export class ComputedText extends BaseComponent {
       scope.cos = Math.cos;
       scope.tan = Math.tan;
       scope.exp = Math.exp;
-      return parsed.evaluate(scope);
+      this.value = parsed.evaluate(scope);
+      return String(this.value);
     } catch (e) {
       return '';
     }
+  }
+
+  public getValue():string|number{
+    return this.value;
+  }
+
+  public destroy() {
+    if (this.unsubscribe) this.unsubscribe();
   }
 }
