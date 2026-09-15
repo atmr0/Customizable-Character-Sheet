@@ -8,6 +8,7 @@ export class ItemList extends BaseComponent {
   itemTemplate?: SheetSection;
   items?: SheetSection[];
   numberOfItens: number = 0;
+  editable: boolean = true;
 
   teste: ItemList = this
 
@@ -21,33 +22,43 @@ export class ItemList extends BaseComponent {
   *   ]
   * })
   */
-  private static __cachedSpec: ComponentOptions[] = [];
+ 
+  private static __cachedSpec: BaseComponent[] = [];
   private static __cachedRowLength: number = 1
   private static __cachedId: string = "";
   private static __numberOfItens: number = 0;
   constructor(opts: Partial<BaseComponent & ItemList>) {
-    super(opts)
-
+    super(opts);
     // resetting so the count doesn't continue in other lists
     ItemList.__numberOfItens = 0;
 
-    if(!this.itemTemplate || !this.itemTemplate.components || this.itemTemplate.components.length === 0) {
+    if(!this.itemTemplate || !this.itemTemplate.components || Object.keys(this.itemTemplate.components).length === 0) {
       console.error('Item template is not set for ItemList');
       return;
     }
     if(!this.items) return
-    this.numberOfItens = this.items.length * this.itemTemplate.components.length;
+    this.numberOfItens = this.items.length * Object.keys(this.itemTemplate.components).length;
   }
 
-  public static buildTemplateFromSpec(id: string, spec: ComponentOptions[], defaults: any[] = [], rowLength: number = 4, opts: (b: any) => SheetBuilder = (b) => b): SheetSection {
+  public getItemValue(id:string):any{
+    if(!this.items) return undefined;
+    for(const item of this.items){
+      if(item && item.components && item.components[id]){
+        return item.components[id];
+      }
+    }
+    return undefined;
+  }
+
+  public static buildTemplateFromSpec(id: string, spec: BaseComponent[], defaults: any[] = [], rowLength: number = 4, opts: (b: any) => SheetBuilder = (b) => b): SheetSection {
     ItemList.__cachedSpec = spec;
     ItemList.__cachedRowLength = rowLength;
     ItemList.__cachedId = id;
     const b = new SheetBuilder('').id(id).setRowLength(rowLength);
     let nSpec = ItemList.replaceValuesInObjectList(spec, defaults)
-    nSpec.forEach((f: ComponentOptions) => {
+    nSpec.forEach((f: BaseComponent) => {
       f.idTemplate = f.id;
-      f.id = '' // avoid conflicts for "repeating" the same id 
+      f.id = '' // avoid conflicts for "repeating" the same id. in the line below, it generates a new id.
       b.add(f);
     });
     opts(b);
@@ -55,12 +66,12 @@ export class ItemList extends BaseComponent {
   }
 
   // basically the same as buildTemplateFromSpec, but with id
-  public static buildItemFromValues(values: any[] = []): SheetSection {
+  public static staticBuildItemFromValues(values: any[] = []): SheetSection {
     const b = new SheetBuilder('').setRowLength(ItemList.__cachedRowLength);
     let nSpec = ItemList.replaceValuesInObjectList(ItemList.__cachedSpec, values)
     let id = ItemList.__cachedId
     const itemId = `${id}-item`;
-    nSpec.forEach((f: ComponentOptions) => {
+    nSpec.forEach((f: BaseComponent) => {
       if (!id) console.error('Cached id is not set for ItemList');
       f.id = `${itemId}-${f.idTemplate ?? f.type}-${ItemList.__numberOfItens++}`;
       b.add(f);
@@ -76,17 +87,18 @@ export class ItemList extends BaseComponent {
     const itemId = `${parentId}-item`;
     b.id(itemId)
     let nSpec = ItemList.replaceValuesInObjectList(this.itemTemplate!.components!, values)
-    nSpec.forEach((f: ComponentOptions) => {
+    nSpec.forEach((f: BaseComponent) => {
       f.id = `${itemId}-${f.type}-${this.numberOfItens++}`
       b.add(f);
     });
     return b.build();
   }
 
-  private static replaceValuesInObjectList(obj: Record<string, any>[], values: string[] = []): Record<string, any> {
+  private static replaceValuesInObjectList(obj: Record<string, any>, values: string[] = []): Record<string, any> {
     let newObjList = [];
-    for (let i = 0; i < obj.length; i += 1) {
-      let newObj = { ...obj[i] };
+    const keys = Object.keys(obj);
+    for (let i = 0; i < keys.length; i += 1) {
+      let newObj = { ...obj[keys[i]] };
       for (const key in newObj) {
         if (typeof newObj[key] !== 'string') continue
         if (!newObj[key].startsWith('$')) continue;

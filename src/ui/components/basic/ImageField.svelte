@@ -1,15 +1,21 @@
+<!--90% AI Generated. -->
+
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
+  import type { ComponentOptions } from "@builder/components";
 
   import { valuesStore, setValue } from "@core/valuesStore";
-  import { Constants } from "@core/constants";
 
-  export let id: string | undefined;
-  export let label: string | undefined;
   export let accept: string = "image/*";
   export let maxSizeBytes: number | undefined = undefined;
   export let placeholder: string = "";
-  let componentClass = Constants.ImageField;
+  export let component: ComponentOptions| undefined = undefined;
+  let id: string | undefined;
+  let label: string | undefined;
+   if(component) {
+     id = component.id;
+     label = component.label;
+   }
 
   let fileInput: HTMLInputElement | null = null;
   let previewOpen = false;
@@ -52,7 +58,7 @@
   }
 </script>
 
-<BaseComponent {id} {label} {componentClass}>
+<BaseComponent {component}>
   <div
     class="image-wrapper"
     role="button"

@@ -1,20 +1,22 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
   import { valuesStore, setValue } from "@core/valuesStore";
-    import { Constants } from "@core/constants";
+  import { type ComponentOptions } from "@builder/components";
 
-  export let id: string | undefined;
-  export let label: string | undefined;
   export let checked: boolean = false;
   export let disabled: boolean = false;
-  export let componentClass:string = Constants.CheckboxField
-  // export let onchange = undefined;
-
+  export let component: ComponentOptions | undefined;
+  let id: string | undefined;
+  let label: string | undefined;
+  if (component) {
+    id = component.id;
+    label = component.label;
+  }
   if (id) setValue(id, checked);
 
   $: storeVal = id ? ($valuesStore[id] ?? checked) : checked;
   $: inputId = id ? `${id}_cb` : undefined;
-  function onChange(e:any) {
+  function onChange(e: any) {
     const v = e.target.checked;
     checked = v;
     if (id) setValue(id, v);
@@ -22,7 +24,7 @@
   }
 </script>
 
-<BaseComponent {id} {componentClass}>
+<BaseComponent {component}>
   <div class="checkbox-wrapper">
     <label class="checkbox-root" for={inputId}>
       <input

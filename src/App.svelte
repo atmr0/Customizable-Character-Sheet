@@ -4,26 +4,48 @@
   // import SheetBuilder from "@builder/SheetBuilder";
   import { applyTheme } from "@core/theme";
   import ThemeConfiguration from "./configurations/ThemeConfiguration.svelte";
-  import exportSheet from './Sheet/exportSheet';
+  import { exportSheetModel, exportSheetData } from './Sheet/exportSheet';
   import { importSheetFromFile } from './Sheet/importSheet';
   import { SHEET_BASE, GIT_OWNER, GIT_REPO, GIT_BRANCH, GIT_TOKEN } from './config.js';
-  import { valuesStore } from '@core/valuesStore';
+  import { valuesStore, setSheet} from '@core/valuesStore';
+  import GitRepoManager from './core/GitRepoManager';
+  import { get } from 'svelte/store';
   // let sheet = sheetJson;
   // let styleTag = sheet.styleTag || "";
   let sheet = mainSheet;
+  let modelsheet = {...mainSheet}
+  setSheet(sheet);
   let styleTag = sheet.styleTag ;
   let sheetKey = 0;
   applyTheme()
 
-  import { get } from 'svelte/store';
-  async function handleExport() {
+  async function handleExportModel() {
+    const sheetId = modelsheet && modelsheet.id ? modelsheet.id : 'sheet';
+    try {
+      const res = await exportSheetModel(modelsheet, `${sheetId}_model.json`);
+      if (res.success) {
+        alert('Export do modelo concluído' + (res.path ? `: ${res.path}` : '.'));
+      } else {
+        alert('Erro ao exportar modelo: ' + res.error);
+      }
+    } catch (e) {
+      alert('Erro ao exportar modelo: ' + (e?.message || String(e)));
+    }
+  }
+
+  async function handleExportData() {
     const currentValues = get(valuesStore);
-    const res = await exportSheet(sheet, 'sheet.json', { values: currentValues });
-    if (res.success) {
-      // In Node path will be provided; in browser download is triggered
-      alert('Export concluído' + (res.path ? `: ${res.path}` : '.'));
-    } else {
-      alert('Erro ao exportar: ' + res.error);
+    if (!currentValues || !Object.keys(currentValues).length) return alert('Não há dados para exportar');
+    const sheetId = sheet && sheet.id ? sheet.id : 'sheet';
+    try {
+      const res = await exportSheetData(sheetId, currentValues, undefined, `${sheetId}_data.json`);
+      if (res.success) {
+        alert('Export dos dados concluído' + (res.path ? `: ${res.path}` : '.'));
+      } else {
+        alert('Erro ao exportar dados: ' + res.error);
+      }
+    } catch (e) {
+      alert('Erro ao exportar dados: ' + (e?.message || String(e)));
     }
   }
 
@@ -32,9 +54,6 @@
     if (fileInput) fileInput.click();
   }
   
-  // GitHub settings for client-side commits (managed by GitRepoManager)
-  import GitRepoManager from './core/GitRepoManager';
-
   const gitManager = new GitRepoManager({ owner: GIT_OWNER, repo: GIT_REPO, branch: GIT_BRANCH, token: GIT_TOKEN });
   let { owner: gitOwner, repo: gitRepo, branch: gitBranch, token: gitToken } = gitManager.getSettings();
 
@@ -69,7 +88,13 @@
     const f = input.files && input.files[0];
     if (!f) return;
     const res = await importSheetFromFile(f);
-    if (res.success) {
+    if (!res.success) {
+      alert('Erro ao importar: ' + res.error);
+      input.value = '';
+      return;
+    }
+
+    if (res.kind === 'model') {
       sheet = res.sheet;
       styleTag = sheet.styleTag || '';
       // restore values if present, otherwise reset so components set initial values on mount
@@ -81,9 +106,12 @@
       // reapply theme in case imported sheet has different styles
       applyTheme();
       sheetKey += 1;
-      alert('Sheet importada com sucesso.');
-    } else {
-      alert('Erro ao importar: ' + res.error);
+      alert('Sheet (modelo) importado com sucesso.');
+    } else if (res.kind === 'data') {
+      // apply only values
+      valuesStore.set(res.values || {});
+
+      alert('Dados do sheet importados com sucesso.');
     }
     // reset input so same file can be chosen again if needed
     input.value = '';
@@ -98,7 +126,8 @@
   </div>
   <div class="main">
     <div class="sheet-controls">
-      <button on:click={handleExport} title="Exportar sheet como JSON">Exportar Sheet</button>
+      <button on:click={handleExportModel} title="Exportar modelo do sheet">Exportar Modelo</button>
+      <button on:click={handleExportData} title="Exportar dados do sheet">Exportar Dados</button>
       <button on:click={openFilePicker} title="Importar sheet a partir de arquivo JSON">Importar Sheet</button>
       <button on:click={saveToRepo} disabled={!gitOwner || !gitRepo || !gitToken || saving} title="Salvar sheet no repositório GitHub">{saving ? 'Salvando...' : 'Salvar no GitHub'}</button>
       <input bind:this={fileInput} type="file" accept="application/json,.json" on:change={handleFileChange} style="display:none" />

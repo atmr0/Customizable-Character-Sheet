@@ -1,5 +1,6 @@
-import { BaseComponent, SheetSection } from "./BaseComponent";
+import { BaseComponent } from "./BaseComponent";
 import { Constants } from "../../constants";
+import { SheetSection } from "./Sheet";
 
 export class SubGrid extends BaseComponent {
   type: string = Constants.SubGrid;

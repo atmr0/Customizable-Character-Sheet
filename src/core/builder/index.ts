@@ -1,2 +1,2 @@
-export * from './ComponentsMap';
+export * from './componentsMap';
 export * from './components';

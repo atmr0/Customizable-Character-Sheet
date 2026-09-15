@@ -5,30 +5,29 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { BaseComponent, SubGrid } from "@ui/components/index.js";
-  import { valuesStore, setValue } from "../../../core/valuesStore";
+  import { valuesStore, setValue } from "@core/valuesStore";
   import { get } from "svelte/store";
-  import type { ItemList, SheetSection } from "../../../core/builder";
+  import type { ItemList, SheetSection } from "@builder/components";
 
-  export let id: string | undefined;
-  export let label: string | undefined;
-  export let items: SheetSection[] = [];
-  export let editable: boolean = true;
-  export let teste:ItemList|undefined;
+  export let component:ItemList|undefined;
+  let id: string | undefined = component?.id;
+  $: editable = component?.editable ?? true;
   onMount(() => {
     const store = get(valuesStore);
-    if (id && !store[id] && items && items.length) {
-      setValue(id, items);
+    if(!component) return;
+    if (id && !store[id] && component.items && component.items.length) {
+      setValue(id, component.items);
     }
-    (async () => {
-      try {
-        const mod = await import("../../../core/builder");
-      } catch (err) {
-        console.warn("Failed to load components map dynamically", err);
-      }
-    })();
+    // (async () => {
+    //   try {
+    //     const mod = await import("@builder/components");
+    //   } catch (err) {
+    //     console.warn("Failed to load components map dynamically", err);
+    //   }
+    // })();
   });
 
-  $: storeItems = id ? $valuesStore[id] || [] : items;
+  $: storeItems = id ? $valuesStore[id] || [] : component?.items ;
 
   let nextRowId = 1;
 
@@ -43,10 +42,10 @@
   function addItem() {
     if (!editable) return;
     const current = storeItems || [];
-    const newRow = teste!.buildItemFromValues()
+    const newRow = component!.buildItemFromValues()
     const next = [...current, newRow];
     if (id) setValue(id, next);
-    else items = next;
+    else component!.items = next;
   }
 
   function removeItem(rowId: string) {
@@ -54,11 +53,11 @@
     const current = storeItems || [];
     const next = current.filter((r: any) => r.__rowId !== rowId);
     if (id) setValue(id, next);
-    else items = next;
+    else component!.items = next;
   }
 </script>
 
-<BaseComponent {id} {label}>
+<BaseComponent {component}>
   <div class="list-field">
       <ul class="list-all-items" >
       {#each rows as row, i (row.__rowId)}

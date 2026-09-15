@@ -1,26 +1,26 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
   import { setValue, valuesStore } from "@core/valuesStore";
-  import { evaluateExpression } from "@core/utils/compute.js";
-  import { Constants } from "@core/constants";
+  import { ComputedText } from "@builder/components";
 
-  export let expr = "";
-  export let label = undefined;
-  export let formatText = (v) => v;
-  export let id: string | undefined = undefined;
-  let componentClass = Constants.ComputedText;
+  export let component: ComputedText | undefined = undefined;
+  let id: string | undefined;
+  if(component) {
+    id = component.id;
+  }
   let computed = "";
   let lastValue = ""
   $: $valuesStore;
-  $: if (expr) {
+  $: if (component && component.expr) {
     try {
-      const val = evaluateExpression(expr, $valuesStore || {});
+      const val = component.evaluateExpression($valuesStore || {});
       computed = val === null || val === undefined ? "" : val;
       if (id && computed !== lastValue) {
         setValue(id, computed);
         lastValue = computed;
       }
     } catch (e) {
+      console.error(e);
       computed = "";
     }
   } else {
@@ -28,8 +28,8 @@
   }
 </script>
 
-<BaseComponent {id} {label} {componentClass}>
+<BaseComponent {component}>
   <div
     class="computed-text"
-  >{formatText(computed)}</div>
+  >{component?.format(computed)}</div>
 </BaseComponent>

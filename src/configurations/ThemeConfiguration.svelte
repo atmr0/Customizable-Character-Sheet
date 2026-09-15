@@ -1,7 +1,7 @@
 <script>
-  import { componentsMap } from "@builder";
+  import { svelteComponentsMap } from "@builder";
   import { cssVariables, applyTheme } from "../core/theme.js";
-  let componentTypes = componentsMap;
+  let componentTypes = svelteComponentsMap;
 
   function handleInput(type, variable, value) {
     cssVariables[type][variable] = value;

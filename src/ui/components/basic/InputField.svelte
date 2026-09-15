@@ -5,61 +5,62 @@
   import { Constants } from "@core/constants";
   import { onMount } from "svelte";
   import { get } from "svelte/store";
-
-  type InputType = "text" | "number";
-
-  export let value: any = "";
-  export let label: string | undefined;
-  export let placeholder: string = "";
-  export let id: string;
-  
+  import { InputField } from "@builder/components";
   // input mode/type controls
-  export let inputType: InputType = "text";
-  export let allowFloat: boolean = false;
-  export let step: number | string = allowFloat ? "any" : 1;
-  export let min: number | undefined = undefined;
-  export let max: number | undefined = undefined;
-  
-  let componentClass = Constants.InputField;
-  function parseNumeric(raw:string) {
-    if (raw === "" || raw === null || raw === undefined) return "";
+
+  export let component: InputField | undefined = undefined;
+  export let onInput:any;
+  let id: string | undefined = component?.id;
+  let placeholder: string | undefined = component?.placeholder;
+  let inputType: string | undefined = component?.inputType;
+  let step: number | string = component?.step ?? 0;
+  let min: number | undefined = component?.min;
+  let max: number | undefined = component?.max;
+
+  let value: string | number | undefined = component?.value;
+  function parseNumeric(raw: string) {
+    if (!component || raw === "" || raw === null || raw === undefined)
+      return "";
     const normalized = String(raw).replace(",", ".");
-    const num = allowFloat ? Number(normalized) : parseInt(normalized, 10);
+    const num = component.allowFloat
+      ? Number(normalized)
+      : parseInt(normalized, 10);
     return isNaN(num) ? "" : num;
   }
 
-  function handleInput(e:any) {
+  function handleInput(e: any) {
     const raw = e.target.value;
-
-    if (inputType === "number") {
+    if (!component) return;
+    if (component.inputType === "number") {
       const parsed = parseNumeric(raw);
+      component.value = parsed;
       value = parsed;
       if (id) setValue(id, parsed);
     } else {
+      component.value = raw;
       value = raw;
-      if (id) setValue(id, value);
+      if (id) setValue(id, component.value);
     }
   }
   onMount(() => {
     if (!id) return;
-    if(get(valuesStore)[id] === undefined)
-      setValue(id, value);
+    if (get(valuesStore)[id] === undefined) setValue(id, value);
   });
 
   $: if (id) {
     const storeVal = $valuesStore[id];
-    if (storeVal !== undefined && storeVal !== value) {
-      value = storeVal;
+    if (storeVal !== undefined && storeVal !== component?.value) {
+      if (component) component.value = storeVal;
     }
   }
 </script>
 
-<BaseComponent {id} {label} {componentClass}>
+<BaseComponent {component}>
   <input
     {id}
     bind:value
     {placeholder}
-    oninput={handleInput}
+    oninput={(e) => { handleInput(e); if (onInput) onInput(e); }}
     class={Constants.InputField}
     type={inputType === "number" ? "number" : "text"}
     {step}

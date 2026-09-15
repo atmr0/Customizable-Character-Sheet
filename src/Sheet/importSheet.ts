@@ -3,12 +3,23 @@
  * Browser: via File object. Node: via fs path.
  */
 
-export type ImportResult = { success: true; sheet: any } | { success: false; error: string };
+export type ImportResult =
+  | { success: true; kind: 'model'; sheet: any }
+  | { success: true; kind: 'data'; values: any }
+  | { success: false; error: string };
 
 export async function parseSheetFromJSON(json: string): Promise<ImportResult> {
   try {
     const obj = JSON.parse(json);
-    return { success: true, sheet: obj };
+    // New format: { typeExport: 'sheetModel'|'sheetData', ... }
+    if (obj && typeof obj === 'object' && obj.typeExport === 'sheetModel') {
+      return { success: true, kind: 'model', sheet: obj.sheet };
+    }
+    if (obj && typeof obj === 'object' && obj.typeExport === 'sheetData') {
+      return { success: true, kind: 'data', values: obj.values ?? {} };
+    }
+    // Backwards compatibility: if no typeExport, assume it's a sheet model
+    return { success: true, kind: 'model', sheet: obj };
   } catch (err: any) {
     return { success: false, error: err?.message || String(err) };
   }
@@ -26,6 +37,7 @@ export async function importSheetFromFile(file: File): Promise<ImportResult> {
   });
 }
 
+//not used
 export async function importSheetFromPath(path: string): Promise<ImportResult> {
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires

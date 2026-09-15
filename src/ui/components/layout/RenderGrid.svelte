@@ -2,7 +2,7 @@
   import {
     type ComponentOptions,
     type Sheet,
-    componentsMap,
+    svelteComponentsMap,
   } from "@builder";
   export let sheet: Sheet;
 
@@ -26,10 +26,10 @@
 {#if sheet}
   {@html `<style type="text/css">${sheet.styleTag || ""}</style>`}
   <div id={sheet.id} class="grid" style={gridStyle()}>
-    {#each sheet.components as cell}
+    {#each Object.values<ComponentOptions>(sheet.components) as cell}
       <div class="sheet-cell" style={cellGridStyle(cell)} id="cell-{cell.id}">
-        {#if componentsMap[cell.type!]}
-          <svelte:component this={componentsMap[cell.type!]} {...cell} />
+        {#if svelteComponentsMap[cell.type!]}
+          <svelte:component this={svelteComponentsMap[cell.type!]} component={cell} />
         {:else}
           <div>Unknown component: {cell && cell.type}</div>
         {/if}

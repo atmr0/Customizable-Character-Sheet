@@ -1,5 +1,5 @@
 import { Input } from 'postcss';
-import { ComputedText, InputField, type ComponentOptions, } from './core/builder';
+import { ComputedText, InputField, type ComponentOptions, BaseComponent } from './core/builder';
 import SheetBuilder from './core/builder/SheetBuilder';
 import { Constants } from './core/constants';
 import { attributesColors } from './core/theme';
@@ -8,8 +8,8 @@ import { ItemList } from './core/builder/components/ItemList';
 type colors = keyof typeof attributesColors;
 
 const skillSpec: ComponentOptions[] = [
-  { type: Constants.InputField, id:'skillName', placeholder: 'Skill name', width: 3, value: '$2' },
-  { type: Constants.ComputedText, expr: '$1', width: 1 },
+  new InputField({id:'skillName', placeholder: 'Skill name', width: 3, value: '$2' }),
+  new ComputedText({expr: '$1', width: 1 }),
 ];
 
 
@@ -21,9 +21,9 @@ const mainSheet = new SheetBuilder('Character Sheet')
   .subGrid({id:'informations',width:6}, 
     new SheetBuilder().setRowLength(6).id('informations')
     .InputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', width: 5 })
-    .add({ type: 'ImageField', id: 'profile_picture', width: 1, height: 2 })
-    .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', width: 3 })
-    .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], width: 2 })
+    .add(new BaseComponent({ type: 'ImageField', id: 'profile_picture', width: 1, height: 2 }))
+    .InputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', row:2, col:1,width: 3 })
+    .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], width: 2, row:2,col:4})
     .withSheetStyle({background: 'red'},Constants.InputField)
     .build()
   )
@@ -39,19 +39,19 @@ const mainSheet = new SheetBuilder('Character Sheet')
     "--attr-focus-color": (cell: ComponentOptions) => attributesColors[cell.id as colors],
   })
   .section("talents", r => r
-    .add({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', height: 1 })
+    // .add(new BaseComponent({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', height: 1 }))
     .itemList({
-      id: 'skills', label: 'Skills', width: 2, height: 5, editable: true,
+        id: 'skills', label: 'Skills', width: 2, height: 5, editable: true,
       itemTemplate: ItemList.buildTemplateFromSpec('skills', skillSpec, ['cha_attr_mod + 2']),
       items: [
-        ItemList.buildItemFromValues(['str_attr_mod + 5', 'Atletismo'])
+        ItemList.staticBuildItemFromValues(['str_attr_mod + 5', 'Atletismo'])
       ]
     })
     .itemList({
       id: 'aaa', label: 'Skills', width: 2, height: 5, editable: true,
       itemTemplate: ItemList.buildTemplateFromSpec('aaa', skillSpec, ['cha_attr_mod + 2']),
       items: [
-        ItemList.buildItemFromValues(['str_attr_mod + 5', 'Carismo'])
+        ItemList.staticBuildItemFromValues(['str_attr_mod + 5', 'Carismo'])
       ]
     })
   )

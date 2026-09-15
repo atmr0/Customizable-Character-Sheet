@@ -1,18 +1,29 @@
 <script lang="ts">
-  export let id: string | undefined;
-  export let label: string | undefined = undefined;
-  export let noBackground: boolean = true;
-  export let componentClass = ''; 
+  import { BaseComponent, type ComponentOptions } from "@builder/components";
 
-  if(componentClass) componentClass = componentClass+"-wrapper";
+  export let component: ComponentOptions | undefined = undefined;
+  export let noBackground: boolean = true;
+  export let showLabel: boolean = true;
+
+  // export let onchange: ((event: any, value: any) => void)  = (event: any, value: any) => {
+  //   if(id) setValue(id, value)
+  // };
+
+  let wrapperClass: string = component ? component.type + "-wrapper" : "";
+  let id:string|undefined;
+  let label: string|undefined;
+  if(component) {
+    id = component.id;
+    label = component.label;
+  }
 </script>
 
 <div
-  class="base-component {noBackground ? 'no-bg' : ''} {componentClass}"
-  {id}
+  class="base-component {noBackground ? 'no-bg' : ''} {wrapperClass}"
+  id={component?.id ?? ''}
   {...$$restProps}
 >
-  {#if label}
+  {#if showLabel && label}
     <slot name="label"><div class="label">{label}</div></slot>
   {/if}
   <slot />
