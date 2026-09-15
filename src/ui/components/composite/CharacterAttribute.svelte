@@ -6,7 +6,7 @@
     InputField,
     ComputedText,
   } from "@ui/components/index.js";
-  import { setValue, valuesStore } from "@core/valuesStore";
+  import { updateValueStore, valuesStore } from "@core/valuesStore";
   import { Constants } from "@core/constants.ts";
   import {
     BaseComponent as BC,
@@ -25,9 +25,9 @@
   function onInput(e) {
     value = e.target.value;
     component.value = value;
-    if (id) setValue(id, Number(value));
+    if (id) updateValueStore(id, Number(value));
   }
-  if (id) setValue(id, Number(value));
+  if (id) updateValueStore(id, Number(value));
   component.value = value;
 
   let format = (v) => {

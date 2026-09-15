@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
-  import { setValue } from "@core/valuesStore";
+  import { updateValueStore } from "@core/valuesStore";
   import { SelectField } from "@builder/components";
 
   export let component: SelectField | undefined;
@@ -10,9 +10,9 @@
     if (!component) return;
     component.value = e.target.value;
     value = component.value;
-    if (id) setValue(id, component.value);
+    if (id) updateValueStore(id, component.value);
   }
-  if (id) setValue(id, component?.value);
+  if (id) updateValueStore(id, component?.value);
 </script>
 
 <BaseComponent {component}>

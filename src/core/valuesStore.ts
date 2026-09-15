@@ -9,7 +9,7 @@ let sheet: Sheet | null = null;
 export function setSheet(newSheet: Sheet | null) {
   sheet = newSheet;
 }
-export function setValue(id: string, value: any) {
+export function updateValueStore(id: string, value: any) {
   valuesStore.update(s => ({ ...s, [id]: value }));
 }
 

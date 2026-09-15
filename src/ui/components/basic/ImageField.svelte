@@ -4,7 +4,7 @@
   import { BaseComponent } from "@ui/components/index.js";
   import type { ComponentOptions } from "@builder/components";
 
-  import { valuesStore, setValue } from "@core/valuesStore";
+  import { valuesStore, updateValueStore } from "@core/valuesStore";
 
   export let accept: string = "image/*";
   export let maxSizeBytes: number | undefined = undefined;
@@ -52,7 +52,7 @@
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = reader.result as string;
-      if (id) setValue(id, dataUrl);
+      if (id) updateValueStore(id, dataUrl);
     };
     reader.readAsDataURL(f);
   }

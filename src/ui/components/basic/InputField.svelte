@@ -1,7 +1,7 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
 
-  import { setValue, valuesStore } from "@core/valuesStore";
+  import { updateValueStore, valuesStore } from "@core/valuesStore";
   import { Constants } from "@core/constants";
   import { onMount } from "svelte";
   import { get } from "svelte/store";
@@ -35,16 +35,16 @@
       const parsed = parseNumeric(raw);
       component.value = parsed;
       value = parsed;
-      if (id) setValue(id, parsed);
+      if (id) updateValueStore(id, parsed);
     } else {
       component.value = raw;
       value = raw;
-      if (id) setValue(id, component.value);
+      if (id) updateValueStore(id, component.value);
     }
   }
   onMount(() => {
     if (!id) return;
-    if (get(valuesStore)[id] === undefined) setValue(id, value);
+    if (get(valuesStore)[id] === undefined) updateValueStore(id, value);
   });
 
   $: if (id) {

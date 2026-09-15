@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
-  import { setValue, valuesStore } from "@core/valuesStore";
+  import { valuesStore } from "@core/valuesStore";
   import { ComputedText } from "@builder/components";
 
   export let component: ComputedText | undefined = undefined;
@@ -9,17 +9,11 @@
     id = component.id;
   }
   $: computed = "";
-  let lastValue = ""
   $: $valuesStore;
   $: if (component && component.expr) {
     try {
       const val = $valuesStore[""]; // it does nothing, only makes it so this block always stay updated
-      computed = String(component.getValue());
-
-      if (id && computed !== lastValue) {
-        setValue(id, computed);
-        lastValue = computed;
-      }
+      computed = component.getValueFormatted();
     } catch (e) {
       console.error(e);
       computed = "";
@@ -32,5 +26,5 @@
 <BaseComponent {component}>
   <div
     class="computed-text"
-  >{component?.format(computed)}</div>
+  >{computed}</div>
 </BaseComponent>

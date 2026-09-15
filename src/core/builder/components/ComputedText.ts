@@ -1,28 +1,34 @@
 import { BaseComponent } from "./BaseComponent";
 import { Constants } from "../../constants";
 import { Parser } from 'expr-eval';
-import {valuesStore, ValuesMap} from "../../valuesStore";
+import { updateValueStore } from "../../valuesStore";
 
 export class ComputedText extends BaseComponent {
   type: string = Constants.ComputedText;
   expr?: string;
   format: (value: any) => string = (value) => String(value);
-  public value: number|string = 0;
-  private unsubscribe?: () => void;
-  private currentValues: ValuesMap = {};
+  public value: number | string = 0;
+
+  private lastValue: any = undefined;
+  private valueFormatted: string | undefined = undefined;
 
   constructor(init?: Partial<ComputedText>) {
     super(init);
-    this.unsubscribe = valuesStore.subscribe(v => {
-      this.currentValues = v || {};
+    // this.unsubscribe = valuesStore.subscribe();
+    this.setValueStoreHandler(v => {
       if (this.expr) {
         try {
-          this.evaluateExpression(this.currentValues);
+           let newValue = this.evaluateExpression(v || {});
+          if (this.id && newValue !== this.lastValue) {
+            updateValueStore(this.id, newValue);
+            this.lastValue = newValue;
+          }
         } catch (e) {
           console.error(e)
         }
       }
     });
+    console.log(this.id, this.unsubscribe)
   }
   public evaluateExpression(values = {}): string {
     if (!this.expr) return ''
@@ -57,8 +63,11 @@ export class ComputedText extends BaseComponent {
     }
   }
 
-  public getValue():string|number{
+  public getValue(): string | number {
     return this.value;
+  }
+  public getValueFormatted(): string {
+    return this.format(this.value);
   }
 
   public destroy() {

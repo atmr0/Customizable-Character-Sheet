@@ -5,7 +5,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { BaseComponent, SubGrid } from "@ui/components/index.js";
-  import { valuesStore, setValue } from "@core/valuesStore";
+  import { valuesStore, updateValueStore } from "@core/valuesStore";
   import { get } from "svelte/store";
   import type { ItemList, SheetSection } from "@builder/components";
 
@@ -16,7 +16,7 @@
     const store = get(valuesStore);
     if(!component) return;
     if (id && !store[id] && component.items && component.items.length) {
-      setValue(id, component.items);
+      updateValueStore(id, component.items);
     }
     // (async () => {
     //   try {
@@ -44,7 +44,7 @@
     const current = storeItems || [];
     const newRow = component!.addItem()
     const next = [...current, newRow];
-    if (id) setValue(id, next);
+    if (id) updateValueStore(id, next);
     else component!.items = next;
   }
 
@@ -52,7 +52,7 @@
     if (!editable) return;
     const current = storeItems || [];
     const next = current.filter((r: any) => r.__rowId !== rowId);
-    if (id) setValue(id, next);
+    if (id) updateValueStore(id, next);
     else component!.items = next;
   }
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
-  import { valuesStore, setValue } from "@core/valuesStore";
+  import { valuesStore, updateValueStore } from "@core/valuesStore";
   import { type ComponentOptions } from "@builder/components";
 
   export let checked: boolean = false;
@@ -12,14 +12,14 @@
     id = component.id;
     label = component.label;
   }
-  if (id) setValue(id, checked);
+  if (id) updateValueStore(id, checked);
 
   $: storeVal = id ? ($valuesStore[id] ?? checked) : checked;
   $: inputId = id ? `${id}_cb` : undefined;
   function onChange(e: any) {
     const v = e.target.checked;
     checked = v;
-    if (id) setValue(id, v);
+    if (id) updateValueStore(id, v);
     // onchange?.(v, e);
   }
 </script>
