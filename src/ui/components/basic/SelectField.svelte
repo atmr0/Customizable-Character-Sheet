@@ -8,9 +8,7 @@
   let value:string|undefined = component?.value;
   function handleChange(e: any) {
     if (!component) return;
-    component.value = e.target.value;
-    value = component.value;
-    if (id) updateValueStore(id, component.value);
+    component.setValue(e.target.value);
   }
   if (id) updateValueStore(id, component?.value);
 </script>

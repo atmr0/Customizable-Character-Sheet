@@ -14,4 +14,28 @@ export class InputField extends BaseComponent {
   public getValue(): string|number|undefined {
     return this.value;
   }
+
+  public setValue(value: string | number | undefined) {
+    if(!this.id) {console.error("InputField has no ID"); return}
+    if (this.inputType === "number") {
+      const parsed = this.parseNumeric(value as string);
+      this.value = parsed;
+      value = parsed;
+      if (this.id) this.updateValueStore(this.id, parsed);
+    } else {
+      this.value = value;
+      value = value;
+      if (this.id) this.updateValueStore(this.id, this.value);
+    }
+  }
+
+  private parseNumeric(raw: string) {
+    if (raw === "" || raw === null || raw === undefined)
+      return "";
+    const normalized = String(raw).replace(",", ".");
+    const num = this.allowFloat
+      ? Number(normalized)
+      : parseInt(normalized, 10);
+    return isNaN(num) ? "" : num;
+  }
 }

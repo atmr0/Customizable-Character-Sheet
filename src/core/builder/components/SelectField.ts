@@ -10,4 +10,9 @@ export class SelectField extends BaseComponent {
   public getValue(): string {
     return this.value ?? this.placeholder!;
   }
+
+  public setValue(value: string): void {
+    this.value = value;
+    this.updateValueStore(this.id!, this.value);
+  }
 }

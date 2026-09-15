@@ -1,4 +1,4 @@
-import {valuesStore, ValuesMap} from "../../valuesStore";
+import {valuesStore, ValuesMap, updateValueStore} from "../../valuesStore";
 import type { Subscriber } from "svelte/store";
 
 export class BaseComponent {
@@ -34,6 +34,10 @@ export class BaseComponent {
   public setValue(value: any): any {
     if (this.constructor.name == "BaseComponent") return '';
     throw new Error("[BaseComponent] setValue() not implemented for " + this.constructor.name);
+  }
+
+  public updateValueStore(id:string, value: any) {
+    updateValueStore(id, value);
   }
 }
 

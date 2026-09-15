@@ -18,29 +18,12 @@
   let max: number | undefined = component?.max;
 
   let value: string | number | undefined = component?.value;
-  function parseNumeric(raw: string) {
-    if (!component || raw === "" || raw === null || raw === undefined)
-      return "";
-    const normalized = String(raw).replace(",", ".");
-    const num = component.allowFloat
-      ? Number(normalized)
-      : parseInt(normalized, 10);
-    return isNaN(num) ? "" : num;
-  }
+  
 
   function handleInput(e: any) {
     const raw = e.target.value;
     if (!component) return;
-    if (component.inputType === "number") {
-      const parsed = parseNumeric(raw);
-      component.value = parsed;
-      value = parsed;
-      if (id) updateValueStore(id, parsed);
-    } else {
-      component.value = raw;
-      value = raw;
-      if (id) updateValueStore(id, component.value);
-    }
+    component.setValue(raw);
   }
   onMount(() => {
     if (!id) return;

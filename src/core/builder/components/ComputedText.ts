@@ -10,11 +10,9 @@ export class ComputedText extends BaseComponent {
   public value: number | string = 0;
 
   private lastValue: any = undefined;
-  private valueFormatted: string | undefined = undefined;
 
   constructor(init?: Partial<ComputedText>) {
     super(init);
-    // this.unsubscribe = valuesStore.subscribe();
     this.setValueStoreHandler(v => {
       if (this.expr) {
         try {

@@ -23,7 +23,7 @@ export class ItemList extends BaseComponent {
   *   ]
   * })
   */
- 
+
   private static __cachedSpec: BaseComponent[] = [];
   private static __cachedRowLength: number = 1
   private static __cachedId: string = "";
@@ -33,14 +33,14 @@ export class ItemList extends BaseComponent {
     // resetting so the count doesn't continue in other lists
     ItemList.__numberOfItens = 0;
 
-    if(!this.itemTemplate || !this.itemTemplate.components || Object.keys(this.itemTemplate.components).length === 0) {
+    if (!this.itemTemplate || !this.itemTemplate.components || Object.keys(this.itemTemplate.components).length === 0) {
       console.error('Item template is not set for ItemList');
       return;
     }
-    if(!this.items) return
+    if (!this.items) return
 
-    for(const item of this.items){
-      if(item && item.id){
+    for (const item of this.items) {
+      if (item && item.id) {
         this.itemsRecord[item.id] = item;
       }
     }
@@ -48,24 +48,45 @@ export class ItemList extends BaseComponent {
   }
 
   public getValue(): any[] {
-    if(!this.items) return [];
-    let data:any[] = [];
+    if (!this.items) return [];
+    let data: any[] = [];
     console.log(this.items)
-    for(const item in this.itemsRecord){
+    for (const item in this.itemsRecord) {
       data.push(this.getItemValues(item))
     }
     return data;
   }
 
-  public getItemValues(id:string):any{
-    if(!this.items) return undefined;
+  public getItemValues(id: string): any {
+    if (!this.items) return undefined;
     let item = this.itemsRecord[id];
     console.log("Getting item values for id:", id);
-    let values:any = []
-    for(const component in item.components){
+    let values: any = []
+    for (const component in item.components) {
       values.push(item.components![component].getValue());
     }
     return values;
+  }
+
+  public addItem(values: any[] = []): SheetSection | undefined {
+    if (!this.editable) return;
+    let newItem = this.buildItemFromValues(values);
+    if (newItem && newItem.id) {
+      this.itemsRecord[newItem.id] = newItem;
+      if (this.items) this.items.push(newItem);
+    }
+    this.updateValueStore(this.id!, this.items);
+    return newItem;
+  }
+
+  public removeItem(id: string): void {
+    if (!this.editable) return;
+    if (!this.items) return;
+    const item = this.itemsRecord[id];
+    if (!item) return;
+    this.items = this.items.filter(i => i.id !== id);
+    delete this.itemsRecord[id];
+    this.updateValueStore(this.id!, this.items);
   }
 
   public static buildTemplateFromSpec(id: string, spec: BaseComponent[], defaults: any[] = [], rowLength: number = 4, opts: (b: any) => SheetBuilder = (b) => b): SheetSection {
@@ -112,14 +133,6 @@ export class ItemList extends BaseComponent {
       b.add(f);
     });
     return b.build();
-  }
-
-  public addItem(values:any[] = []):SheetSection {
-    let newItem = this.buildItemFromValues(values);
-    if(newItem && newItem.id){
-      this.itemsRecord[newItem.id] = newItem;
-    }
-    return newItem;
   }
 
   private static replaceValuesInObjectList(obj: Record<string, any>, values: string[] = []): Record<string, any> {

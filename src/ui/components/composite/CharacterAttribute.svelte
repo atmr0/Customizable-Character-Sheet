@@ -30,7 +30,7 @@
   if (id) updateValueStore(id, Number(value));
   component.value = value;
 
-  let format = (v) => {
+  computedComponent.format = (v) => {
     const num = Number(v);
     if (isNaN(num)) return "";
     return num >= 0 ? `+${num}` : String(num);
@@ -48,7 +48,6 @@
     <ComputedText
       component={computedComponent}
       bind:this={modificator}
-      {format}
     />
   </div>
 </BaseComponent>

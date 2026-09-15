@@ -1,26 +1,25 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
-  import { valuesStore, updateValueStore } from "@core/valuesStore";
+  import { updateValueStore } from "@core/valuesStore";
   import { type ComponentOptions } from "@builder/components";
 
-  export let checked: boolean = false;
   export let disabled: boolean = false;
   export let component: ComponentOptions | undefined;
   let id: string | undefined;
   let label: string | undefined;
+  let checked: boolean = false;
   if (component) {
     id = component.id;
     label = component.label;
+    checked = component.getValue();
   }
   if (id) updateValueStore(id, checked);
 
-  $: storeVal = id ? ($valuesStore[id] ?? checked) : checked;
   $: inputId = id ? `${id}_cb` : undefined;
   function onChange(e: any) {
     const v = e.target.checked;
     checked = v;
-    if (id) updateValueStore(id, v);
-    // onchange?.(v, e);
+    component?.setValue(v)
   }
 </script>
 

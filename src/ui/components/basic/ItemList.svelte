@@ -11,63 +11,37 @@
 
   export let component:ItemList|undefined;
   let id: string | undefined = component?.id;
-  $: editable = component?.editable ?? true;
   onMount(() => {
     const store = get(valuesStore);
     if(!component) return;
     if (id && !store[id] && component.items && component.items.length) {
       updateValueStore(id, component.items);
     }
-    // (async () => {
-    //   try {
-    //     const mod = await import("@builder/components");
-    //   } catch (err) {
-    //     console.warn("Failed to load components map dynamically", err);
-    //   }
-    // })();
   });
-
-  $: storeItems = id ? $valuesStore[id] || [] : component?.items ;
-
-  let nextRowId = 1;
-
-  function ensureRowId(row: any, idx: number) {
-    if (!row) return row;
-    if (!row.__rowId) row.__rowId = `row-${nextRowId++}-${idx}`;
-    return row;
-  }
-
-  $: rows = (storeItems || []).map((r: any, idx: number) => ensureRowId(r, idx));
+  
+  $: editable = component?.editable ?? true;
+  $: rows = id ? $valuesStore[id] || [] : component?.items ;
 
   function addItem() {
-    if (!editable) return;
-    const current = storeItems || [];
-    const newRow = component!.addItem()
-    const next = [...current, newRow];
-    if (id) updateValueStore(id, next);
-    else component!.items = next;
+    if(component) component.addItem()    
   }
 
   function removeItem(rowId: string) {
-    if (!editable) return;
-    const current = storeItems || [];
-    const next = current.filter((r: any) => r.__rowId !== rowId);
-    if (id) updateValueStore(id, next);
-    else component!.items = next;
+    if(component) component.removeItem(rowId);
   }
 </script>
 
 <BaseComponent {component}>
   <div class="list-field">
       <ul class="list-all-items" >
-      {#each rows as row, i (row.__rowId)}
+      {#each rows as row, i (row.id)}
         <li class="list-item">
           <SubGrid sheet={row}  ></SubGrid>
           {#if editable}
             <button
               type="button"
               class="remove-btn"
-              on:click={() => removeItem(row.__rowId)}>×</button>
+              on:click={() => removeItem(row.id)}>×</button>
           {/if}
         </li>
       {/each}
