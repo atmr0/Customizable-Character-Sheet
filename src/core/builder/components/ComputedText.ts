@@ -1,7 +1,7 @@
 import { BaseComponent } from "./BaseComponent";
 import { Constants } from "../../constants";
 import { Parser } from 'expr-eval';
-import { updateValueStore } from "../../valuesStore";
+import { updateValueStore } from "@core/valuesStore";
 
 export class ComputedText extends BaseComponent {
   type: string = Constants.ComputedText;
@@ -26,7 +26,6 @@ export class ComputedText extends BaseComponent {
         }
       }
     });
-    console.log(this.id, this.unsubscribe)
   }
   public evaluateExpression(values = {}): string {
     if (!this.expr) return ''

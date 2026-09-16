@@ -27,8 +27,17 @@
     component.value = value;
     if (id) updateValueStore(id, Number(value));
   }
-  if (id) updateValueStore(id, Number(value));
-  component.value = value;
+  // Initialize from component.value or store
+  if (component?.value !== undefined) {
+    inputComponent.value = component.value;
+    if (id) updateValueStore(id, Number(component.value));
+  } else if (id) {
+    const storeVal = $valuesStore[id];
+    if (storeVal !== undefined) {
+      inputComponent.value = storeVal;
+      updateValueStore(id, Number(storeVal));
+    }
+  }
 
   computedComponent.format = (v) => {
     const num = Number(v);
@@ -36,7 +45,13 @@
     return num >= 0 ? `+${num}` : String(num);
   };
   let modificator;
-  $: $valuesStore;
+  // keep inputComponent in sync with valuesStore
+  $: if (id) {
+    const storeVal = $valuesStore[id];
+    if (storeVal !== undefined && storeVal !== inputComponent.value) {
+      inputComponent.value = storeVal;
+    }
+  }
 </script>
 
 <BaseComponent {component} showLabel={false}>

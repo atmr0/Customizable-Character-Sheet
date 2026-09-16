@@ -13,4 +13,10 @@ export class SubGrid extends BaseComponent {
   public getValue(){
     return this.sheet ? this.sheet.exportData() : {};
   }
+
+  public setValue(values: any) {
+    if (this.sheet) {
+      this.sheet.importData(values);
+    }
+  }
 }

@@ -32,8 +32,9 @@
 
   $: if (id) {
     const storeVal = $valuesStore[id];
-    if (storeVal !== undefined && storeVal !== component?.value) {
+    if (storeVal !== undefined && storeVal !== value) {
       if (component) component.value = storeVal;
+      value = storeVal;
     }
   }
 </script>

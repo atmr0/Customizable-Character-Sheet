@@ -1,4 +1,4 @@
-import {valuesStore, ValuesMap, updateValueStore} from "../../valuesStore";
+import {valuesStore, ValuesMap, updateValueStore} from "@core/valuesStore";
 import type { Subscriber } from "svelte/store";
 
 export class BaseComponent {

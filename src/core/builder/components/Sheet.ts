@@ -1,5 +1,5 @@
-import { ItemList } from "./ItemList";
 import { type ComponentOptions } from "./BaseComponent";
+
 
 export class Sheet {
   title?: string;
@@ -17,18 +17,22 @@ export class Sheet {
     if (!this.components) return;
     for (const key in data) {
       if (this.components[key]) {
-        console.log("[importing]", data[key])
         this.components[key].setValue(data[key]);
       }
     }
   }
 
+  // only for testing, not used otherwise
+  syncWait(ms: number) {
+    const end = Date.now() + ms
+    while (Date.now() < end) continue
+  }
   public exportData() {
     let data: Record<string, any> = {};
     if (!this.components) return data;
     for (const key in this.components) {
       let value = this.components[key].getValue();
-      if(value) data[key] = value;
+      if (value) data[key] = value;
     }
     console.log(data)
     return data;

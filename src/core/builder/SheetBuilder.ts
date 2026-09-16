@@ -57,7 +57,7 @@ export class SheetBuilder {
     return this;
   }
 
-  InputField(opts: Partial<BuilderIndex.InputField>): this { return this.add(new BuilderIndex.InputField(opts)); }
+  inputField(opts: Partial<BuilderIndex.InputField>): this { return this.add(new BuilderIndex.InputField(opts)); }
   staticText(opts: Partial<BuilderIndex.StaticText>): this { return this.add(new BuilderIndex.StaticText(opts)); }
   subGrid(opts: Partial<BuilderIndex.SubGrid>, sheet: BuilderIndex.Sheet): this { return this.add(new BuilderIndex.SubGrid(opts, sheet)); }
   characterAttribute(opts: Partial<BuilderIndex.ComponentOptions>): this { return this.add({ type: Constants.CharacterAttribute, ...opts }); }

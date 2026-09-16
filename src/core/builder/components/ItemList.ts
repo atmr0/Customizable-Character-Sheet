@@ -50,7 +50,6 @@ export class ItemList extends BaseComponent {
   public getValue(): any[] {
     if (!this.items) return [];
     let data: any[] = [];
-    console.log(this.items)
     for (const item in this.itemsRecord) {
       data.push(this.getItemValues(item))
     }
@@ -60,12 +59,26 @@ export class ItemList extends BaseComponent {
   public getItemValues(id: string): any {
     if (!this.items) return undefined;
     let item = this.itemsRecord[id];
-    console.log("Getting item values for id:", id);
     let values: any = []
     for (const component in item.components) {
       values.push(item.components![component].getValue());
     }
     return values;
+  }
+
+  public setValue(values: any[]): void {
+    if (!this.items) return;
+    this.items = []
+    this.itemsRecord = {};
+    for (let i = 0; i < values.length; i++) {
+      const itemValues = values[i] || [];
+      const newItem = this.buildItemFromValues(itemValues);
+      if (newItem && newItem.id) {
+        this.itemsRecord[newItem.id] = newItem;
+        this.items.push(newItem);
+      }
+    }
+    this.updateValueStore(this.id!, this.items);
   }
 
   public addItem(values: any[] = []): SheetSection | undefined {
@@ -101,6 +114,7 @@ export class ItemList extends BaseComponent {
       b.add(f);
     });
     opts(b);
+
     return b.build();
   }
 
@@ -145,7 +159,7 @@ export class ItemList extends BaseComponent {
         if (!newObj[key].startsWith('$')) continue;
 
         let index = parseInt(newObj[key].slice(1)) - 1
-        const v = values[index] ?? ''
+        const v = values[index] ?? newObj[key]
         newObj[key] = v
       }
       newObjList.push(newObj)

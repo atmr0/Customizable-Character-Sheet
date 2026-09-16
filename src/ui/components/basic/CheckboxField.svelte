@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
-  import { updateValueStore } from "@core/valuesStore";
+  import { updateValueStore, valuesStore } from "@core/valuesStore";
   import { type ComponentOptions } from "@builder/components";
 
   export let disabled: boolean = false;
@@ -14,6 +14,13 @@
     checked = component.getValue();
   }
   if (id) updateValueStore(id, checked);
+
+  $: if (id) {
+    const storeVal = $valuesStore[id];
+    if (storeVal !== undefined && storeVal !== checked) {
+      checked = !!storeVal;
+    }
+  }
 
   $: inputId = id ? `${id}_cb` : undefined;
   function onChange(e: any) {

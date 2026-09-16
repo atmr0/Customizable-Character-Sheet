@@ -93,7 +93,7 @@
     const input = e.target;
     const f = input.files && input.files[0];
     if (!f) return;
-    const res = await importSheetFromFile(f);
+    const res = await importSheetFromFile(f, sheet);
     if (!res.success) {
       alert('Erro ao importar: ' + res.error);
       input.value = '';
@@ -114,10 +114,8 @@
       sheetKey += 1;
       alert('Sheet (modelo) importado com sucesso.');
     } else if (res.kind === 'data') {
-      // apply only values
-      valuesStore.set(res.values || {});
-
-      alert('Dados do sheet importados com sucesso.');
+      console.log(res)
+      sheet.importData(res.values || {});
     }
     // reset input so same file can be chosen again if needed
     input.value = '';
