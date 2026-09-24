@@ -41,20 +41,21 @@ const mainSheet = new SheetBuilder('Character Sheet')
   .section("talents", r => r
     // .add(new BaseComponent({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', height: 1 }))
     .itemList({
-      id: 'skills', label: 'Skills', width: 2, height: 5, editable: true,
+      id: 'skills', label: 'Skills', width: 2, height: 5, editable: false,
       itemTemplate: ItemList.buildTemplateFromSpec('skills', skillSpec, [, 'cha_attr_mod + 2']),
       items: [
         ItemList.staticBuildItemFromValues(['Atletismo', 'str_attr_mod + 5'])
       ]
     })
     .itemList({
-      id: 'aaa', label: 'Skills', width: 2, height: 5, editable: true,
+      id: 'aaa', label: 'Skills', width: 2, height: 5, editable: false,
       itemTemplate: ItemList.buildTemplateFromSpec('aaa', skillSpec, [,'cha_attr_mod + 2']),
       items: [
         ItemList.staticBuildItemFromValues(['Carismo', 'str_attr_mod + 5'])
       ]
     })
   )
+  .checkboxField({ id: 'example_checkbox', label: 'Example Checkbox', width: 2 })
   .build();
 
 export default mainSheet;

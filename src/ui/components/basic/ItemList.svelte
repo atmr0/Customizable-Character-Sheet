@@ -1,7 +1,3 @@
-<!--
-  Some of this code was AI generated. I don't understand very much why the __rowId, but it works. Differently of just row.id.
--->
-
 <script lang="ts">
   import { onMount } from "svelte";
   import { BaseComponent, SubGrid } from "@ui/components/index.js";

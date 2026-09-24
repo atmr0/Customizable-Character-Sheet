@@ -17,7 +17,6 @@ export class InputField extends BaseComponent {
 
   public setValue(value: string | number | undefined) {
     if(!this.id) {console.error("InputField has no ID"); return}
-    console.log('[InputField setValue]', this.id, value);
     if (this.inputType === "number") {
       const parsed = this.parseNumeric(value as string);
       this.value = parsed;

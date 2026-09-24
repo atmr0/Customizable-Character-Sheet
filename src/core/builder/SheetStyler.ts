@@ -6,6 +6,7 @@ export type styleValues = Record<string, any> | Record<string, Record<string, Fu
 // In the future, maybe I'll use a canvas instead of HTTP DOM
 export default class SheetStyler {
   private styleObj: Record<string, any> = { '*': {} };
+  // @ts-ignore
   private sheet: BuilderIndex.Sheet;
 
   private sectionStack: BuilderIndex.ComponentOptions[][] = [];
@@ -110,7 +111,7 @@ export default class SheetStyler {
     }
   }
 
-  public createSelector(targetClass: string, component: BuilderIndex.ComponentOptions | null = null): string {
+  private createSelector(targetClass: string, component: BuilderIndex.ComponentOptions | null = null): string {
     let selector = `#${this.sheet.id}`;
     if (component) selector += ` #${component.id}`;
     if (targetClass) selector += ` .${targetClass}`;

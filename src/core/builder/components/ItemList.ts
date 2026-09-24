@@ -9,7 +9,7 @@ export class ItemList extends BaseComponent {
   items?: SheetSection[]; // better for typing when creating the list using the builder. And rendering it in order of addition
   private itemsRecord: Record<string, SheetSection> = {}; // but this is the one I will be using for search
   numberOfItens: number = 0;
-  editable: boolean = true;
+  editable?: boolean;
 
   teste: ItemList = this
 

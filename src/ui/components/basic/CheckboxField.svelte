@@ -25,8 +25,8 @@
   $: inputId = id ? `${id}_cb` : undefined;
   function onChange(e: any) {
     const v = e.target.checked;
-    checked = v;
-    component?.setValue(v)
+    checked = !v;
+    component?.setValue(checked)
   }
 </script>
 

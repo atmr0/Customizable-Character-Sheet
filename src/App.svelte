@@ -114,7 +114,6 @@
       sheetKey += 1;
       alert('Sheet (modelo) importado com sucesso.');
     } else if (res.kind === 'data') {
-      console.log(res)
       sheet.importData(res.values || {});
     }
     // reset input so same file can be chosen again if needed

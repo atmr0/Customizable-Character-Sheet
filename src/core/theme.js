@@ -1,3 +1,11 @@
+/**
+ * Most of this file was AI generated, with a bit of human supervision, of course.
+ */
+
+import cssStyles from "./cssStyles";
+
+
+
 // Theme tokens and helpers for the RPG character sheet
 
 export const defaultTheme = {
@@ -26,14 +34,13 @@ export const attributesColors = {
   cha_attr: '#EC4899',
 };
 
-
-export default defaultTheme;
-
 // All CSS variables from src/styles/variables.css (keeps the CSS names)
 export const cssVariables = {
   general: {
     '--primary-color': '#0B6EFD',
     '--secondary-color': '#6C757D',
+    '--highlight-color': 'rgba(253, 11, 164, 0.78)',
+    '--highlight-text-color': '#FFFFFF',
     '--background': 'transparent',
     '--surface': '#FFFFFF',
     '--text-primary': '#111827',
@@ -42,7 +49,6 @@ export const cssVariables = {
     '--border-color': '#a5a7aB',
     '--border-width': '1/16rem',
     '--border-radius': '0',
-    '--border-bottom': '1px solid var(--border-color)',
     '--padding-base': '0.5rem',
     '--gap': '0.5rem',
     '--shadow': '0 1px 3px rgba(0, 0, 0, 0.08)',
@@ -51,60 +57,15 @@ export const cssVariables = {
     '--font-size': '1rem',
     '--border': 'none'
   },
-  checkbox: {
-    '--cb-shadow-offset-ratio': '0.7',
-    '--cb-v-offset-shadow': '0',
-    '--cb-shadow-blur-ratio': '0.1',
-    '--cb-outer-box-blur-radius': 'calc(var(--control-size) * var(--cb-shadow-blur-ratio))',
-    '--cb-outer-box-shadow': '0 var(--cb-v-offset-shadow) var(--cb-outer-box-blur-radius) var(--cb-accent-shadow, rgba(255, 190, 184, 0.5))',
-    '--cb-checked-box-shadow': '0 var(--cb-v-offset-shadow) var(--cb-outer-box-blur-radius) var(--cb-success-shadow, rgba(146, 255, 151, 0.5))',
 
-    '--cb-inner-box-ratio': '0.7',
-    '--cb-inner-box-color': '#fff',
-    '--cb-inner-box-shadow': 'inset 0 var(--cb-v-offset-shadow) var(--cb-outer-box-blur-radius) var(--cb-accent-shadow)',
-    '--cb-inner-box-hover-shadow': 'inset 0 var(--cb-v-offset-shadow) calc(var(--cb-outer-box-blur-radius) * 0.8) var(--cb-accent-hover-shadow)',
-    '--cb-inner-box-hover-ratio': '0.55',
-
-    '--cb-tick-size-ratio': '0.7',
-    '--cb-tick-border-radius': '2px',
-    '--cb-tick-thickness-ratio': '0.1',
-    '--cb-tick-short-arm-length-ratio': '0.5',
-    '--cb-tick-long-arm-length-ratio': '1',
-    '--cb-tick-shadow-color': 'rgba(0, 0, 0, 0.23)',
-    '--cb-tick-short-arm-shadow': '-2px 0 5px var(--cb-tick-shadow-color)',
-    '--cb-tick-long-arm-shadow': '0 calc(var(--control-size) * 0.03) calc(var(--control-size) * 0.05) var(--cb-tick-shadow-color)',
-    '--cb-tick-translate-x-ratio': '0.78',
-    '--cb-tick-translate-y-ratio': '0.88',
-
-    '--cb-checkbox-outer-color': 'var(--secondary-color)',
-    '--cb-checkbox-checked-color': '#07d410',
-    '--cb-tick-color': '#cf0',
-    '--cb-accent-shadow': '#ffbeb8',
-    '--cb-accent-hover-shadow': '#ff9d96',
-    '--cb-success-shadow': '#92ff97',
-    '--cb-checkbox-box-border-radius': '5%'
-  },
-  image: {
-    '--img-border': '.125em solid var(--border-color)'
-  },
   list: {
-    '--list-gap-right': '0.5rem',
     '--list-gap-between-items': '0.25rem',
-    '--list-add-btn-padding': '0.25rem 0.5rem'
   },
   attributes: {
-    '--attr-input-font-size': '1em',
     '--attr-size': '4em',
     '--attr-input-width': 'var(--attr-size)',
     '--attr-input-height': 'var(--attr-size)',
-    '--attr-input-border-radius': '50%',
-    '--attr-input-border-width': '0.125em',
-    '--attr-input-border': '0.125em solid var(--text-secondary)',
-    '--attr-transition-duration': '0.12s',
     '--attr-focus-color': 'blue',
-    '--attr-focus-border-width': '0.125em',
-    '--attr-focus-box-shadow-width': '0.25em',
-    '--attr-focus-outline': 'none'
   }
 };
 
@@ -145,4 +106,118 @@ export function applyTheme(overrides = {}) {
       // ignore invalid values
     }
   });
+}
+
+// A nested JS representation of full CSS rules. Keys are selectors and values
+// are maps of property -> value or nested selectors. Example:
+// {
+//   ".base-component": {
+//     "width": "100%",
+//     "background": "#fff",
+//     ".label": { "color": "#333" }
+//   }
+// }
+
+
+function buildCssFromObject(obj, parent) {
+  let css = "";
+  Object.entries(obj).forEach(([key, value]) => {
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      // nested selector or group of properties
+      const selector = parent ? `${parent} ${key}` : key;
+      // collect primitive props for this selector
+      const props = Object.entries(value).filter(([, v]) => typeof v !== 'object');
+      if (props.length) {
+        css += `${selector} {\n`;
+        props.forEach(([p, v]) => {
+          css += `  ${p}: ${v};\n`;
+        });
+        css += `}\n`;
+      }
+      // handle deeper nesting
+      const nested = Object.fromEntries(Object.entries(value).filter(([, v]) => typeof v === 'object'));
+      if (Object.keys(nested).length) {
+        css += buildCssFromObject(nested, selector);
+      }
+    } else {
+      // top-level property (shouldn't normally happen here)
+      if (!parent) return;
+    }
+  });
+  return css;
+}
+
+// Generate full stylesheet text from cssStyles object
+export function generateCss(styles = cssStyles) {
+  let out = "";
+  Object.entries(styles).forEach(([selector, rules]) => {
+    if (rules && typeof rules === 'object') {
+      const primitiveProps = Object.entries(rules).filter(([, v]) => typeof v !== 'object');
+      if (primitiveProps.length) {
+        out += `${selector} {\n`;
+        primitiveProps.forEach(([p, v]) => {
+          out += `  ${p}: ${v};\n`;
+        });
+        out += `}\n`;
+      }
+      const nested = Object.fromEntries(Object.entries(rules).filter(([, v]) => typeof v === 'object'));
+      out += buildCssFromObject(nested, selector);
+    }
+  });
+  return out;
+}
+
+// Apply generated CSS into a single <style id="theme-styles"> tag
+export function applyStyles(styles = cssStyles) {
+  if (typeof document === 'undefined' || !document.head) return;
+  const id = 'theme-styles';
+  let tag = document.getElementById(id);
+  if (!tag) {
+    tag = document.createElement('style');
+    tag.id = id;
+    document.head.appendChild(tag);
+  }
+  try {
+    tag.textContent = generateCss(styles);
+  } catch (e) {
+    // ignore
+  }
+}
+
+// Apply a raw CSS string into the same theme <style> tag. Useful when user
+// edits freeform CSS.
+export function applyCssString(cssText) {
+  if (typeof document === 'undefined' || !document.head) return;
+  const id = 'theme-styles';
+  let tag = document.getElementById(id);
+  if (!tag) {
+    tag = document.createElement('style');
+    tag.id = id;
+    document.head.appendChild(tag);
+  }
+  try {
+    tag.textContent = cssText;
+  } catch (e) {
+    // ignore
+  }
+}
+
+// Persisted raw CSS string (in-memory export). Call `setCssTextStorage` to update.
+export let cssTextStorage = generateCss(cssStyles);
+
+export function setCssTextStorage(text) {
+  cssTextStorage = text;
+  applyCssString(text);
+}
+
+// On module load in the browser, apply theme variables and generated CSS immediately
+try {
+  if (typeof document !== 'undefined' && document.documentElement) {
+    // set CSS variables on :root
+    applyTheme();
+    // inject generated CSS
+    applyCssString(cssTextStorage || generateCss(cssStyles));
+  }
+} catch (e) {
+  // ignore errors during module init
 }
