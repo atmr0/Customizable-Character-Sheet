@@ -30,9 +30,6 @@ const cssStyles = {
     "box-shadow": "none",
     "border": "none"
   },
-  // ":focus": {
-  //   "outline": "none"
-  // },
   ":focus-visible": {
     "outline": "var(--highlight-color) solid 1px"
   },
@@ -250,7 +247,7 @@ const cssStyles = {
       "width": "inherit",
       "margin": "0",
       "padding": "0",
-      "margin-left": "-0.5ch", /* adjust for centering with number sign*/
+      "margin-left": "-0.5ch",
     },
   }
 };

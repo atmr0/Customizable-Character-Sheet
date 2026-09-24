@@ -14,14 +14,14 @@ export class ItemList extends BaseComponent {
   teste: ItemList = this
 
   /*
-  * This allow us to not need to create instances when building the sheet in code
-  * ex.: [...].itemList({
-  *   itemTemplate: ItemList.buildTemplateFromSpec(...),
-  *   items: [
-  *     ItemList.buildItemFromValues([...]),
-  *     ItemList.buildItemFromValues([...])
-  *   ]
-  * })
+   This allow us to not need to create instances when building the sheet in code
+   ex.: [...].itemList({
+     itemTemplate: ItemList.buildTemplateFromSpec(...),
+     items: [
+       ItemList.buildItemFromValues([...]),
+       ItemList.buildItemFromValues([...])
+     ]
+   })
   */
 
   private static __cachedSpec: BaseComponent[] = [];

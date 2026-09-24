@@ -34,6 +34,7 @@ export class Sheet {
       let value = this.components[key].getValue();
       if (value) data[key] = value;
     }
+    console.log(data)
     return data;
   }
 }

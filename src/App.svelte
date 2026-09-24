@@ -2,7 +2,7 @@
   import {RenderGrid} from "./ui";
   import { mainSheet } from "./MainSheet";
   // import SheetBuilder from "@builder/SheetBuilder";
-  import { applyTheme } from "@core/theme";
+  import { applyTheme } from "@ui/theme";
   import ThemeConfiguration from "./configurations/ThemeConfiguration.svelte";
   import { exportSheetModel, exportSheetData } from './Sheet/exportSheet';
   import { importSheetFromFile } from './Sheet/importSheet';

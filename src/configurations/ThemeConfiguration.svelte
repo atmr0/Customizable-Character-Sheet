@@ -5,8 +5,8 @@
     setCssTextStorage,
     applyCssString,
     generateCss,
-  } from "../core/theme.js";
-  import cssStyles from "../core/cssStyles";
+  } from "../ui/theme.js";
+  import cssStyles from "../ui/cssStyles";
   import MonacoCssEditor from './MonacoCssEditor.svelte';
 
   let cssText = cssTextStorage || generateCss(cssStyles) || "";

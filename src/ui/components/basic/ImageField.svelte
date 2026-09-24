@@ -2,20 +2,15 @@
 
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
-  import type { ComponentOptions } from "@builder/components";
+  import type { ImageField as ImageFieldType } from "@builder/components";
+  import { valuesStore } from "@core/valuesStore";
 
-  import { valuesStore, updateValueStore } from "@core/valuesStore";
-
-  export let accept: string = "image/*";
-  export let maxSizeBytes: number | undefined = undefined;
-  export let placeholder: string = "";
-  export let component: ComponentOptions| undefined = undefined;
-  let id: string | undefined;
-  let label: string | undefined;
-   if(component) {
-     id = component.id;
-     label = component.label;
-   }
+  export let component: ImageFieldType | undefined = undefined;
+  let id: string | undefined = component?.id;
+  let label: string | undefined = component?.label;
+  let accept: string = component?.accept ?? "image/*";
+  let maxSizeBytes: number | undefined = component?.maxSizeBytes;
+  let placeholder: string = component?.placeholder ?? "";
 
   let fileInput: HTMLInputElement | null = null;
   let previewOpen = false;
@@ -42,19 +37,12 @@
     }
   }
 
-  function handleFile(e: Event) {
+  async function handleFile(e: Event) {
     const target = e.target as HTMLInputElement;
     const f = target.files && target.files[0];
-    if (!f) return;
-    if (maxSizeBytes && f.size > maxSizeBytes) {
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      if (id) updateValueStore(id, dataUrl);
-    };
-    reader.readAsDataURL(f);
+    if (!f || !component) return;
+    if (maxSizeBytes && f.size > maxSizeBytes) return;
+    await component.setFromFile(f);
   }
 </script>
 

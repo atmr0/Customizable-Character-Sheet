@@ -1,9 +1,4 @@
-/**
- * Most of this file was AI generated, with a bit of human supervision, of course.
- */
-
-import cssStyles from "./cssStyles";
-
+import cssStyles from './cssStyles';
 
 
 // Theme tokens and helpers for the RPG character sheet
@@ -34,7 +29,6 @@ export const attributesColors = {
   cha_attr: '#EC4899',
 };
 
-// All CSS variables from src/styles/variables.css (keeps the CSS names)
 export const cssVariables = {
   general: {
     '--primary-color': '#0B6EFD',
@@ -69,20 +63,16 @@ export const cssVariables = {
   }
 };
 
-// Helper: normalize keys (accept both 'primary-color' or '--primary-color' or camelCase)
 function toCssVarName(key) {
   if (typeof key !== 'string') return key;
   if (key.startsWith('--')) return key;
-  // convert camelCase or kebab/no-prefix to --kebab-case
   const kebab = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/_/g, '-').toLowerCase();
   return `--${kebab}`;
 }
 
-// Apply theme: set CSS variables on :root. `overrides` can use keys with or without `--`.
 export function applyTheme(overrides = {}) {
   if (typeof document === 'undefined' || !document.documentElement) return;
   const root = document.documentElement;
-  // flatten nested cssVariables (groups) into a single map of varName -> value
   function flattenVars(obj) {
     const out = {};
     Object.entries(obj).forEach(([k, v]) => {
@@ -108,24 +98,11 @@ export function applyTheme(overrides = {}) {
   });
 }
 
-// A nested JS representation of full CSS rules. Keys are selectors and values
-// are maps of property -> value or nested selectors. Example:
-// {
-//   ".base-component": {
-//     "width": "100%",
-//     "background": "#fff",
-//     ".label": { "color": "#333" }
-//   }
-// }
-
-
 function buildCssFromObject(obj, parent) {
   let css = "";
   Object.entries(obj).forEach(([key, value]) => {
     if (value && typeof value === "object" && !Array.isArray(value)) {
-      // nested selector or group of properties
       const selector = parent ? `${parent} ${key}` : key;
-      // collect primitive props for this selector
       const props = Object.entries(value).filter(([, v]) => typeof v !== 'object');
       if (props.length) {
         css += `${selector} {\n`;
@@ -134,20 +111,17 @@ function buildCssFromObject(obj, parent) {
         });
         css += `}\n`;
       }
-      // handle deeper nesting
       const nested = Object.fromEntries(Object.entries(value).filter(([, v]) => typeof v === 'object'));
       if (Object.keys(nested).length) {
         css += buildCssFromObject(nested, selector);
       }
     } else {
-      // top-level property (shouldn't normally happen here)
       if (!parent) return;
     }
   });
   return css;
 }
 
-// Generate full stylesheet text from cssStyles object
 export function generateCss(styles = cssStyles) {
   let out = "";
   Object.entries(styles).forEach(([selector, rules]) => {
@@ -167,7 +141,6 @@ export function generateCss(styles = cssStyles) {
   return out;
 }
 
-// Apply generated CSS into a single <style id="theme-styles"> tag
 export function applyStyles(styles = cssStyles) {
   if (typeof document === 'undefined' || !document.head) return;
   const id = 'theme-styles';
@@ -184,8 +157,6 @@ export function applyStyles(styles = cssStyles) {
   }
 }
 
-// Apply a raw CSS string into the same theme <style> tag. Useful when user
-// edits freeform CSS.
 export function applyCssString(cssText) {
   if (typeof document === 'undefined' || !document.head) return;
   const id = 'theme-styles';
@@ -202,7 +173,6 @@ export function applyCssString(cssText) {
   }
 }
 
-// Persisted raw CSS string (in-memory export). Call `setCssTextStorage` to update.
 export let cssTextStorage = generateCss(cssStyles);
 
 export function setCssTextStorage(text) {
@@ -210,14 +180,11 @@ export function setCssTextStorage(text) {
   applyCssString(text);
 }
 
-// On module load in the browser, apply theme variables and generated CSS immediately
 try {
   if (typeof document !== 'undefined' && document.documentElement) {
-    // set CSS variables on :root
     applyTheme();
-    // inject generated CSS
     applyCssString(cssTextStorage || generateCss(cssStyles));
   }
 } catch (e) {
-  // ignore errors during module init
+  // ignore
 }

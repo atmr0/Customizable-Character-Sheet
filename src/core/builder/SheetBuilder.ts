@@ -60,11 +60,12 @@ export class SheetBuilder {
   inputField(opts: Partial<BuilderIndex.InputField>): this { return this.add(new BuilderIndex.InputField(opts)); }
   staticText(opts: Partial<BuilderIndex.StaticText>): this { return this.add(new BuilderIndex.StaticText(opts)); }
   subGrid(opts: Partial<BuilderIndex.SubGrid>, sheet: BuilderIndex.Sheet): this { return this.add(new BuilderIndex.SubGrid(opts, sheet)); }
-  characterAttribute(opts: Partial<BuilderIndex.ComponentOptions>): this { return this.add({ type: Constants.CharacterAttribute, ...opts }); }
+  characterAttribute(opts: Partial<BuilderIndex.CharacterAttribute>): this { return this.add(new BuilderIndex.CharacterAttribute(opts)); }
   computedText(opts: Partial<BuilderIndex.ComputedText>): this { return this.add(new BuilderIndex.ComputedText(opts)); }
   itemList(opts: Partial<BuilderIndex.ItemList>): this { return this.add(new BuilderIndex.ItemList(opts)); }
   selectField(opts: Partial<BuilderIndex.SelectField>): this { return this.add(new BuilderIndex.SelectField(opts)); }
   checkboxField(opts: Partial<BuilderIndex.CheckboxField>): this { return this.add(new BuilderIndex.CheckboxField(opts)); }
+  imageField(opts: Partial<BuilderIndex.ImageField>): this { return this.add(new BuilderIndex.ImageField(opts)); }
 
   id(v: string): this { this.sheet.id = v; return this; }
   title(v: string): this { this.sheet.title = v; return this; }

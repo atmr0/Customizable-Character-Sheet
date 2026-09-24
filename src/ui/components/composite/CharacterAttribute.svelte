@@ -6,52 +6,18 @@
     InputField,
     ComputedText,
   } from "@ui/components/index.js";
-  import { updateValueStore, valuesStore } from "@core/valuesStore";
   import { Constants } from "@core/constants.ts";
-  import {
-    BaseComponent as BC,
-    InputField as IF,
-    ComputedText as CT,
-  } from "@core/builder/components";
-  export let component;
-  let id = component?.id;
-  let label = component.label;
-  let idField = id ? `${id}_field` : undefined;
-  let idComputed = id ? `${id}_mod` : undefined;
 
-  let inputComponent = new IF({ id: idField, inputType: "number", value: 10 });
-  let computedComponent = new CT({ id: idComputed, expr: `${id} % 10` });
+  export let component;
+  let label = component.label;
   let value;
   function onInput(e) {
     value = e.target.value;
-    component.value = value;
-    if (id) updateValueStore(id, Number(value));
-  }
-  // Initialize from component.value or store
-  if (component?.value !== undefined) {
-    inputComponent.value = component.value;
-    if (id) updateValueStore(id, Number(component.value));
-  } else if (id) {
-    const storeVal = $valuesStore[id];
-    if (storeVal !== undefined) {
-      inputComponent.value = storeVal;
-      updateValueStore(id, Number(storeVal));
-    }
+    component.setValue(value);
   }
 
-  computedComponent.format = (v) => {
-    const num = Number(v);
-    if (isNaN(num)) return "";
-    return num >= 0 ? `+${num}` : String(num);
-  };
   let modificator;
-  // keep inputComponent in sync with valuesStore
-  $: if (id) {
-    const storeVal = $valuesStore[id];
-    if (storeVal !== undefined && storeVal !== inputComponent.value) {
-      inputComponent.value = storeVal;
-    }
-  }
+
 </script>
 
 <BaseComponent {component} showLabel={false}>
@@ -59,9 +25,9 @@
     {#if label}
       <div class="label">{label}</div>
     {/if}
-    <InputField onInput={onInput} component={inputComponent} />
+    <InputField onInput={onInput} component={component.input} />
     <ComputedText
-      component={computedComponent}
+      component={component.mod}
       bind:this={modificator}
     />
   </div>

@@ -1,6 +1,6 @@
 # Custom RPG Character Sheet
 
-**Running / previewing**
+Running / Previewing
 - Install dependencies and run the dev server:
 
 ```bash
@@ -8,144 +8,81 @@ npm install
 npm run dev
 ```
 
+## For contributors
+Despite it being designed so you clone it and make your sheet to your game. Please, don't forget to submit suggestions and improvements to this repository. Some suggestions of things to improve upon and other TODOs are at the end.
+
+## Why this project exists?
+Firstly, for my own enjoyment. Secondly, it has some cool features. Maybe there is a site I don't know that has everything I made here, but I'm very confident that it will be subscription based.
+
+The two main reasons are: 
+1. GitHub integration. You can clone it, create a github page, and send it to your friends. It won't be necessary to download the sheet so the players can use it. They can update their sheets, everything will be tracked by github.
+2. Customization. You can create any RPG sheet you want easily. And you, as the master, can even set different themes for each player, or class, or whatever.
+
 ## Documentation
 
-### Components
-The sheet is built using a flexible layout model. The renderer prefers a `flex`-based line layout for sheets that don't require vertical spanning (simpler and responsive), and will automatically switch to a CSS Grid "grid-mode" when any cell requests vertical spans (`colspan` / `rowSpan`). This preserves `colspan`-like behaviour where needed while keeping most sheets simple.
+The project is divided into Svelte components (mostly UI) and TypeScript (TS) components, where data is processed and saved to the `valuesStore`.
 
-**All components have (none are obligatory):**
-- `id` — Useful for styling. Also used for accessing its value in other places;
-- `label` — A label displayed at the top/left by default (the `checkbox` is an exception);
-- `colspan` — Logical span along the sheet's primary axis. When the sheet is not transposed this behaves like `colspan` (default `1`). When transposed it maps to the other axis.
-- `rowSpan` — Logical span across the primary axis (complement of `colspan`, default `1`). Together `colspan` and `rowSpan` replace `colspan`/`colspan` and make the model axis-agnostic.
-- `style` — An object based on CSS that customizes the component;
-- `(literally anything)` — You can add any attribute and value, but you will have to code to implement it;
+Currently the project contains the following components:
 
+#### Layout components
+- **Sheet**: the base for everything. It stores all components and styles. Components are organized in cells (a grid) — although the grid layout itself is not stored in the `Sheet`. `Sheet` is responsible for importing and exporting its data.
+- **SubGrid**: basically a `Sheet` used to subdivide a cell into another grid.
 
-**Current built-in components and their key attributes:**
-- `StaticText` — static text;
-- `ComputedText` — dynamic text evaluated from an expression;
-- `InputField` — text or numeric input (see component for props);
-- `SelectField` — dropdown menu with predefined options;
-- `ItemList` — list of items using an item template;
-- `CheckboxField` — checkbox control;
-- `ImageField` — upload/preview image (can request `colspan` / `rowSpan` to occupy more space);
+#### Simple components
+- **BaseComponent**: the generic component that others inherit from. It has common attributes such as `id`, `type`, `label`, position and dimensions. It receives an obj
+- **CheckboxField**: a simple checkbox.
+- **ComputedText**: non-interactive text that computes an expression based on other components' values.
+- **ImageField**: set an image and zoom it.
+- **InputField**: a simple input (string or numeric).
+- **SelectField**: select one option from a list (like radio).
+- **StaticText**: static text.
 
----
-### Component attributes (detailed)
-Specific component attributes:
-- `StaticText`
-  - `text` (string): displayed content.
+#### Composite components
+- **CharacterAttribute**: contains a numeric `InputField` and a `ComputedText` (modifier).
+- **ItemList**: a flexible component that manages multiple other components based on a template you provide. It uses a `SubGrid` to create items. For example, you can make a template with `InputField`, `ComputedText`, `StaticText` and `CheckboxField`, and all created items will have the same fields.
 
-- `ComputedText`
-  - `expr` (string): expression evaluated using the values store (e.g. `cha_attr_mod + 5`).
-  - `format` (function): optional formatter called with the computed value.
-
-- `InputField` (see `src/core/svelte components/basic components/InputField.svelte`)
-  - `value` (string|number): initial value.
-  - `placeholder` (string)
-  - `inputType` (string): `'text'` or `'number'`.
-  - `allowFloat` (boolean): allow fractional numbers when numeric.
-  - `step`, `min`, `max` (number|string): native input constraints.
-  - `oninput` (function): callback invoked on raw input events.
-
-- `SelectField`
-  - `options` (string[]): available options.
-  - `value` (string|number): initial selection.
-
-- `ItemList`
-  - `itemTemplate` (array): array defining components for each line of the list (use ComponentOptions objects).
-  - The `ItemList` renderer instantiates items from this template and keeps them in the sheet model.
-
-- `CheckboxField`
-  - `value` / `checked` (boolean): initial state.
-
-- `ImageField`
-  - `src` (string): optional preloaded image URL.
-  - Upload/preview UX is implemented in the component; the `style` object can adjust appearance.
-  - `colspan` / `rowSpan`: the `ImageField` (e.g. profile picture) can request vertical spanning — the renderer will switch to grid-mode when vertical spans are required.
-
-- `CharacterAttribute` (see `src/core/svelte components/CharacterAttribute.svelte`)
-  - `value` (number): initial attribute value.
-  - `label` (string): label above the circular control.
-  - The component wires its numeric input into the central values store using the cell `id`.
-  - Attribute-related CSS tokens are prefixed with `--attr-` (ex.: `--attr-focus-color`, `--attr-size`).
-
----
-### `SheetBuilder` (grid-based) 
-The project now uses a grid-based `SheetBuilder` that places components directly into rows and columns (instead of the previous line-first DSL). The implementation lives in [src/core/builder/SheetBuilder.ts](src/core/builder/SheetBuilder.ts) and produces a model where components are stored in `sheet.components` with explicit `row`, `col`, `colspan`, `rowSpan` and metadata.
-
-Key ideas and API
-- **Grid coordinates:** components may include `row` and `col` (1-based) to explicitly position them. If omitted, the builder places components automatically scanning left→right, top→bottom.
-- **Default size:** if no span is specified, a component is `1x1` (`colspan = 1`, `rowSpan = 1`).
-- **Occupancy tracking:** the builder tracks occupied grid cells and will throw an error when an explicit placement conflicts with existing components (or you can detect/handle that in your code).
-- **Primary methods:**
-  - **`new SheetBuilder(title?)`** — create a builder instance.
-  - **`setRowLength(n)`** — set the number of columns per row (required to control automatic placement width).
-  - **`add(cell)`** — add a `ComponentOptions` object. The builder sets `cell.id` if missing, assigns `row`/`col` if omitted (automatic placement), and records `colspan`/`rowSpan`
-  - **`withStyle(style)`** — attach sheet-level styles (keeps previous `styleTag` generation).
-  - **`build()`** — finalize and return the `Sheet` model. The sheet includes `components` (flat list) and metadata (`rowLength`, `numberOfLines`, `styleTag`).
-
-Example
-```js
-const sheet = new SheetBuilder('Character Sheet')
-  .setRowLength(6)
-  .add({ type: 'SubGrid', id: 'subgrid1', row: 1, col: 1, colspan: 6 })
-  .add({ type: 'CharacterAttribute', id: 'str_attr', row: 2, col: 1, value: 10 })
-  .add({ type: 'CharacterAttribute', id: 'dex_attr', value: 10 }) // automatic placement
-  .build();
-```
-
-Notes
-- The builder ensures components do not overlap when placed; if a conflict occurs on explicit placement it throws an error.
-- The builder will fill `sheet.components` (a flat array). The renderer expects `components` and resolves the actual Svelte component for each entry from the registry.
-
-Renderer changes
-- The previous `GridBuilder` is no longer required. The renderer (`src/core/svelte components/layout/RenderGrid.svelte`) resolves component constructors dynamically using the `componentsMap` registry (`src/core/builder/ComponentsMap.ts`) and instantiates components with the cell object as props.
-
-Migration tips
-- Replace previous `line(...).characterAttribute(...)` patterns by calling `setRowLength(...)` then `add(...)` with optional `row`/`col` coordinates.
-- If you relied on `ignoreLineInLayout` previously, implement the same behavior by positioning an element at row `1` with `colspan` spanning the full width and then placing subsequent items at row `2` explicitly or by allowing automatic placement to fill left-to-right starting at row 2.
+#### Other files related to the sheet
+- `OrganizingGrid.ts`: helper for the `SheetBuilder` to avoid overlapping components; it allows not specifying every component position by tracking the first empty cell (left-to-right, top-to-bottom).
+- `componentsMap.ts`: an index for Svelte components; a legacy artifact that could be merged with other index files.
+- `SheetStyler`: responsible for storing and managing sections and custom styles. *A section is a virtual division (not a subgrid); it only serves styling purposes.*
 
 
----
-### Creating the sheet
-You can use the `SheetBuilder` and `LineBuilder` explained above, or you can use pure JSON.
-Example of a JSON sheet:
-```json
-{
-  "title": "Character Sheet",
-  "id": "test_sheet",
-  "rowLength": 6,
-  "lines": [
-    [
-      {
-        "type": "InputField",
-        "id": "player_name",
-        "label": "Player Name",
-        "placeholder": "John Doe",
-        "colspan": 5
-      }
-    ],
-    [
-      {
-        "type": "CharacterAttribute",
-        "id": "str_attr",
-        "label": "Strength",
-        "value": 10,
-        "style": {
-          "--attr-focus-color": "#EF4444"
-        }
-      }
-    ]
-  ],
-  "styles": {
-    "#str_attr": {
-      "--attr-focus-color": "#EF4444"
-    }
-  }
-}
-```
+### SheetBuilder
+`SheetBuilder.ts` is the recommended way to construct a sheet. As the name suggests, it follows (more or less) the builder design pattern.
 
-There is a redundancy of the style in this example, only to show the available options.
-**Important**: If the sheet `styles` has the same selector as the specific component style (str_attr), the specific component will overwrite it. Else, the most specific selector will overwrite, like CSS usually does. e.g.: `#test_sheet-line-2 #str_attr` would overwrite the component specific style.
+It stores the sheet, `OrganizingGrid` and `SheetStyler`.
+
+Methods
+- `add`: creates and rehydrates components and adds them to the sheet.
+  - Note: the rehydration step was AI-generated. It is necessary so component methods are available. When a plain object is passed as a constructor parameter (e.g. `{ key: value, key2: value2 }`) and `Object.assign` is used, prototype methods are not preserved; rehydration restores them.
+- `(componentName)`: calls `add` with the corresponding component.
+- `id`: sets the id for the next component.
+- `lines`: sets the number of lines. It helps with the appearance of the CSS grid, although it doesn't limit the number of lines.
+- `startSection`: begins a section.
+- `endSection`: ends the current section.
+- `section`: an alternative if you don't want to use `startSection` / `endSection`; it is more compact and better indented.
+- `withComponentStyle`: applies style to the last component added.
+- `withSectionStyle`: applies style to the last section.
+- `withSheetStyle`: applies style to the current sheet; it does not matter where it is called.
+- `withStyle`: applies style depending on where it is called. If called immediately after adding a component, it applies to that component; if called after a section, it applies to the section.
+  - These methods are proxies to the `SheetStyler` methods.
+- `build`: returns the sheet.
+
+### Styling
+It uses CSS for styling. All CSS is stored in theme.js. This is so we are able to edit and visualize everything, in real time, in the side menu text editor.
+
+### Ways to create a new component
+You can create a new class component in typescript, and its corresponding svelte component.
+You can create a subgrid. And you can create an ItemList
+For example, the CharacterAttribute could easily be an ItemList. But currently (24/09/2026), but it would be a bit more complicated for styling it.
+
+## Things to improve upon
+- The file organization
+- Normalizing file and class names.
+- Maybe find a way to simplify a little bit the HTML. For example, everything is wrapped in a \[something]-wrapper. I don't really remember why, but it bothers me a bit.
+- If someone really is motivated, it would be awesome to change from CSS to a canvas, or whatever. It would open a lot more of customization possibilities, such as add texture to things, like an old paper border. If this is possible with CSS, pardon my ignorance lol.
+
+
+## TODO
+- Create a login page
+- Save the styles for each player, as mentioned at the beginning.

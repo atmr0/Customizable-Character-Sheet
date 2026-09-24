@@ -30,16 +30,16 @@ export async function writeExportData(data: string, filename = 'sheet.json'): Pr
   // Browser: trigger download
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     try {
-      // const blob = new Blob([data], { type: 'application/json' });
-      // const url = URL.createObjectURL(blob);
-      // const a = document.createElement('a');
-      // a.href = url;
-      // a.download = filename;
-      // // Some environments require the anchor to be in the DOM
-      // document.body.appendChild(a);
-      // a.click();
-      // a.remove();
-      // URL.revokeObjectURL(url);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      // Some environments require the anchor to be in the DOM
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
       return { success: true };
     } catch (err: any) {
       return { success: false, error: err?.message || String(err) };
