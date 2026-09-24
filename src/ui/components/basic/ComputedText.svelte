@@ -1,26 +1,21 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
-  import { setValue, valuesStore } from "@core/valuesStore";
-  import { evaluateExpression } from "@core/utils/compute.js";
-  import { Constants } from "@core/constants";
+  import { valuesStore } from "@core/valuesStore";
+  import { ComputedText } from "@builder/components";
 
-  export let expr = "";
-  export let label = undefined;
-  export let format = (v) => v;
-  export let id: string | undefined = undefined;
-  let componentClass = Constants.ComputedText;
-  let computed = "";
-  let lastValue = ""
+  export let component: ComputedText | undefined = undefined;
+  let id: string | undefined;
+  if(component) {
+    id = component.id;
+  }
+  $: computed = "";
   $: $valuesStore;
-  $: if (expr) {
+  $: if (component && component.expr) {
     try {
-      const val = evaluateExpression(expr, $valuesStore || {});
-      computed = val === null || val === undefined ? "" : val;
-      if (id && computed !== lastValue) {
-        setValue(id, computed);
-        lastValue = computed;
-      }
+      const val = $valuesStore[""]; // it does nothing, only makes it so this block always stay updated
+      computed = component.getValueFormatted();
     } catch (e) {
+      console.error(e);
       computed = "";
     }
   } else {
@@ -28,8 +23,8 @@
   }
 </script>
 
-<BaseComponent {id} {label} {componentClass}>
+<BaseComponent {component}>
   <div
     class="computed-text"
-  >{format(computed)}</div>
+  >{computed}</div>
 </BaseComponent>

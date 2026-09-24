@@ -11,7 +11,7 @@ import { Constants } from "../constants";
 
 
 
-export const componentsMap: Record<string, any> = {
+export const svelteComponentsMap: Record<string, any> = {
   [Constants.CharacterAttribute]: CharacterAttributeSvelte,
   [Constants.CheckboxField]: CheckboxFieldSvelte,
   [Constants.ComputedText]: ComputedTextSvelte,
@@ -23,8 +23,4 @@ export const componentsMap: Record<string, any> = {
   [Constants.SubGrid]: SubGridSvelte,
 };
 
-export type ComponentMap = typeof componentsMap;
-
-export const componentTypes = Object.freeze(Object.keys(componentsMap));
-
-export default componentsMap;
+export default svelteComponentsMap;

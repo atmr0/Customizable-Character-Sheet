@@ -1,30 +1,32 @@
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
-  import { setValue } from "@core/valuesStore";
-  import { Constants } from "@core/constants";
+  import { updateValueStore, valuesStore } from "@core/valuesStore";
+  import { SelectField } from "@builder/components";
 
-
-  export let id: string;
-  export let label: string | undefined;
-  export let options: Array<string> | Array<{ value: any; label: string }> = [];
-  export let value: any = "";
-  export let placeholder: string = "Select...";
-  export let onchange = undefined;
-  let componentClass = Constants.SelectField;
-  function handleChange(e) {
-    value = e.target.value;
-    onchange?.(e);
-    if (id) setValue(id, value);
+  export let component: SelectField | undefined;
+  let id: string | undefined = component?.id;
+  let value:string|undefined = component?.value;
+  function handleChange(e: any) {
+    if (!component) return;
+    component.setValue(e.target.value);
   }
-  if (id) setValue(id, value);
+  if (id) updateValueStore(id, component?.value);
+
+  $: if (id) {
+    const storeVal = $valuesStore[id];
+    if (storeVal !== undefined && storeVal !== value) {
+      value = storeVal;
+      if (component) component.value = storeVal;
+    }
+  }
 </script>
 
-<BaseComponent {id} {label} {componentClass}>
+<BaseComponent {component}>
   <select class="select-input" bind:value on:change={handleChange}>
-    {#if placeholder}
-      <option value="">{placeholder}</option>
+    {#if component?.placeholder}
+      <option value="">{component.placeholder}</option>
     {/if}
-    {#each options as opt}
+    {#each component?.options as opt}
       <option value={opt}>{opt}</option>
     {/each}
   </select>

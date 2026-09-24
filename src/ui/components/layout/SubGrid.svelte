@@ -1,8 +1,12 @@
 <script lang="ts">
+  import { SubGrid } from "@builder/components";
   import RenderGrid from "./RenderGrid.svelte";
-  export let sheet;
+  export let component: SubGrid;
+  export let sheet: any;
+
+  sheet = component?.sheet ?? sheet;
 </script>
 
 {#if sheet}
-  <RenderGrid {sheet} />
+  <RenderGrid sheet={sheet} />
 {/if}

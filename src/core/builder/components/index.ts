@@ -1,4 +1,5 @@
-export { BaseComponent, type ComponentOptions, type Sheet, type SheetSection } from './BaseComponent';
+export { BaseComponent, type ComponentOptions } from './BaseComponent';
+export { type Sheet, type SheetSection } from './Sheet';
 export { InputField } from './InputField';
 export { StaticText } from './StaticText';
 export { SubGrid } from './SubGrid';

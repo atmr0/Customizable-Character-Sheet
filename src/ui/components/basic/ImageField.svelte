@@ -1,16 +1,21 @@
+<!--90% AI Generated. -->
+
 <script lang="ts">
   import { BaseComponent } from "@ui/components/index.js";
+  import type { ComponentOptions } from "@builder/components";
 
-  import { valuesStore, setValue } from "@core/valuesStore";
-  import { Constants } from "@core/constants";
+  import { valuesStore, updateValueStore } from "@core/valuesStore";
 
-  export let id: string | undefined;
-  export let label: string | undefined;
   export let accept: string = "image/*";
   export let maxSizeBytes: number | undefined = undefined;
   export let placeholder: string = "";
-  export let onupload = undefined;
-  let componentClass = Constants.ImageField;
+  export let component: ComponentOptions| undefined = undefined;
+  let id: string | undefined;
+  let label: string | undefined;
+   if(component) {
+     id = component.id;
+     label = component.label;
+   }
 
   let fileInput: HTMLInputElement | null = null;
   let previewOpen = false;
@@ -47,14 +52,13 @@
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = reader.result as string;
-      if (id) setValue(id, dataUrl);
-      onupload?.(dataUrl, f);
+      if (id) updateValueStore(id, dataUrl);
     };
     reader.readAsDataURL(f);
   }
 </script>
 
-<BaseComponent {id} {label} {componentClass}>
+<BaseComponent {component}>
   <div
     class="image-wrapper"
     role="button"
