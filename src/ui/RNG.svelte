@@ -1,6 +1,6 @@
 <script lang="ts">
   import { RNG } from "@core/RNG";
-  import { eventGlobal } from "./idk.svelte";
+  import { eventGlobal } from "./eventGlobal.svelte";
   import { onMount } from "svelte";
   import { cubicBezier } from "./animationEasing";
 
@@ -22,11 +22,10 @@
     numberVisibleItems = Math.ceil(viewPortHeight / itemHeight) + 2;
   });
 
-  $inspect(eventGlobal.rng);
+  // $inspect(eventGlobal.rng);
   $effect(() => {
     if (eventGlobal.rng) {
       roll(eventGlobal.rng);
-      eventGlobal.rng = null;
     }
   });
 
@@ -57,6 +56,11 @@
     content.style.transform = `translateY(${result.initialPosition + center - itemHeight / 2}px)`;
   }
 
+  function endAnimation() {
+    spinning = false;
+    eventGlobal.send(null, eventGlobal.message+" done");
+  }
+
   function animateContent(result: any) {
     const initialTime = performance.now();
     let easing = cubicBezier(0.879, -0.064, 0.34, 1);
@@ -76,8 +80,7 @@
         requestAnimationFrame(animate);
       }
       else {
-        spinning = false;
-
+        endAnimation();
       }
     }
     requestAnimationFrame(animate);

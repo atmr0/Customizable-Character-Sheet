@@ -1,6 +1,8 @@
 export const eventGlobal = $state({
   rng: undefined,
-  send(rng) {
+  message: "",
+  send(rng, message="") {
     this.rng = rng;
+    this.message = message;
   }
 });

@@ -18,6 +18,8 @@ export class BaseComponent {
     if (init) Object.assign(this, init);
     if (!this.width) this.width = 1;
     if (!this.height) this.height = 1;
+    if(this.constructor.name != "StaticText" && !this.id) 
+      this.id = this.constructor.name + "_" + Math.random().toString(36).substr(2, 9);
   }
 
   protected setValueStoreHandler( sub:Subscriber<ValuesMap>|undefined = undefined) {

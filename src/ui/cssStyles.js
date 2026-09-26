@@ -238,18 +238,20 @@ const cssStyles = {
       "border-color": "var(--attr-focus-color)",
       "box-shadow": "0 0 0 0.25em var(--attr-focus-color)"
     },
-
-    ".computed-text": {
-      "text-align": "center",
-      "background-color": "transparent",
-      "border": "none",
-      "min-height": "0",
-      "width": "inherit",
-      "margin": "0",
-      "padding": "0",
+    ".ComputedText": {
       "margin-left": "-0.5ch",
-    },
-  }
+    }
+  },
+  ".ComputedText": {
+    "text-align": "center",
+    "background-color": "transparent",
+    "border": "none",
+    "min-height": "1em",
+    "width": "inherit",
+    "margin": "0",
+    "padding": "0",
+    "margin-left": "-0.5ch",
+  },
 };
 
 export default cssStyles

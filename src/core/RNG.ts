@@ -16,6 +16,7 @@ export class RNG {
   private mod?: number;
   private length: number = 0;
   private lastResult: { index: number, value: number } | undefined;
+  public result: { index: number, value: number } | undefined;
   constructor(RNGConfig: Partial<RNGConfig>) {
     this.values = RNGConfig.values || this.createValues(RNGConfig.min!, RNGConfig.max!);
     this.length = this.values.length;
@@ -54,20 +55,20 @@ export class RNG {
 
     if (this.length === 0) throw new Error("No values available for random generation.");
     const randomIndex = Math.floor(Math.random() * this.length);
-    this.lastResult = { index: randomIndex, value: this.values[randomIndex] };
-    return this.lastResult;
+    this.lastResult = this.result ?? { index: 0, value: this.values[0] }
+
+    this.result = { index: randomIndex, value: this.values[randomIndex] };
+    return this.result;
   }
 
   getAnimationInfo(numberVisibleItems: number, itemSize: number) {
-    let lastResult = this.lastResult || { index: Math.floor(this.length / 2), value: Math.floor(this.length / 2) };
-    let result = this.generateRandom();
-    const direction: number =  Math.random() < 0.5 ? rollDirection.UP : rollDirection.DOWN;
-
+    const direction: number = rollDirection.UP//  Math.random() < 0.5 ? rollDirection.UP : rollDirection.DOWN;
+    const result = this.result!;
+    const lastResult = this.lastResult!;
     let minimumNumberOfItemsToTravel = Math.ceil(Math.random() * 4) + 2;
     let indexDifference = result.index - lastResult.index;
     let rotations = Math.ceil(minimumNumberOfItemsToTravel / this.length);
-    let totalItemsToTravel = rotations * this.length - indexDifference * direction;
-
+    let totalItemsToTravel = rotations * this.length + indexDifference * direction;
     let extraCopiesOnEachSide = Math.ceil(numberVisibleItems / this.length); // extra copies at the beginning and end to make the illusion of an infinite loop
     let totalNumberOfCopies = rotations + extraCopiesOnEachSide * 2;
 
@@ -80,7 +81,7 @@ export class RNG {
     const endIndex = startIndex + totalItemsToTravel * direction;
 
     // TODO add random offset, and make it snap to the final position
-    const dislocation = (startIndex-endIndex) * itemSize;
+    const dislocation = (startIndex - endIndex) * itemSize;
     const initialPosition = startIndex * itemSize * -1; // we scroll up
     const duration = Math.random() * 2000 + 1000;
 
@@ -91,8 +92,5 @@ export class RNG {
       result,
       valuesToRoll
     }
-
-
-
   }
 }
