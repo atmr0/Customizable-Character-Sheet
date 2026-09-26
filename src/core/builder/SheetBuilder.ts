@@ -65,6 +65,7 @@ export class SheetBuilder {
   itemList(opts: Partial<BuilderIndex.ItemList>): this { return this.add(new BuilderIndex.ItemList(opts)); }
   selectField(opts: Partial<BuilderIndex.SelectField>): this { return this.add(new BuilderIndex.SelectField(opts)); }
   checkboxField(opts: Partial<BuilderIndex.CheckboxField>): this { return this.add(new BuilderIndex.CheckboxField(opts)); }
+  rollButton(opts: Partial<BuilderIndex.RollButton>): this { return this.add(new BuilderIndex.RollButton(opts)); }
   imageField(opts: Partial<BuilderIndex.ImageField>): this { return this.add(new BuilderIndex.ImageField(opts)); }
 
   id(v: string): this { this.sheet.id = v; return this; }

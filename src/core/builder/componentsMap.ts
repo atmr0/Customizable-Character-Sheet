@@ -7,6 +7,7 @@ import CharacterAttributeSvelte from "@ui/components/composite/CharacterAttribut
 import SelectFieldSvelte from "@ui/components/basic/SelectField.svelte";
 import ImageFieldSvelte from "@ui/components/basic/ImageField.svelte";
 import CheckboxFieldSvelte from "@ui/components/basic/CheckboxField.svelte";
+import RollButtonSvelte from "@ui/components/basic/RollButton.svelte";
 import { Constants } from "../constants";
 
 
@@ -21,6 +22,7 @@ export const svelteComponentsMap: Record<string, any> = {
   [Constants.SelectField]: SelectFieldSvelte,
   [Constants.StaticText]: StaticTextSvelte,
   [Constants.SubGrid]: SubGridSvelte,
+  [Constants.RollButton]: RollButtonSvelte,
 };
 
 export default svelteComponentsMap;

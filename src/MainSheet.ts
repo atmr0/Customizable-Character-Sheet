@@ -55,6 +55,7 @@ const mainSheet = new SheetBuilder('Character Sheet')
       ]
     })
   )
+  .rollButton({ id: 'example_roll', width: 2 })
   .checkboxField({ id: 'example_checkbox', label: 'Example Checkbox', width: 2 })
   .build();
 

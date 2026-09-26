@@ -81,7 +81,7 @@ For example, the CharacterAttribute could easily be an ItemList. But currently (
 - Normalizing file and class names.
 - Maybe find a way to simplify a little bit the HTML. For example, everything is wrapped in a \[something]-wrapper. I don't really remember why, but it bothers me a bit.
 - If someone really is motivated, it would be awesome to change from CSS to a canvas, or whatever. It would open a lot more of customization possibilities, such as add texture to things, like an old paper border. If this is possible with CSS, pardon my ignorance lol.
-
+- A better, more computationally efficient, RNG animation. I thought about making only one set of items and make their locations loop around, instead of creating multiple copies. But idk.
 
 ## TODO
 - Create a login page

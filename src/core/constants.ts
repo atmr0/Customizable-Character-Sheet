@@ -8,4 +8,5 @@ export class Constants{
   static SelectField = 'SelectField';
   static StaticText = 'StaticText';
   static SubGrid = 'SubGrid';
+  static RollButton = 'RollButton';
 }

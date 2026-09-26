@@ -11,6 +11,7 @@
   import GitRepoManager from './core/GitRepoManager';
   import { get } from 'svelte/store';
   import { Sheet as SheetClass } from './core/builder/components/Sheet';
+  import RNG from "@ui/RNG.svelte";
   
   let sheet = mainSheet;
   // rehydrate to class instance so helper methods like exportData exist
@@ -155,6 +156,8 @@
     {#key sheetKey}
       <RenderGrid {sheet} />
     {/key}
+
+    <RNG></RNG>
   </div>
 
 </main>
