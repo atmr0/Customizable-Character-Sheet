@@ -2,7 +2,7 @@
   import { RNG } from "@core/RNG";
   import { eventGlobal } from "./eventGlobal.svelte";
   import { onMount } from "svelte";
-  import { cubicBezier } from "./animationEasing";
+  import { animateRoll } from "./rngAnimations";
 
   const itemHeight = 80;
   // const halfHeight = itemHeight / 2;
@@ -22,77 +22,44 @@
     numberVisibleItems = Math.ceil(viewPortHeight / itemHeight) + 2;
   });
 
+  let rng: RNG | undefined = undefined;
   // $inspect(eventGlobal.rng);
   $effect(() => {
     if (eventGlobal.rng) {
       roll(eventGlobal.rng);
+      rng = eventGlobal.rng;
     }
   });
 
-  function updateVisual() {
-    let items = document.querySelectorAll(".rng-item");
-    items.forEach((item, index) => {
-      let rect = item.getBoundingClientRect();
-
-      if (rect.y < center && rect.y + rect.height > center) {
-        item.style.scale = "1.2";
-        item.style.color = "var(--highlight-text-color)";
-      } else {
-        item.style.scale = "1";
-        item.style.color = "black";
-      }
-    });
-  }
-
-  function organizeHtmlElements(result: any) {
+  function organizeHtmlElements(animationInfo: any) {
     let divs = [];
-    for (let i = 0; i < result.valuesToRoll.length; i++) {
+    for (let i = 0; i < animationInfo.valuesToRoll.length; i++) {
       let div = document.createElement("div");
       div.classList.add("rng-item");
-      div.textContent = result.valuesToRoll[i].toString();
+      div.textContent = animationInfo.valuesToRoll[i].toString();
+      if(animationInfo.valuesToRoll[i] == animationInfo.max) div.classList.add("rng-item-max");
+      if(animationInfo.valuesToRoll[i] == animationInfo.min) {
+        div.classList.add("rng-item-min");
+      }
       divs.push(div);
     }
     content.replaceChildren(...divs);
-    content.style.transform = `translateY(${result.initialPosition + center - itemHeight / 2}px)`;
+    content.style.transform = `translateY(${animationInfo.initialPosition + center - itemHeight / 2}px)`;
   }
 
   function endAnimation() {
     spinning = false;
-    eventGlobal.send(null, eventGlobal.message+" done");
-  }
-
-  function animateContent(result: any) {
-    const initialTime = performance.now();
-    let easing = cubicBezier(0.879, -0.064, 0.34, 1);
-    function animate() {
-      const currentTime = performance.now();
-      const elapsedTime = currentTime - initialTime;
-      const animationProgress = easing(elapsedTime / result.duration);
-
-      const newPosition =
-        result.initialPosition +
-        result.dislocation * animationProgress +
-        center -
-        itemHeight / 2;
-      content!.style.transform = `translateY(${newPosition}px)`;
-      updateVisual();
-      if (animationProgress < 1) {
-        requestAnimationFrame(animate);
-      }
-      else {
-        endAnimation();
-      }
-    }
-    requestAnimationFrame(animate);
+    eventGlobal.send(null, eventGlobal.message + " done");
   }
 
   function roll(rng: RNG) {
     if (!content) return;
     if (!rng) throw new Error("RNG instance is required.");
     overlay!.style.visibility = "visible";
-    let result = rng.getAnimationInfo(numberVisibleItems, itemHeight);
-    organizeHtmlElements(result);
-    animateContent(result);
+    let animationInfo = rng.getAnimationInfo(numberVisibleItems, itemHeight);
+    organizeHtmlElements(animationInfo);
+    animateRoll(rng, animationInfo, content, center, itemHeight, endAnimation);
+
     spinning = true;
   }
 
@@ -103,51 +70,9 @@
   }
 </script>
 
-<div class="rng-overlay" id="rng-overlay" onclick={handleOverlayClick}>
-  <div class="rng-highlight" id="rng-highlight"></div>
-  <div class="rng-content" id="rng-content"></div>
+<div class="RNG">
+  <div class="rng-overlay" id="rng-overlay" onclick={handleOverlayClick}>
+    <div class="rng-highlight" id="rng-highlight"></div>
+    <div class="rng-content" id="rng-content"></div>
+  </div>
 </div>
-
-<style>
-  .rng-overlay {
-    visibility: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    z-index: 1000;
-  }
-
-  .rng-content {
-    display: flex;
-    flex-direction: column;
-    width: 320px;
-    max-width: calc(100% - 32px);
-  }
-
-  .rng-highlight {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 80px;
-    margin-top: -40px;
-    margin-left: -160px;
-    background-color: var(--highlight-color);
-    width: 320px;
-
-    pointer-events: none;
-  }
-  :global(.rng-item) {
-    min-height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: xx-large;
-  }
-</style>

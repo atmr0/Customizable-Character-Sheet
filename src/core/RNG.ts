@@ -11,24 +11,39 @@ enum rollDirection {
   DOWN = 1
 }
 
+export enum critResult {
+  NONE = 0,
+  CRIT = 1,
+  FUMBLE = -1
+}
+
 export class RNG {
-  private values: number[] = [];
-  private mod?: number;
+  public crittable:boolean;
+  public mod: number;
+  public min: number;
+  public max: number;
+  public values: number[] = [];
   private length: number = 0;
   private lastResult: { index: number, value: number } | undefined;
   public result: { index: number, value: number } | undefined;
-  constructor(RNGConfig: Partial<RNGConfig>) {
+  constructor(RNGConfig: Partial<RNG>) {
     this.values = RNGConfig.values || this.createValues(RNGConfig.min!, RNGConfig.max!);
+    this.mod = RNGConfig.mod ?? 0;
+    this.min = RNGConfig.min!;
+    this.max = RNGConfig.max!;
+    this.crittable = RNGConfig.crittable ?? false;
     this.length = this.values.length;
-    this.mod = RNGConfig.mod;
   }
 
   createValues(min: number, max: number): number[] {
     const values = [];
     let size = max - min + 1;
-    for (let i = 0; i < size / 2 - 1; i++) {
+    for (let i = 0; i < size / 2; i++) {
       values.push(max - i);
-      values.push(min + i + 1);
+      values.push(min + i);
+    }
+    if(size % 2 !== 0) { //ex.: [5,1,4,2,3,3]
+      values.pop();
     }
     return values;
   }
@@ -56,13 +71,12 @@ export class RNG {
     if (this.length === 0) throw new Error("No values available for random generation.");
     const randomIndex = Math.floor(Math.random() * this.length);
     this.lastResult = this.result ?? { index: 0, value: this.values[0] }
-
     this.result = { index: randomIndex, value: this.values[randomIndex] };
     return this.result;
   }
 
   getAnimationInfo(numberVisibleItems: number, itemSize: number) {
-    const direction: number = rollDirection.UP//  Math.random() < 0.5 ? rollDirection.UP : rollDirection.DOWN;
+    const direction: number = Math.random() < 0.5 ? rollDirection.UP : rollDirection.DOWN;
     const result = this.result!;
     const lastResult = this.lastResult!;
     let minimumNumberOfItemsToTravel = Math.ceil(Math.random() * 4) + 2;
@@ -89,8 +103,13 @@ export class RNG {
       initialPosition,
       dislocation,
       duration,
-      result,
       valuesToRoll
     }
+  }
+  checkCrit() {
+    if(!this.crittable || !this.result) return critResult.NONE;
+    if(this.result.value === this.max) return critResult.CRIT;
+    if(this.result.value === this.min) return critResult.FUMBLE;
+    return critResult.NONE;
   }
 }

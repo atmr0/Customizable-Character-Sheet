@@ -116,7 +116,7 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
-    height: 80vh;
+    height: 90vh;
   }
 
   .editor-header {

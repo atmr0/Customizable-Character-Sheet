@@ -7,15 +7,14 @@
   import { onMount } from "svelte";
 
   let {component, values} = $props();
-  component = component as RollButton;
-  let textComponent: any;
+  let textComponent: HTMLElement;
   onMount(() => {
-    textComponent = document.getElementById(component!.rolledValue!.id!) as HTMLElement;
+    textComponent = document.getElementById(component?.id + 'rolledValue') as HTMLElement;
     textComponent.style.visibility = "hidden";
   });
-
   $effect(() => {
     if (eventGlobal.message == component?.id + " done") {
+      textComponent.innerText = component?.rolledValue ?? "";
       textComponent.style.visibility = "visible";
     }
   });
@@ -26,28 +25,12 @@
     eventGlobal.send(component.rng, component.id);
     textComponent.style.visibility = "hidden";
   }
+
 </script>
 
 <BaseComponent {component}>
   <div class={Constants.RollButton}>
     <button on:click={handleClick}>Roll</button>
-    <ComputedText component={component?.rolledValue} />
+    <span class="rolledValue" id={component?.id + 'rolledValue'}></span>
   </div>
 </BaseComponent>
-
-<style>
-  button {
-    margin-bottom: 0.5rem;
-  }
-
-  .RollButton {
-    display: flex;
-    flex-direction: row;
-    /* align-items: center; */
-    justify-content: left;
-    width: fit-content;
-  }
-  .RollButton :global(.ComputedText) {
-    margin-left: 0.5rem;
-  }
-</style>

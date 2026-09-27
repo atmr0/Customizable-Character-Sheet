@@ -252,6 +252,67 @@ const cssStyles = {
     "padding": "0",
     "margin-left": "-0.5ch",
   },
+  ".RollButton": {
+    "display": "flex",
+    "flex-direction": "row",
+    "justify-content": "left",
+    "width": "fit-content",
+    "button": {
+      "margin-bottom": "0.5rem",
+    },
+    ".rolledValue": {
+      "display": "inline-block",
+      "margin-left": "0.5rem",
+      "width": "fit-content"
+    },
+  },
+  ".RNG": {
+    "--success-color": "#ffd700",
+    "--failure-color": "#ff0000",
+    "--base-color": "rgba(0, 0, 0, 1)",
+    ".rng-overlay": {
+      "visibility": "hidden",
+      "position": "fixed",
+      "top": "0",
+      "left": "0",
+      "width": "100%",
+      "height": "100%",
+      "background": "rgba(0, 0, 0, 0.5)",
+      "display": "flex",
+      "justify-content": "center",
+      "z-index": "1000",
+    },
+
+    ".rng-content": {
+      "display": "flex",
+      "flex-direction": "column",
+      "width": "320px",
+      "max-width": "calc(100% - 32px)",
+    },
+
+    ".rng-highlight": {
+      "position": "absolute",
+      "top": "50%",
+      "left": "50%",
+      "width": "100%",
+      "height": "80px",
+      "margin-top": "-40px",
+      "margin-left": "-160px",
+      "background-color": "var(--highlight-color)",
+      "width": "320px",
+
+      "pointer-events": "none",
+    },
+    ".rng-item": {
+      "min-height": "80px",
+      "display": "flex",
+      "align-items": "center",
+      "justify-content": "center",
+      "font-weight": "bold",
+      "font-size": "xx-large",
+    },
+
+  },
 };
 
 export default cssStyles

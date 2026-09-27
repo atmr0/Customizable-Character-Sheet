@@ -4,6 +4,7 @@ import SheetBuilder from './core/builder/SheetBuilder';
 import { Constants } from './core/constants';
 import { attributesColors } from './ui/theme';
 import { ItemList } from './core/builder/components/ItemList';
+import { RNG } from '@core/RNG';
 
 type colors = keyof typeof attributesColors;
 
@@ -55,7 +56,8 @@ const mainSheet = new SheetBuilder('Character Sheet')
       ]
     })
   )
-  .rollButton({ id: 'example_roll', width: 2 })
+  .rollButton({ id: 'example_roll', rng: new RNG({crittable: true, min: 1, max: 20, mod: 4}) })
+  .rollButton({ id: 'example_roll_2', rng: new RNG({crittable: true, min: 1, max: 4}) })
   .checkboxField({ id: 'example_checkbox', label: 'Example Checkbox', width: 2 })
   .build();
 

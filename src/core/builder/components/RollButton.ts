@@ -1,6 +1,6 @@
 import { BaseComponent, ComputedText } from '../components';
 import { Constants } from '../../constants';
-import { RNG } from '@core/RNG';
+import { critResult, RNG } from '@core/RNG';
 
 export type RollAnimationInfo = {
   selectedValueIndex: number;
@@ -10,17 +10,22 @@ export type RollAnimationInfo = {
 };
 export class RollButton extends BaseComponent {
   type = Constants.RollButton;
-  rolledValue:ComputedText;
+  rolledValue:string;
   rng: RNG;
   constructor(opts: Partial<RollButton>) {
     super(opts);
-    this.rng = opts.rng || new RNG({min: 0, max: 5});
-    this.rolledValue = new ComputedText({expr: ""})
+    this.rng = opts.rng || new RNG({crittable: true, min: 1, max: 20});
+    this.rolledValue = ""
   }
 
   public roll() {
     const result = this.rng.generateRandom();
-    this.rolledValue.setValue(""+result.value);
+    let mod = this.rng.mod ?? 0;
+    let value = `${result.value + mod}`
+    if(this.rng.checkCrit() != critResult.NONE) {
+      value = `nat ${result.value}`;
+    }
+    this.rolledValue = value;
     
   }
 
