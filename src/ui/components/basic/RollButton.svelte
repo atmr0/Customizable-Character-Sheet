@@ -6,7 +6,8 @@
   import { Constants } from "@core/constants";
   import { onMount } from "svelte";
 
-  let {component, values} = $props();
+  interface Props {component: RollButton;}
+  let {component}:Props = $props();
   let textComponent: HTMLElement;
   onMount(() => {
     textComponent = document.getElementById(component?.id + 'rolledValue') as HTMLElement;
@@ -22,7 +23,7 @@
   function handleClick() {
     if (!component || !component.id) return;
     component.roll();
-    eventGlobal.send(component.rng, component.id);
+    eventGlobal.send(component.dices, component.id);
     textComponent.style.visibility = "hidden";
   }
 

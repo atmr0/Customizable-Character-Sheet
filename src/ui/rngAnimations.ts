@@ -1,3 +1,4 @@
+import { Dices, ModOperation } from "@core/Dices";
 import { RNG } from "@core/RNG";
 
 // AI generated, it imitates the behavior of CSS cubic-bezier easing functions for animations
@@ -38,10 +39,10 @@ export function cubicBezierEasing(x1: number, y1: number, x2: number, y2: number
     return getCoord(t, y1, y2);
   };
 }
-let elementOnCenter: HTMLElement;
 
-function updateVisual(center: number) {
-  let items = document.querySelectorAll(".rng-item");
+function updateVisual(column: HTMLElement, center: number) {
+  let items = column.querySelectorAll(".rng-item");
+  let elementOnCenter: HTMLElement;
   items.forEach((item) => {
     let rect = item.getBoundingClientRect();
     if (rect.y < center && rect.y + rect.height > center) {
@@ -57,13 +58,18 @@ function updateVisual(center: number) {
       item.style.color = "var(--base-color)";
     }
   });
+  return elementOnCenter!
 }
 
 
-function animateRoll(rng:RNG, animationInfo: any, content: HTMLElement, center: number, itemHeight: number, endAnimation: () => void) {
+function animateRoll(dice: Dices, rng: RNG, animationInfo: any, column: HTMLElement, center: number, itemHeight: number, endAnimation: () => void) {
   const initialTime = performance.now();
   let easing = cubicBezierEasing(0.879, -0.064, 0.34, 1);
   let yOffset = center - itemHeight / 2
+  let operation = dice.getModOperation();
+  let modValue = dice.getModValue();
+
+  
   function animate() {
     const currentTime = performance.now();
     const elapsedTime = currentTime - initialTime;
@@ -71,34 +77,53 @@ function animateRoll(rng:RNG, animationInfo: any, content: HTMLElement, center: 
 
     const currentDislocation = animationInfo.dislocation * animationProgress
     const newPosition = animationInfo.initialPosition + currentDislocation + yOffset;
-    content!.style.transform = `translateY(${newPosition}px)`;
-    updateVisual(center);
+    column!.style.transform = `translateY(${newPosition}px)`;
+    let elementOnCenter = updateVisual(column, center);
     if (animationProgress < 1) {
       requestAnimationFrame(animate);
     } else {
-        if (rng.crittable && rng.result!.value == rng.max) glow(elementOnCenter, `var(--success-color)`, 1000, true)
-      else if (rng.crittable && rng.result!.value == rng.min) glow(elementOnCenter, `var(--failure-color)`, 1000, false)
-      else if (rng.mod != 0) animateModificator(rng.mod, elementOnCenter);
-      endAnimation();
+      setTimeout(() => idk(dice, rng, operation, modValue, elementOnCenter, endAnimation), 500);
     }
   }
   requestAnimationFrame(animate);
 }
 
+function idk(dice:Dices, rng: RNG, operation: ModOperation, modValue: number, elementOnCenter: HTMLElement, endAnimation: () => void) {
+  if (dice.crittable && rng.getValue() == rng.max) glow(elementOnCenter, `var(--success-color)`, 1000, true)
+  else if (dice.crittable && rng.getValue() == rng.min) glow(elementOnCenter, `var(--failure-color)`, 1000, false)
+  else if (operation != ModOperation.NONE && operation != ModOperation.MULTIPLICATION) animateModificator(operation, modValue, elementOnCenter);
+  endAnimation();
+}
 
-function animateModificator(mod: number, elementOnCenter: HTMLElement) {
+function animateModificator(operation: ModOperation, modValue: number, elementOnCenter: HTMLElement) {
   const initialTime = performance.now();
   const duration = 1000;
   const endStepsTime = duration * 0.8;
-  const stepSize = Math.abs(endStepsTime / mod);
 
   let lastStep = -1;
   let currentStep = 0;
 
-  const colorOfNumberChange = mod > 0 ? "var(--success-color)" : "var(--failure-color)";
+  let colorOfNumberChange = ""
+  let stepFunction: Function;
+  if (operation == ModOperation.MULTIPLICATION) {
+    modValue -= 1 // 5*4 would sum 5, 4 times resulting in 25
+    colorOfNumberChange = "var(--multiply-color)";
+    stepFunction = (v: number, o: number) => v + o;
+  } else {
+    if (operation == ModOperation.SUBTRACTION) {
+      modValue = -modValue;
+      colorOfNumberChange = "var(--decrease-color)";
+    }
+    else colorOfNumberChange = "var(--increase-color)"
+    stepFunction = (v: number, o: number) => v + (modValue > 0 ? 1 : -1);
+  }
+
+  const stepSize = Math.abs(endStepsTime / modValue);
   // An idea to make it stand out more, the text would stay in another color. But I don't know how to make it look good really
   let finalColor = 'var(--highlight-text-color)' // `color-mix(in oklab, ${baseColor}, ${colorOfNumberChange} 50%)`
+
   let val = parseInt(elementOnCenter.textContent);
+  const originalValue = val
   function animate() {
     const currentTime = performance.now();
     const elapsedTime = currentTime - initialTime;
@@ -108,11 +133,11 @@ function animateModificator(mod: number, elementOnCenter: HTMLElement) {
     currentStep = Math.floor(elapsedTime / stepSize)
     if (elapsedTime < endStepsTime) {
       if (currentStep !== lastStep) {
-        val = val + (mod > 0 ? 1 : -1);
+        val = stepFunction(val, originalValue)
         elementOnCenter.textContent = val.toString();
         lastStep = currentStep;
       }
-      pulsate(stepProgress, finalColor, colorOfNumberChange, elementOnCenter, mod);
+      pulsate(stepProgress, finalColor, colorOfNumberChange, elementOnCenter, modValue);
     }
     else {
       elementOnCenter.style.transform = `scale(1)`;

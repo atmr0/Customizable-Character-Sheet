@@ -1,6 +1,7 @@
 import { BaseComponent, ComputedText } from '../components';
 import { Constants } from '../../constants';
-import { critResult, RNG } from '@core/RNG';
+import { RNG } from '@core/RNG';
+import { critResult, Dices } from '@core/Dices';
 
 export type RollAnimationInfo = {
   selectedValueIndex: number;
@@ -10,29 +11,28 @@ export type RollAnimationInfo = {
 };
 export class RollButton extends BaseComponent {
   type = Constants.RollButton;
-  rolledValue:string;
-  rng: RNG;
+  rolledValue: string;
+  dices: Dices;
   constructor(opts: Partial<RollButton>) {
     super(opts);
-    this.rng = opts.rng || new RNG({crittable: true, min: 1, max: 20});
     this.rolledValue = ""
+    this.dices = new Dices("3d20+3", true);
   }
 
   public roll() {
-    const result = this.rng.generateRandom();
-    let mod = this.rng.mod ?? 0;
-    let value = `${result.value + mod}`
-    if(this.rng.checkCrit() != critResult.NONE) {
-      value = `nat ${result.value}`;
+    const result = this.dices.roll();
+    let value = `${this.dices.getFinalValue()}`
+    if (this.dices.checkCrit() != critResult.NONE) {
+      value = `nat ${result}`;
     }
     this.rolledValue = value;
-    
+
   }
 
-  public setValue(value: any) {
-    this.rng.setValues(Array.isArray(value) ? value : [value]);
+  public setValue(value: string) {
+    this.dices = new Dices(value);
   }
   public getValue() {
-    return this.rng.getValues();
+    return //this.rng.getValues();
   }
 }

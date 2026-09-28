@@ -269,7 +269,11 @@ const cssStyles = {
   ".RNG": {
     "--success-color": "#ffd700",
     "--failure-color": "#ff0000",
+    "--increase-color" : "#3cff00",
+    "--decrease-color" : "#dd1111",
+    "--multiply-color": "var(--success-color)",
     "--base-color": "rgba(0, 0, 0, 1)",
+
     ".rng-overlay": {
       "visibility": "hidden",
       "position": "fixed",
@@ -281,9 +285,24 @@ const cssStyles = {
       "display": "flex",
       "justify-content": "center",
       "z-index": "1000",
+      "gap": "16px",
+      "overflow": "hidden",
     },
 
-    ".rng-content": {
+    ".rng-highlights": {
+      "z-index": "-1",
+      "position": "absolute",
+      "inset": "0",
+      "display": "flex",
+      "justify-content": "center",
+      "align-items": "center",
+      "pointer-events": "none",
+      "gap": "16px",
+      "background": "none",
+      "visibility": "visible",
+    },
+
+    ".rng-column": {
       "display": "flex",
       "flex-direction": "column",
       "width": "320px",
@@ -291,18 +310,15 @@ const cssStyles = {
     },
 
     ".rng-highlight": {
-      "position": "absolute",
-      "top": "50%",
-      "left": "50%",
-      "width": "100%",
-      "height": "80px",
-      "margin-top": "-40px",
-      "margin-left": "-160px",
-      "background-color": "var(--highlight-color)",
+      "display": "block",
       "width": "320px",
-
+      "height": "80px",
+      "background-color": "var(--highlight-color)",
+      "opacity": "0.95",
+      "border-radius": "6px",
       "pointer-events": "none",
     },
+
     ".rng-item": {
       "min-height": "80px",
       "display": "flex",

@@ -11,7 +11,7 @@
 
   let cssText = cssTextStorage || generateCss(cssStyles) || "";
   let monacoEditor;
-  let open = true;
+  let open = false;
 
   // sanitize helper
   function sanitize(text) {
