@@ -2,13 +2,17 @@ import { BaseComponent } from "./BaseComponent";
 import { Constants } from "../../constants";
 import { InputField } from "./InputField";
 import { ComputedText } from "./ComputedText";
+import { RollButton } from "./RollButton";
+import { Dices, ModOperation } from "@core/Dices";
+
 export class CharacterAttribute extends BaseComponent {
   type: string = Constants.CharacterAttribute;
   input: InputField;
   mod: ComputedText;
   expr: string;
-  input_id: string;
-  mod_id: string;
+  button: RollButton;
+  private input_id: string;
+  private mod_id: string;
   constructor(opts: Partial<CharacterAttribute> = {}) {
     super(opts);
     this.input_id = `${this.id}_input`;
@@ -22,12 +26,16 @@ export class CharacterAttribute extends BaseComponent {
       if (isNaN(num)) return "+0";
       return num >= 0 ? `+${num}` : String(num);
     };
+
+    this.button = new RollButton({ id: `${this.id}_button`, dices: new Dices("d20+0" + this.mod.getValue(), true) });
   }
 
   setValue(value: number) {
     this.input.setValue(value);
+    let dices = this.button.dices;
+    dices.setModificator(ModOperation.ADDITION, parseInt(this.mod.getValueFormatted()));
   }
   getValue(): number {
-    return this.input.getValue() as number;
+    return parseInt(String(this.input.getValue()));
   }
 }

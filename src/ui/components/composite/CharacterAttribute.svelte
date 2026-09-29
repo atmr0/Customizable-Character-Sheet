@@ -5,14 +5,15 @@
     BaseComponent,
     InputField,
     ComputedText,
+    RollButton,
   } from "@ui/components/index.js";
   import { Constants } from "@core/constants.ts";
 
   export let component;
   let label = component.label;
   let value;
-  function onInput(e) {
-    value = e.target.value;
+  function onInput(v) {
+    value = v;
     component.setValue(value);
   }
 
@@ -25,10 +26,11 @@
     {#if label}
       <div class="label">{label}</div>
     {/if}
-    <InputField onInput={onInput} component={component.input} />
+    <InputField onInputExtra={onInput} component={component.input} />
     <ComputedText
       component={component.mod}
       bind:this={modificator}
     />
+    <RollButton component={component.button} /> 
   </div>
 </BaseComponent>

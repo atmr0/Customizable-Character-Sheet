@@ -5,18 +5,24 @@ export class InputField extends BaseComponent {
   type: string = Constants.InputField;
   value?: string | number;
   placeholder?: string;
-  inputType: InputType = 'text';
-  allowFloat: boolean = false;
-  step: number | string = this.allowFloat ? 'any' : 1;
-  min: number | undefined = undefined;
-  max: number | undefined = undefined;
+  inputType: InputType;
+  allowFloat: boolean
+  step: number | string;;
+  min: number | undefined;
+  max: number | undefined;
 
-  public getValue(): string|number|undefined {
+  constructor(opts: Partial<InputField>) {
+    super(opts);
+    this.inputType = opts.inputType ?? "text";
+    this.allowFloat = opts.allowFloat ?? false;
+    this.step = opts.step ?? (this.allowFloat ? 'any' : 1);
+  }
+  public getValue(): string | number | undefined {
     return this.value;
   }
 
   public setValue(value: string | number | undefined) {
-    if(!this.id) {console.error("InputField has no ID"); return}
+    if (!this.id) { console.error("InputField has no ID"); return }
     if (this.inputType === "number") {
       const parsed = this.parseNumeric(value as string);
       this.value = parsed;

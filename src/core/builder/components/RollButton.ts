@@ -16,7 +16,7 @@ export class RollButton extends BaseComponent {
   constructor(opts: Partial<RollButton>) {
     super(opts);
     this.rolledValue = ""
-    this.dices = new Dices("3d20+3", true);
+    this.dices = opts.dices ?? new Dices("d20", true);
   }
 
   public roll() {

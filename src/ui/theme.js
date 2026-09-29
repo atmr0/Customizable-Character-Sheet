@@ -102,7 +102,45 @@ function buildCssFromObject(obj, parent) {
   let css = "";
   Object.entries(obj).forEach(([key, value]) => {
     if (value && typeof value === "object" && !Array.isArray(value)) {
-      const selector = parent ? `${parent} ${key}` : key;
+      // Combine parent and key into a proper selector handling:
+      // - comma-separated selectors
+      // - parent reference with '&'
+      // - pseudo-classes/attributes (start with ':' or '[') should be appended without a space
+      const combineSelectors = (parentSel, keySel) => {
+        if (keySel.includes('&')) {
+          return keySel.replace(/&/g, parentSel);
+        }
+        const firstChar = keySel[0] || '';
+        if (firstChar === ':' || firstChar === '[') {
+          return `${parentSel}${keySel}`;
+        }
+        return `${parentSel} ${keySel}`;
+      };
+
+      const selectors = [];
+      if (parent) {
+        const parents = parent.split(',').map(s => s.trim());
+        const keys = key.split(',').map(s => s.trim());
+
+        // If parent is a comma-separated list and the nested key is a
+        // pseudo-class or attribute (starts with ':' or '[') and does
+        // not reference '&', prefer the concise :is(...) form.
+        const shouldUseIs = parents.length > 1 && keys.length === 1 && (keys[0][0] === ':' || keys[0][0] === '[') && !keys[0].includes('&');
+        if (shouldUseIs) {
+          selectors.push(`:is(${parents.join(', ')})${keys[0]}`);
+        } else {
+          parents.forEach(p => {
+            keys.forEach(k => {
+              selectors.push(combineSelectors(p, k));
+            });
+          });
+        }
+      } else {
+        selectors.push(key);
+      }
+
+      const selector = selectors.join(', ');
+
       const props = Object.entries(value).filter(([, v]) => typeof v !== 'object');
       if (props.length) {
         css += `${selector} {\n`;
@@ -141,21 +179,21 @@ export function generateCss(styles = cssStyles) {
   return out;
 }
 
-export function applyStyles(styles = cssStyles) {
-  if (typeof document === 'undefined' || !document.head) return;
-  const id = 'theme-styles';
-  let tag = document.getElementById(id);
-  if (!tag) {
-    tag = document.createElement('style');
-    tag.id = id;
-    document.head.appendChild(tag);
-  }
-  try {
-    tag.textContent = generateCss(styles);
-  } catch (e) {
-    // ignore
-  }
-}
+// export function applyStyles(styles = cssStyles) {
+//   if (typeof document === 'undefined' || !document.head) return;
+//   const id = 'theme-styles';
+//   let tag = document.getElementById(id);
+//   if (!tag) {
+//     tag = document.createElement('style');
+//     tag.id = id;
+//     document.head.appendChild(tag);
+//   }
+//   try {
+//     tag.textContent = generateCss(styles);
+//   } catch (e) {
+//     // ignore
+//   }
+// }
 
 export function applyCssString(cssText) {
   if (typeof document === 'undefined' || !document.head) return;

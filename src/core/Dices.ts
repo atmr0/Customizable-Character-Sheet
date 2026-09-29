@@ -1,9 +1,9 @@
 import { RNG } from "./RNG";
 export enum ModOperation {
+  SUBTRACTION = -1,
   NONE = 0,
   ADDITION = 1,
-  SUBTRACTION = 2,
-  MULTIPLICATION = 3
+  MULTIPLICATION = 2
 }
 export enum critResult {
   NONE = 0,
@@ -19,8 +19,9 @@ export class Dices {
   private modValue: number = 0;
   public crittable: boolean;
   constructor(dices: string, crittable: boolean = false) {
-    // dXX*A + YYdYY+B ...
-    ///(?:\s*\+?\s*(\d*d\d+([+\-*\/]\d+)*))/g    Try to implement multiple dice types later
+    // TODO: Trry to implement multiple dice types later ("d20 + d8"), regex I was making: /(?:\s*\+?\s*(\d*d\d+([+\-*\/]\d+)*))/g
+    
+    // XXdYY+A 
     const re = /(\d*)d(\d+)([+\-*]\d+)?/
     let value = dices.match(re);
     if (value == null) throw Error("Invalid dice string");
@@ -47,6 +48,17 @@ export class Dices {
   }
 
 
+  // I could use the same as the ComputedText, that is, evaluate an string expression; but it seems a bit overkill
+  public setModificator(modOperation: ModOperation, value: number) {
+    if(value<0 && (modOperation == ModOperation.ADDITION || modOperation == ModOperation.SUBTRACTION)) {
+      this.modOperation = -modOperation;
+      this.modValue = -value;
+      return;
+    }
+    this.modOperation = modOperation;
+    this.modValue = value;
+  }
+
   public getModOperation(): number {
     return this.modOperation;
   }
@@ -54,9 +66,11 @@ export class Dices {
   public getModValue(): number {
     return this.modValue;
   }
+  
   public getFinalValue(): number {
     return this.finalResult;
   }
+
   public checkCrit() {
     if (this.results.length === 0) return critResult.NONE;
     if (!this.crittable || this.results.length === 0) return critResult.NONE;
@@ -64,6 +78,7 @@ export class Dices {
     if (this.results[0] === this.rngs[0].min) return critResult.FUMBLE;
     return critResult.NONE;
   }
+  
   public roll() {
     this.results = []
     this.finalResult = 0;
@@ -72,6 +87,7 @@ export class Dices {
       this.results.push(v)
       this.finalResult += v
     }
+    if(this.crittable && this.checkCrit() != critResult.NONE) return this.finalResult;
     if (this.modOperation == ModOperation.ADDITION) this.finalResult += this.modValue;
     else if (this.modOperation == ModOperation.SUBTRACTION) this.finalResult -= this.modValue;
     else if (this.modOperation == ModOperation.MULTIPLICATION) this.finalResult *= this.modValue;

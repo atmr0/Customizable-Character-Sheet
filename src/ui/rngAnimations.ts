@@ -1,4 +1,4 @@
-import { Dices, ModOperation } from "@core/Dices";
+import { critResult, Dices, ModOperation } from "@core/Dices";
 import { RNG } from "@core/RNG";
 
 // AI generated, it imitates the behavior of CSS cubic-bezier easing functions for animations
@@ -82,20 +82,21 @@ function animateRoll(dice: Dices, rng: RNG, animationInfo: any, column: HTMLElem
     if (animationProgress < 1) {
       requestAnimationFrame(animate);
     } else {
-      setTimeout(() => idk(dice, rng, operation, modValue, elementOnCenter, endAnimation), 500);
+      setTimeout(() => idk(dice, operation, modValue, elementOnCenter, endAnimation), 500);
     }
   }
   requestAnimationFrame(animate);
 }
 
-function idk(dice:Dices, rng: RNG, operation: ModOperation, modValue: number, elementOnCenter: HTMLElement, endAnimation: () => void) {
-  if (dice.crittable && rng.getValue() == rng.max) glow(elementOnCenter, `var(--success-color)`, 1000, true)
-  else if (dice.crittable && rng.getValue() == rng.min) glow(elementOnCenter, `var(--failure-color)`, 1000, false)
-  else if (operation != ModOperation.NONE && operation != ModOperation.MULTIPLICATION) animateModificator(operation, modValue, elementOnCenter);
+function idk(dice:Dices, operation: ModOperation, modValue: number, elementOnCenter: HTMLElement, endAnimation: () => void) {
+  if (dice.checkCrit() == critResult.CRIT) glow(elementOnCenter, `var(--success-color)`, 1000, true)
+  else if (dice.checkCrit() == critResult.FUMBLE) glow(elementOnCenter, `var(--failure-color)`, 1000, false)
+  else if (operation != ModOperation.NONE) animateModificator(operation, modValue, elementOnCenter);
   endAnimation();
 }
 
 function animateModificator(operation: ModOperation, modValue: number, elementOnCenter: HTMLElement) {
+  if(modValue === 0) return;
   const initialTime = performance.now();
   const duration = 1000;
   const endStepsTime = duration * 0.8;

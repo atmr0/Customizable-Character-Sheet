@@ -2,6 +2,7 @@
   import { BaseComponent } from "@ui/components/index.js";
   import { updateValueStore, valuesStore } from "@core/valuesStore";
   import { SelectField } from "@builder/components";
+  import { Constants } from "@core/constants";
 
   export let component: SelectField | undefined;
   let id: string | undefined = component?.id;
@@ -22,7 +23,7 @@
 </script>
 
 <BaseComponent {component}>
-  <select class="select-input" bind:value on:change={handleChange}>
+  <select class={Constants.SelectField} bind:value on:change={handleChange} disabled={!component?.editable}>
     {#if component?.placeholder}
       <option value="">{component.placeholder}</option>
     {/if}

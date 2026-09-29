@@ -2,6 +2,7 @@ import * as BuilderIndex from "./";
 import { Constants } from "../constants";
 import OrganizingGrid from "./OrganizingGrid";
 import SheetStyler, { type styleValues } from "./SheetStyler";
+import { testFunction } from "./test";
 
 
 let onDevelopment = true
@@ -25,22 +26,7 @@ export class SheetBuilder {
   }
 
   add(component: BuilderIndex.ComponentOptions): this {
-    // rehydration done by AI ====================================
-    // without it, methods from classes like ComputedText would not be available to call, and I couldn't figure it out
-    let comp: BuilderIndex.ComponentOptions = component;
-    const BaseCtor = (BuilderIndex as any).BaseComponent;
-    if (!(component instanceof BaseCtor)) {
-      // attempt to construct a typed instance by looking up the ctor by type
-      const ctor = (BuilderIndex as any)[component.type as string];
-      if (typeof ctor === 'function') {
-        // create an instance and copy props to preserve prototype/methods
-        comp = Object.assign(new ctor(), component);
-      } else {
-        // fallback to BaseComponent so we still have default behavior
-        comp = Object.assign(new BaseCtor(), component);
-      }
-    }
-    // =======================================================================
+    let comp = testFunction(component)
 
     if (!onDevelopment && SheetBuilder.itemIds.has(comp.id!)) {
       throw new Error(`Component with id ${comp.id} already exists in the sheet.`);

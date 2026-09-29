@@ -41,11 +41,18 @@ const cssStyles = {
     "background": "var(--highlight-color)",
     "color": "var(--highlight-text-color)"
   },
+  /* Chrome, Safari, Edge, Opera */
+  "input::-webkit-outer-spin-button, input::-webkit-inner-spin-button": {
+    "-webkit-appearance": "none",
+    "margin": "0"
+  },
 
-  ".InputField": {
-
+  /* Firefox */
+  "input[type=number]": {
+    "-moz-appearance": "textfield"
+  },
+  ".InputField, .SelectField": {
     "--border-width": "1px",
-
     "width": "100%",
     "background": "var(--background)",
     "box-sizing": "border-box",
@@ -269,8 +276,8 @@ const cssStyles = {
   ".RNG": {
     "--success-color": "#ffd700",
     "--failure-color": "#ff0000",
-    "--increase-color" : "#3cff00",
-    "--decrease-color" : "#dd1111",
+    "--increase-color": "#3cff00",
+    "--decrease-color": "#dd1111",
     "--multiply-color": "var(--success-color)",
     "--base-color": "rgba(0, 0, 0, 1)",
 

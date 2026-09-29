@@ -75,12 +75,11 @@ export class RNG {
     if (this.length === 0) throw new Error("No values available for random generation.");
     const randomIndex = Math.floor(Math.random() * this.length);
     this.lastResult = this.result ?? { index: 0, value: this.values[0] }
-    this.result = { index: 19, value: this.values[19] }//{ index: randomIndex, value: this.values[randomIndex] };
+    this.result = { index: randomIndex, value: this.values[randomIndex] };
     return this.result.value;
   }
 
   getAnimationInfo(numberVisibleItems: number, itemSize: number, duration: number = 0): RNGAnimationInfo {
-    console.log('---------------------------------------')
     const direction: number = Math.random() < 0.5 ? rollDirection.UP : rollDirection.DOWN;
     const result = this.result!;
     const lastResult = this.lastResult!;
@@ -89,9 +88,9 @@ export class RNG {
     let indexAfterMinimumTravel = modulo((lastResult.index + minimumTravel),this.length);
     let rotations = Math.abs(Math.ceil(minimumTravel / this.length));
     let indexOffset = result.index - indexAfterMinimumTravel;
-    let totalTravel = minimumTravel + indexOffset + this.length * direction;
+    let totalTravel = minimumTravel + indexOffset + (this.length< numberVisibleItems ? this.length : 0)*direction;
 
-    // copies to create the illusion of being infinite
+      // copies to create the illusion of being infinite
     let extraCopiesOnEachSide = Math.ceil(numberVisibleItems / this.length);
     let totalNumberOfCopies = extraCopiesOnEachSide * 2 + rotations + 2;
     let valuesToRoll = this.duplicateValues(this.values, totalNumberOfCopies);
