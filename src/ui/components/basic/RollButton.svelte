@@ -10,12 +10,12 @@
   let {component}:Props = $props();
   let textComponent: HTMLElement;
   onMount(() => {
-    textComponent = document.getElementById(component?.id + 'rolledValue') as HTMLElement;
+    textComponent = document.getElementById(component.id + 'rolledValue') as HTMLElement;
     textComponent.style.visibility = "hidden";
   });
   $effect(() => {
-    if (eventGlobal.message == component?.id + " done") {
-      textComponent.innerText = component?.rolledValue ?? "";
+    if (eventGlobal.message == component.id + " done") {
+      textComponent.innerText = component.rolledValue ?? "";
       textComponent.style.visibility = "visible";
     }
   });
@@ -31,7 +31,7 @@
 
 <BaseComponent {component}>
   <div class={Constants.RollButton}>
-    <button on:click={handleClick}>Roll</button>
-    <span class="rolledValue" id={component?.id + 'rolledValue'}></span>
+    <button on:click={handleClick}>{component.text}</button>
+    <div class="rolledValue" id={component.id + 'rolledValue'}></div>
   </div>
 </BaseComponent>

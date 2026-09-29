@@ -5,18 +5,17 @@
   import { get } from "svelte/store";
   import type { ItemList, SheetSection } from "@builder/components";
 
-  export let component:ItemList|undefined;
-  let id: string | undefined = component?.id;
+  export let component:ItemList;
+  let id: string | undefined = component.id;
   onMount(() => {
     const store = get(valuesStore);
-    if(!component) return;
     if (id && !store[id] && component.items && component.items.length) {
       updateValueStore(id, component.items);
     }
   });
   
-  $: editable = component?.editable ?? true;
-  $: rows = id ? $valuesStore[id] || [] : component?.items ;
+  $: editable = component.editable ?? true;
+  $: rows = id ? $valuesStore[id] || [] : component.items ;
 
   function addItem() {
     if(component) component.addItem()    

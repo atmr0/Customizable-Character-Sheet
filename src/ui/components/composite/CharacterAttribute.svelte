@@ -27,10 +27,13 @@
       <div class="label">{label}</div>
     {/if}
     <InputField onInputExtra={onInput} component={component.input} />
-    <ComputedText
-      component={component.mod}
-      bind:this={modificator}
-    />
-    <RollButton component={component.button} /> 
+
+    <div class="roll-area">
+      <ComputedText
+        component={component.mod}
+        bind:this={modificator}
+      />
+      <RollButton component={component.button} />
+    </div>
   </div>
 </BaseComponent>

@@ -27,7 +27,7 @@ export class CharacterAttribute extends BaseComponent {
       return num >= 0 ? `+${num}` : String(num);
     };
 
-    this.button = new RollButton({ id: `${this.id}_button`, dices: new Dices("d20+0" + this.mod.getValue(), true) });
+    this.button = new RollButton({ id: `${this.id}_button`, text:"Roll",dices: new Dices("d20+0" + this.mod.getValue(), true) });
   }
 
   setValue(value: number) {

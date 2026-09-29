@@ -13,9 +13,11 @@ export class RollButton extends BaseComponent {
   type = Constants.RollButton;
   rolledValue: string;
   dices: Dices;
+  text:string;
   constructor(opts: Partial<RollButton>) {
     super(opts);
     this.rolledValue = ""
+    this.text = opts.text ?? "Roll";
     this.dices = opts.dices ?? new Dices("d20", true);
   }
 

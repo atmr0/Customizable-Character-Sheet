@@ -2,18 +2,19 @@
   import { BaseComponent } from "@ui/components/index.js";
   import { updateValueStore, valuesStore } from "@core/valuesStore";
   import { type ComponentOptions } from "@builder/components";
+  import { onMount } from "svelte";
 
   export let disabled: boolean = false;
-  export let component: ComponentOptions | undefined;
+  export let component: ComponentOptions;
   let id: string | undefined;
   let label: string | undefined;
   let checked: boolean = false;
-  if (component) {
+  onMount(() => {
     id = component.id;
     label = component.label;
-    checked = component.getValue();
-  }
-  if (id) updateValueStore(id, checked);
+    checked = component.getValue() ?? false;
+    if(id) updateValueStore(id, checked);
+  });
 
   $: if (id) {
     const storeVal = $valuesStore[id];
@@ -26,7 +27,7 @@
   function onChange(e: any) {
     const v = e.target.checked;
     checked = !v;
-    component?.setValue(checked)
+    component.setValue(checked)
   }
 </script>
 

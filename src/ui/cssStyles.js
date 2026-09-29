@@ -25,6 +25,10 @@ const cssStyles = {
       "pointer-events": "none"
     }
   },
+  ".wrapper": {
+    "width": "fit-content",
+    "height": "fit-content",
+  },
   ".no-bg": {
     "background": "none",
     "box-shadow": "none",
@@ -217,38 +221,7 @@ const cssStyles = {
       "background": "var(--surface)"
     }
   },
-  ".CharacterAttribute": {
-    "display": "flex",
-    "flex-direction": "column",
-    "align-items": "center",
-    "gap": "0.25em",
-    ".label": {
-      "text-align": "center",
-      "font-weight": "600",
-      "color": "var(--text-secondary)",
-    },
 
-    ".InputField": {
-      "font-size": "1em",
-      "text-align": "center",
-      "border-radius": "50%",
-      "border": "0.125em solid var(--text-secondary)",
-      "width": "var(--attr-input-width)",
-      "height": "var(--attr-input-height)",
-      "display": "block",
-      "margin-inline": "auto",
-      "transition": "box-shadow 0.12s ease, border-width 0.12s ease, border-color 0.12s ease"
-    },
-    ".InputField:focus-within": {
-      "outline": "none",
-      "border-width": "0.125em",
-      "border-color": "var(--attr-focus-color)",
-      "box-shadow": "0 0 0 0.25em var(--attr-focus-color)"
-    },
-    ".ComputedText": {
-      "margin-left": "-0.5ch",
-    }
-  },
   ".ComputedText": {
     "text-align": "center",
     "background-color": "transparent",
@@ -259,18 +232,96 @@ const cssStyles = {
     "padding": "0",
     "margin-left": "-0.5ch",
   },
+  ".CharacterAttribute": {
+    "display": "flex",
+    "flex-direction": "column",
+    "align-items": "center",
+    "gap": "0.35rem",
+    ".label": {
+      "font-size": "0.85rem",
+      "color": "var(--text-secondary)",
+      "margin-bottom": "0",
+      "text-align": "center",
+    },
+    ".InputField": {
+      "font-size": "1.15rem",
+      "text-align": "center",
+      "border-radius": "50%",
+      "border": "0.125em solid var(--border-color)",
+      "width": "var(--attr-input-width, 4.25em)",
+      "height": "var(--attr-input-height, 4.25em)",
+      "display": "block",
+      "margin-inline": "auto",
+      "align-items": "center",
+      "justify-content": "center",
+      "font-weight": 800,
+      "background": "var(--background)",
+      "transition": "transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease",
+      ":focus-within, :focus": {
+        "outline": "none",
+        "border-color": "var(--attr-focus-color)",
+        "box-shadow": "0 0 0 0.25rem color-mix(in srgb, var(--attr-focus-color) 20%, transparent)",
+        "transform": "translateY(-2px)",
+      },
+    },
+
+    ".roll-area": {
+      "position": "relative",
+      "top": "-1rem",
+      "display": "flex",
+      "width": "calc(var(--attr-input-width, 4.25em)*1.5)",
+      ".ComputedText": {
+        "font-size": "0.9rem",
+        "margin-top": "0.25rem",
+        "color": "var(--text-secondary)",
+      },
+      ".RollButton": {
+        "position": "absolute",
+        "left": "50%",
+        "button": {
+          "translate": "-50%",
+          ":hover": {
+            "background": "color-mix(in srgb, var(--attr-focus-color) 92%, white 8%)",
+            "box-shadow": "0px 0px 3px var(--attr-focus-color)",
+            "border": "none",
+          },
+        },
+        ".rolledValue": {
+          "font-weight": 700,
+          "font-size": "1.3rem",
+          "color": "var(--attr-focus-color)",
+        }
+      }
+    },
+  },
   ".RollButton": {
     "display": "flex",
-    "flex-direction": "row",
-    "justify-content": "left",
-    "width": "fit-content",
-    "button": {
-      "margin-bottom": "0.5rem",
-    },
+    "align-items": "center",
+    "white-space": "nowrap",
     ".rolledValue": {
-      "display": "inline-block",
-      "margin-left": "0.5rem",
-      "width": "fit-content"
+      "text-align": "left",
+      "font-weight": 700,
+      "color": "var(--text-primary)",
+      "padding-left": "0.25rem",
+      "min-width": "1.5rem",
+      "white-space": "nowrap"
+    },
+    "button": {
+      "background": "var(--surface)",
+      "color": "var(--text-primary)",
+      "border": "1px solid var(--border-color)",
+      "padding": "0.25rem 0.5rem",
+      "border-radius": "6px",
+      "cursor": "pointer",
+      "box-shadow": "0 1px 0 rgba(0,0,0,0.03)",
+      "transition": "background 120ms ease, transform 120ms ease, box-shadow 120ms ease",
+      ":hover": {
+        "background": "color-mix(in srgb, var(--surface) 92%, black 8%)",
+        "transform": "translateY(-1px)",
+      },
+      ":active": {
+        "transform": "translateY(2px)",
+      },
     },
   },
   ".RNG": {

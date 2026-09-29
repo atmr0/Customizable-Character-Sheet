@@ -5,12 +5,12 @@
   import type { ImageField as ImageFieldType } from "@builder/components";
   import { valuesStore } from "@core/valuesStore";
 
-  export let component: ImageFieldType | undefined = undefined;
-  let id: string | undefined = component?.id;
-  let label: string | undefined = component?.label;
-  let accept: string = component?.accept ?? "image/*";
-  let maxSizeBytes: number | undefined = component?.maxSizeBytes;
-  let placeholder: string = component?.placeholder ?? "";
+  export let component: ImageFieldType;
+  let id: string | undefined = component.id;
+  let label: string | undefined = component.label;
+  let accept: string = component.accept ?? "image/*";
+  let maxSizeBytes: number | undefined = component.maxSizeBytes;
+  let placeholder: string = component.placeholder ?? "";
 
   let fileInput: HTMLInputElement | null = null;
   let previewOpen = false;

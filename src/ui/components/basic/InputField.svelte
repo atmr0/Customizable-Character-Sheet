@@ -8,15 +8,15 @@
   import { InputField } from "@builder/components";
   import Decimal from "decimal.js";
 
-  export let component: InputField | undefined = undefined;
+  export let component: InputField;
   export let onInputExtra: Function;
-  let id: string | undefined = component?.id;
-  let placeholder: string | undefined = component?.placeholder;
-  let inputType: string | undefined = component?.inputType;
-  let step: number | string = component?.step ?? 0;
-  let min: number | undefined = component?.min;
-  let max: number | undefined = component?.max;
-  let value: string | number | undefined = component?.value;
+  let id: string | undefined = component.id;
+  let placeholder: string | undefined = component.placeholder;
+  let inputType: string | undefined = component.inputType;
+  let step: number | string = component.step ?? 0;
+  let min: number | undefined = component.min;
+  let max: number | undefined = component.max;
+  let value: string | number | undefined = component.value;
 
   function handleInput(e: any) {
     const raw = e.target.value;
