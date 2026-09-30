@@ -2,6 +2,7 @@ import * as BuilderIndex from "./";
 import { Constants } from "../constants";
 import OrganizingGrid from "./OrganizingGrid";
 import SheetStyler, { type styleValues } from "./SheetStyler";
+import { testFunction } from "./test";
 
 
 let onDevelopment = true
@@ -25,22 +26,7 @@ export class SheetBuilder {
   }
 
   add(component: BuilderIndex.ComponentOptions): this {
-    // rehydration done by AI ====================================
-    // without it, methods from classes like ComputedText would not be available to call, and I couldn't figure it out
-    let comp: BuilderIndex.ComponentOptions = component;
-    const BaseCtor = (BuilderIndex as any).BaseComponent;
-    if (!(component instanceof BaseCtor)) {
-      // attempt to construct a typed instance by looking up the ctor by type
-      const ctor = (BuilderIndex as any)[component.type as string];
-      if (typeof ctor === 'function') {
-        // create an instance and copy props to preserve prototype/methods
-        comp = Object.assign(new ctor(), component);
-      } else {
-        // fallback to BaseComponent so we still have default behavior
-        comp = Object.assign(new BaseCtor(), component);
-      }
-    }
-    // =======================================================================
+    let comp = testFunction(component)
 
     if (!onDevelopment && SheetBuilder.itemIds.has(comp.id!)) {
       throw new Error(`Component with id ${comp.id} already exists in the sheet.`);
@@ -60,11 +46,13 @@ export class SheetBuilder {
   inputField(opts: Partial<BuilderIndex.InputField>): this { return this.add(new BuilderIndex.InputField(opts)); }
   staticText(opts: Partial<BuilderIndex.StaticText>): this { return this.add(new BuilderIndex.StaticText(opts)); }
   subGrid(opts: Partial<BuilderIndex.SubGrid>, sheet: BuilderIndex.Sheet): this { return this.add(new BuilderIndex.SubGrid(opts, sheet)); }
-  characterAttribute(opts: Partial<BuilderIndex.ComponentOptions>): this { return this.add({ type: Constants.CharacterAttribute, ...opts }); }
+  characterAttribute(opts: Partial<BuilderIndex.CharacterAttribute>): this { return this.add(new BuilderIndex.CharacterAttribute(opts)); }
   computedText(opts: Partial<BuilderIndex.ComputedText>): this { return this.add(new BuilderIndex.ComputedText(opts)); }
   itemList(opts: Partial<BuilderIndex.ItemList>): this { return this.add(new BuilderIndex.ItemList(opts)); }
   selectField(opts: Partial<BuilderIndex.SelectField>): this { return this.add(new BuilderIndex.SelectField(opts)); }
   checkboxField(opts: Partial<BuilderIndex.CheckboxField>): this { return this.add(new BuilderIndex.CheckboxField(opts)); }
+  rollButton(opts: Partial<BuilderIndex.RollButton>): this { return this.add(new BuilderIndex.RollButton(opts)); }
+  imageField(opts: Partial<BuilderIndex.ImageField>): this { return this.add(new BuilderIndex.ImageField(opts)); }
 
   id(v: string): this { this.sheet.id = v; return this; }
   title(v: string): this { this.sheet.title = v; return this; }

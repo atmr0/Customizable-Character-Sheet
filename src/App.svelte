@@ -2,7 +2,7 @@
   import {RenderGrid} from "./ui";
   import { mainSheet } from "./MainSheet";
   // import SheetBuilder from "@builder/SheetBuilder";
-  import { applyTheme } from "@core/theme";
+  import { applyTheme } from "@ui/theme";
   import ThemeConfiguration from "./configurations/ThemeConfiguration.svelte";
   import { exportSheetModel, exportSheetData } from './Sheet/exportSheet';
   import { importSheetFromFile } from './Sheet/importSheet';
@@ -11,6 +11,7 @@
   import GitRepoManager from './core/GitRepoManager';
   import { get } from 'svelte/store';
   import { Sheet as SheetClass } from './core/builder/components/Sheet';
+  import RNG from "@ui/RNG.svelte";
   
   let sheet = mainSheet;
   // rehydrate to class instance so helper methods like exportData exist
@@ -114,7 +115,6 @@
       sheetKey += 1;
       alert('Sheet (modelo) importado com sucesso.');
     } else if (res.kind === 'data') {
-      console.log(res)
       sheet.importData(res.values || {});
     }
     // reset input so same file can be chosen again if needed
@@ -156,6 +156,8 @@
     {#key sheetKey}
       <RenderGrid {sheet} />
     {/key}
+
+    <RNG></RNG>
   </div>
 
 </main>

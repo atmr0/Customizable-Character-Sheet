@@ -7,3 +7,6 @@ export { ComputedText } from './ComputedText';
 export { SelectField } from './SelectField';
 export { CheckboxField } from './CheckboxField';
 export { ItemList } from './ItemList';
+export { ImageField } from './ImageField';
+export { CharacterAttribute } from './CharacterAttribute';
+export { RollButton } from './RollButton';

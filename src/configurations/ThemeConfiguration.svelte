@@ -1,68 +1,80 @@
 <script>
-  import { svelteComponentsMap } from "@builder";
-  import { cssVariables, applyTheme } from "../core/theme.js";
-  let componentTypes = svelteComponentsMap;
+  import { onDestroy } from "svelte";
+  import {
+    cssTextStorage,
+    setCssTextStorage,
+    applyCssString,
+    generateCss,
+  } from "../ui/theme.js";
+  import cssStyles from "../ui/cssStyles";
+  import MonacoCssEditor from './MonacoCssEditor.svelte';
 
-  function handleInput(type, variable, value) {
-    cssVariables[type][variable] = value;
-    applyTheme();
+  let cssText = cssTextStorage || generateCss(cssStyles) || "";
+  let monacoEditor;
+  let open = false;
+
+  // sanitize helper
+  function sanitize(text) {
+    return text.replace(/:\s*'([^']*)'/g, ": $1");
   }
 
-  function formatName(name, removePrefix) {
-    if (!name) return "";
-    if (removePrefix) name = name.replace(/^--\w+-/, ""); // remove leading -- and type prefix
-    let result = name
-      .replace(/-/g, " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-    return result;
+  function handleCssTextChange(text) {
+    cssText = text;
+    const sanitized = sanitize(cssText);
+    applyCssString(sanitized);
+    setCssTextStorage(sanitized);
   }
 
-  function toggleThemeConfig() {
-    const configPanel = document.querySelector(".theme-configuration");
-    if (configPanel) {
-      configPanel.classList.toggle("hidden-menu");
-    }
+  function regenerate() {
+    const parsed = generateCss(cssStyles);
+    cssText = parsed;
+    if (monacoEditor && monacoEditor.setValue) monacoEditor.setValue(parsed);
+    applyCssString(parsed);
+    setCssTextStorage(parsed);
+  }
+
+  function saveToStylesObject() {
+    const sanitized = sanitize(cssText);
+    setCssTextStorage(sanitized);
+  }
+
+  // when panel opens, force editor layout to avoid sizing glitches
+  $: if (open && monacoEditor && monacoEditor.layout) {
+    setTimeout(() => {
+      try {
+        monacoEditor.layout();
+      } catch (e) {}
+    }, 80);
   }
 </script>
 
-<button id="open-theme-button" on:click={toggleThemeConfig}>Theme</button>
+  <button id="open-theme-button" on:click={() => (open = !open)}>{open ? 'Close Theme' : 'Theme'}</button>
 
-<div class="theme-configuration">
-  <h2>Theme Configuration</h2>
-  <p>
-    Here you can customize the theme of your character sheet. Adjust colors,
-    fonts, and other styles to make it your own!
-  </p>
+  <div class="theme-configuration" class:closed={!open}>
+    <div class="theme-content">
+      <div class="styles-editor">
+        <div class="editor-header">
+          <strong>Theme Styles (CSS)</strong>
+          <div style="display:flex;gap:8px;align-items:center"></div>
+        </div>
+        <div class="css-editor-container">
+          <MonacoCssEditor bind:this={monacoEditor} value={cssText} on:input={(e) => handleCssTextChange(e.detail)} />
+        </div>
 
-  <!-- Add form inputs or controls for theme customization here -->
-  {#each Object.keys(cssVariables) as type}
-    <div class="theme-section hidden-menu">
-      <details>
-        <summary>{formatName(type)}</summary>
-
-        {#each Object.keys(cssVariables[type]) as variable}
-          <div class="theme-variable">
-            <label for={variable}>{type == "general" ? formatName(variable, false) :  formatName(variable, true) }</label>
-            <input
-              type={variable.includes("color") ? "color" : "text"}
-              id={variable}
-              name={variable}
-              value={cssVariables[type][variable]}
-              on:input={(e) => handleInput(type, variable, e.target.value)}
-            />
-          </div>
-        {/each}
-      </details>
+        <div class="actions">
+          <button on:click={regenerate}>Re-generate from object</button>
+          <button on:click={saveToStylesObject}>Save Current CSS To Styles Object</button>
+        </div>
+      </div>
     </div>
-  {/each}
-</div>
+  </div>
 
 <style>
   #open-theme-button {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 11;
+    z-index: 1101;
     padding: 10px 15px;
     background-color: var(--secondary-color);
     color: #fff;
@@ -77,42 +89,76 @@
     right: 0;
     height: 100vh;
     width: 30vw;
-    overflow-y: auto;
+    overflow: hidden;
 
     padding: 20px;
     background-color: var(--background-color, #c9c9c9);
-    z-index: 10;
+    z-index: 1100;
 
-    transition: right 0.6s cubic-bezier(0.704, 0.004, 0.312, 0.997);
-  }
-  .theme-section {
-    margin-bottom: 20px;
-    border: 1px solid var(--border-color, #ccc);
-  }
-
-  .hidden-menu {
-    right: -50vw;
+    /* use transform for smooth slide-in/out */
+    transform: translateX(0);
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    flex-direction: column;
   }
 
-  .theme-variable {
+  .theme-configuration.closed {
+    transform: translateX(100%);
+  }
+
+  .theme-content {
+    overflow: hidden;
+    flex: 1 1 auto;
+    padding-right: 6px;
+  }
+  .styles-editor {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 90vh;
+  }
+
+  .editor-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0.5rem 0.8rem;
+    padding: 6px 0;
   }
 
-  .theme-variable input {
-    text-align: right;
-    max-width: 50%;
-    border-radius: 6px;
-    border: 1px solid var(--border-color, #ccc);
+  .css-editor-container {
+    flex: 1 1 auto;
+    min-height: 60vh;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
   }
 
-  .theme-section summary {
-    font-weight: bold;
+
+  #open-theme-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1101;
+    padding: 8px 10px;
+    background-color: var(--secondary-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
-    padding: 10px;
-    background-color: var(--section-header-bg, #e0e0e0);
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(
+      rgba(201, 201, 201, 0),
+      rgba(201, 201, 201, 0.6)
+    );
+    padding: 6px 0;
   }
 
 

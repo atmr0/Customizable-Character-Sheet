@@ -22,7 +22,7 @@ export class Sheet {
     }
   }
 
-  // only for testing, not used otherwise
+  // only for development testing, not used otherwise
   syncWait(ms: number) {
     const end = Date.now() + ms
     while (Date.now() < end) continue
@@ -34,7 +34,6 @@ export class Sheet {
       let value = this.components[key].getValue();
       if (value) data[key] = value;
     }
-    console.log(data)
     return data;
   }
 }

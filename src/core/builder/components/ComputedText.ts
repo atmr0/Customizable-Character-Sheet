@@ -60,8 +60,13 @@ export class ComputedText extends BaseComponent {
     }
   }
 
-  public getValue(): string | number {
-    return this.value;
+  public setValue(value: string|undefined) {
+    this.expr = value;
+    this.updateValueStore(this.id!, this.expr);
+  }
+
+  public getValue(): string|undefined {
+    return this.expr;
   }
   public getValueFormatted(): string {
     return this.format(this.value);

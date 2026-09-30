@@ -9,3 +9,4 @@ export { default as StaticText} from "./basic/StaticText.svelte";
 export { default as RenderGrid} from "./layout/RenderGrid.svelte";
 export { default as SubGrid} from "./layout/SubGrid.svelte";
 export { default as CharacterAttribute} from "./composite/CharacterAttribute.svelte";
+export { default as RollButton} from "./basic/RollButton.svelte";

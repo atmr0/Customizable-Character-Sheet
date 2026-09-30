@@ -2,8 +2,10 @@ import { Input } from 'postcss';
 import { ComputedText, InputField, type ComponentOptions, BaseComponent } from './core/builder';
 import SheetBuilder from './core/builder/SheetBuilder';
 import { Constants } from './core/constants';
-import { attributesColors } from './core/theme';
+import { attributesColors } from './ui/theme';
 import { ItemList } from './core/builder/components/ItemList';
+import { RNG } from '@core/RNG';
+import { Dices } from '@core/Dices';
 
 type colors = keyof typeof attributesColors;
 
@@ -21,7 +23,7 @@ const mainSheet = new SheetBuilder('Character Sheet')
   .subGrid({ id: 'informations', width: 6 },
     new SheetBuilder().setRowLength(6).id('informations')
       .inputField({ id: 'player_name', label: 'Player Name', placeholder: 'John Doe', width: 5 })
-      .add(new BaseComponent({ type: 'ImageField', id: 'profile_picture', width: 1, height: 2 }))
+      .imageField({ id: 'profile_picture', width: 1, height: 2 })
       .inputField({ id: 'character_name', label: 'Character Name', placeholder: 'Gon Freecss', row: 2, col: 1, width: 3 })
       .selectField({ id: 'nen_type', label: 'Nen type', placeholder: 'Not discovered yet', options: ['Enhancer', 'Emitter', 'Manipulator', 'Transmuter', 'Conjurer', 'Specialist'], width: 2, row: 2, col: 4 })
       // .withSheetStyle({ background: 'red' }, Constants.InputField)
@@ -41,20 +43,23 @@ const mainSheet = new SheetBuilder('Character Sheet')
   .section("talents", r => r
     // .add(new BaseComponent({ type: Constants.CheckboxField, id: 'trainded', label: 'Trained', height: 1 }))
     .itemList({
-      id: 'skills', label: 'Skills', width: 2, height: 5, editable: true,
+      id: 'skills', label: 'Skills', width: 2, height: 5, editable: false,
       itemTemplate: ItemList.buildTemplateFromSpec('skills', skillSpec, [, 'cha_attr_mod + 2']),
       items: [
         ItemList.staticBuildItemFromValues(['Atletismo', 'str_attr_mod + 5'])
       ]
     })
     .itemList({
-      id: 'aaa', label: 'Skills', width: 2, height: 5, editable: true,
+      id: 'aaa', label: 'Skills', width: 2, height: 5, editable: false,
       itemTemplate: ItemList.buildTemplateFromSpec('aaa', skillSpec, [,'cha_attr_mod + 2']),
       items: [
         ItemList.staticBuildItemFromValues(['Carismo', 'str_attr_mod + 5'])
       ]
     })
   )
+  .rollButton({ id: 'example_roll', dices: new Dices("d20+3") })
+  .rollButton({ id: 'example_roll_2', dices: new Dices("6d6+2") })
+  .checkboxField({ id: 'example_checkbox', label: 'Example Checkbox', width: 2 })
   .build();
 
 export default mainSheet;

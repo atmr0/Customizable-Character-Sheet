@@ -1,26 +1,23 @@
 <script lang="ts">
   import { BaseComponent, type ComponentOptions } from "@builder/components";
+  import { onMount } from "svelte";
 
   export let component: ComponentOptions | undefined = undefined;
   export let noBackground: boolean = true;
   export let showLabel: boolean = true;
-
-  // export let onchange: ((event: any, value: any) => void)  = (event: any, value: any) => {
-  //   if(id) setValue(id, value)
-  // };
-
   let wrapperClass: string = component ? component.type + "-wrapper" : "";
-  let id:string|undefined;
-  let label: string|undefined;
-  if(component) {
+  let id: string | undefined;
+  let label: string | undefined;
+  onMount(() => {
+    if (!component) throw new Error("Component is required");
     id = component.id;
     label = component.label;
-  }
+  });
 </script>
 
 <div
-  class="base-component {noBackground ? 'no-bg' : ''} {wrapperClass}"
-  id={component?.id ?? ''}
+  class="base-component {noBackground ? 'no-bg' : ''} wrapper"
+  id={component?.id ?? ""}
   {...$$restProps}
 >
   {#if showLabel && label}

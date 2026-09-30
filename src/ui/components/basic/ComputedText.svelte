@@ -2,6 +2,7 @@
   import { BaseComponent } from "@ui/components/index.js";
   import { valuesStore } from "@core/valuesStore";
   import { ComputedText } from "@builder/components";
+    import { Constants } from "@core/constants";
 
   export let component: ComputedText | undefined = undefined;
   let id: string | undefined;
@@ -9,7 +10,6 @@
     id = component.id;
   }
   $: computed = "";
-  $: $valuesStore;
   $: if (component && component.expr) {
     try {
       const val = $valuesStore[""]; // it does nothing, only makes it so this block always stay updated
@@ -25,6 +25,6 @@
 
 <BaseComponent {component}>
   <div
-    class="computed-text"
+    class={Constants.ComputedText}
   >{computed}</div>
 </BaseComponent>

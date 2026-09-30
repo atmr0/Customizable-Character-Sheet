@@ -18,6 +18,8 @@ export class BaseComponent {
     if (init) Object.assign(this, init);
     if (!this.width) this.width = 1;
     if (!this.height) this.height = 1;
+    if(this.constructor.name != "StaticText" && !this.id) 
+      this.id = this.constructor.name + "_" + Math.random().toString(36).substr(2, 9);
   }
 
   protected setValueStoreHandler( sub:Subscriber<ValuesMap>|undefined = undefined) {
@@ -28,11 +30,17 @@ export class BaseComponent {
   public getValue(): any {
     // it's temporary for components not yet fully implemented
     // if you see this, i forgot to finish it
-    if (this.constructor.name == "BaseComponent") return '';
+    if (this.constructor.name == "BaseComponent") {
+      return this.value;
+    }
+
     throw new Error("[BaseComponent] getValue() not implemented for " + this.constructor.name);
   }
   public setValue(value: any): any {
-    if (this.constructor.name == "BaseComponent") return '';
+    if (this.constructor.name == "BaseComponent") {
+      this.value = value;
+      return;
+    }
     throw new Error("[BaseComponent] setValue() not implemented for " + this.constructor.name);
   }
 
