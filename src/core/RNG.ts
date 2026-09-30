@@ -84,13 +84,16 @@ export class RNG {
     const result = this.result!;
     const lastResult = this.lastResult!;
 
-    let minimumTravel = (Math.ceil(Math.random() * 10) + 10)*direction;
-    let indexAfterMinimumTravel = modulo((lastResult.index + minimumTravel),this.length);
+    let minimumTravel = (Math.ceil(Math.random() * 10) + 10) * direction;
+    let indexAfterMinimumTravel = modulo((lastResult.index + minimumTravel), this.length);
     let rotations = Math.abs(Math.ceil(minimumTravel / this.length));
     let indexOffset = result.index - indexAfterMinimumTravel;
-    let totalTravel = minimumTravel + indexOffset + (this.length< numberVisibleItems ? this.length : 0)*direction;
+    let totalTravel = minimumTravel + indexOffset + (this.length < numberVisibleItems ? this.length : 0) * direction;
 
-      // copies to create the illusion of being infinite
+    if (Math.abs(totalTravel) < 5) {
+      totalTravel += this.length * direction;
+    }
+    // copies to create the illusion of being infinite
     let extraCopiesOnEachSide = Math.ceil(numberVisibleItems / this.length);
     let totalNumberOfCopies = extraCopiesOnEachSide * 2 + rotations + 2;
     let valuesToRoll = this.duplicateValues(this.values, totalNumberOfCopies);
@@ -100,11 +103,11 @@ export class RNG {
       lastResult.index + extraCopiesOnEachSide * this.length :
       lastResult.index + (totalNumberOfCopies - extraCopiesOnEachSide - 1) * this.length;
     const endIndex = startIndex + totalTravel;
-    
+
     // TODO add random pixel offset, and make it snap to the final position
     const dislocation = (startIndex - endIndex) * itemSize;
-    const initialPosition = startIndex * itemSize * -1; 
-    
+    const initialPosition = startIndex * itemSize * -1;
+
     duration = duration || Math.random() * 2000 + 1000;
 
     return {

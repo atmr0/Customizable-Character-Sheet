@@ -70,7 +70,6 @@
     for(let i = 0; i < animationInfos.length; i++) {
       animateRoll(
         dices,
-        eventGlobal.dices.rngs[i],
         animationInfos[i],
         columns[i] as HTMLElement,
         center,
