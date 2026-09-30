@@ -9,7 +9,7 @@ npm run dev
 ```
 
 ## For contributors
-Despite it being designed so you clone it and make your sheet to your game. Please, don't forget to submit suggestions and improvements to this repository. Some suggestions of things to improve upon and other TODOs are at the end.
+Despite it being designed so you clone it and make your sheet to your game, please don't forget to submit suggestions and improvements to this repository. I'm aware that I'm far from being a good developer, and even farther from being a good front-end developer. So any contribution and tips will be greatly appreciated. Some suggestions of things to improve upon and other TODOs are at the end.
 
 ## Why this project exists?
 Firstly, for my own enjoyment. Secondly, it has some cool features. Maybe there is a site I don't know that has everything I made here, but I'm very confident that it will be subscription based.

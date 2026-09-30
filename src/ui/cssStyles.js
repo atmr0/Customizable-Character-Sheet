@@ -343,8 +343,9 @@ const cssStyles = {
       "display": "flex",
       "justify-content": "center",
       "z-index": "1000",
-      "gap": "16px",
       "overflow": "hidden",
+      "user-select": "none",
+      "backdrop-filter": "blur(4px)"
     },
 
     ".rng-highlights": {
@@ -361,18 +362,17 @@ const cssStyles = {
     },
 
     ".rng-column": {
+      "position": "absolute",
       "display": "flex",
       "flex-direction": "column",
-      "width": "320px",
       "max-width": "calc(100% - 32px)",
     },
 
     ".rng-highlight": {
-      "display": "block",
-      "width": "320px",
+      "position": "absolute",
+      "min-width": "2rem",
       "height": "80px",
       "background-color": "var(--highlight-color)",
-      "opacity": "0.95",
       "border-radius": "6px",
       "pointer-events": "none",
     },
@@ -384,7 +384,13 @@ const cssStyles = {
       "justify-content": "center",
       "font-weight": "bold",
       "font-size": "xx-large",
+      "scale": "1",
+      "color": "var(--base-color)"
     },
+    ".onCenter": {
+      "scale": "1.2",
+      "color": "var(--highlight-text-color)"
+    }
 
   },
 };

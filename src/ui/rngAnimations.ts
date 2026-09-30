@@ -1,37 +1,69 @@
 import { critResult, Dices, ModOperation } from "@core/Dices";
+import { RNGAnimationInfo } from "@core/RNG";
 import { gsap } from "gsap";
 import CustomEase from "gsap/CustomEase";
+import TextPlugin from "gsap/TextPlugin";
 
 gsap.registerPlugin(CustomEase);
+gsap.registerPlugin(TextPlugin);
 CustomEase.create("lootEase", "M0,0 C0.879,-0.064 0.34,1 1,1");
 
-function updateVisual(column: HTMLElement, center: number) {
+let center = 0
+let itemHeight = 0;
+let operation: ModOperation = ModOperation.NONE;
+let modValue = 0;
+let dices: Dices;
+let animationEndGates = 0;
+let elementsOnCenter: HTMLElement[] = [];
+function updateVisual(column: HTMLElement) {
   let items = column.querySelectorAll(".rng-item");
   let elementOnCenter: HTMLElement;
   items.forEach((item) => {
     let rect = item.getBoundingClientRect();
     if (rect.y < center && rect.y + rect.height > center) {
-      //@ts-ignore
-      item.style.scale = "1.2";
-      //@ts-ignore
-      item.style.color = "var(--highlight-text-color)";
+      item.classList.add("onCenter");
       elementOnCenter = item as HTMLElement;
     } else {
-      //@ts-ignore
-      item.style.scale = "1";
-      //@ts-ignore
-      item.style.color = "var(--base-color)";
+      item.classList.remove("onCenter");
     }
   });
-  return elementOnCenter!
+  return elementOnCenter!;
 }
 
+function synchronousWaitForAnimationEnd(totalGates: number) {
+  return new Promise<void>((resolve) => {
+    const interval = setInterval(() => {
+      if (animationEndGates >= totalGates) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, 100);
+  });
+}
 
-function animateRoll(dice: Dices, animationInfo: any, column: HTMLElement, center: number, itemHeight: number, endAnimation: () => void) {
+function animateAllRolls(dice: Dices, animationInfo: RNGAnimationInfo[], columns: HTMLElement[], highlights: HTMLElement, lcenter: number, litemHeight: number, endAnimation: () => void) {
+  if (animationInfo.length === 0) {
+    endAnimation();
+    return;
+  }
+  center = lcenter;
+  itemHeight = litemHeight;
+  operation = dice.getModOperation();
+  modValue = dice.getModValue();
+  dices = dice;
+  animationEndGates = 0;
+  elementsOnCenter = [];
+  for (let i = 0; i < animationInfo.length; i++) {
+    animateRoll(animationInfo[i], columns[i]);
+  }
+  synchronousWaitForAnimationEnd(animationInfo.length).then(() => {
+    collapseColumns(columns, highlights);
+    endAnimation();
+  });
+}
+
+function animateRoll(animationInfo: RNGAnimationInfo, column: HTMLElement) {
   const yOffset = center - itemHeight / 2;
-  const operation = dice.getModOperation();
-  const modValue = dice.getModValue();
-
   const startY = animationInfo.initialPosition + yOffset;
   const finalY = animationInfo.initialPosition + animationInfo.dislocation + yOffset;
   const durationSec = (animationInfo.duration || 1000) / 1000;
@@ -43,54 +75,51 @@ function animateRoll(dice: Dices, animationInfo: any, column: HTMLElement, cente
     duration: durationSec,
     ease: "lootEase",
     onUpdate: () => {
-      updateVisual(column, center);
+      updateVisual(column);
     },
     onComplete: () => {
-      const elementOnCenter = updateVisual(column, center);
-      setTimeout(() => animateResult(dice, operation, modValue, elementOnCenter, endAnimation), 500);
+      const elementOnCenter = updateVisual(column);
+      elementsOnCenter.push(elementOnCenter);
+      // setTimeout(() => animateResult(elementOnCenter), 500);
+      setTimeout(() => { animationEndGates += 1 }, 500);
     },
   });
 }
 
-function animateResult(dice: Dices, operation: ModOperation, modValue: number, elementOnCenter: HTMLElement, endAnimation: () => void) {
-  const crit = dice.checkCrit();
+function animateResult(elementOnCenter: HTMLElement) {
+  const crit = dices.checkCrit();
   if (crit == critResult.CRIT) {
     glow(elementOnCenter, `var(--success-color)`, 1, true);
   } else if (crit == critResult.FUMBLE) {
     glow(elementOnCenter, `var(--failure-color)`, 1, false);
   } else if (operation != ModOperation.NONE && modValue !== 0) {
-    animateModificator(operation, modValue, elementOnCenter);
+    animateModificator(elementOnCenter);
   }
-  endAnimation();
 }
 
-function animateModificator(operation: ModOperation, modValueRaw: number, elementOnCenter: HTMLElement) {
-  if (modValueRaw === 0) return;
+function animateModificator(elementOnCenter: HTMLElement) {
+  if (modValue === 0) return;
 
   const originalValue = parseInt(elementOnCenter.textContent || "0", 10) || 0;
-  let steps = Math.abs(modValueRaw);
+  let steps = Math.abs(modValue);
   let isMultiplication = false;
   let sign = 1;
 
   if (operation === ModOperation.MULTIPLICATION) {
     isMultiplication = true;
     // do N-1 additive steps to emulate multiplication (consistent with prior logic)
-    steps -=1
+    steps -= 1
   } else if (operation === ModOperation.SUBTRACTION) {
     sign = -1;
   }
 
-  if (steps === 0)return;
+  if (steps === 0) return;
 
   const totalDuration = 1.0; // seconds
   const proxy = { idx: 0 };
   let lastStep = -1;
 
-  const tl = gsap.timeline({
-    onComplete: () => {
-      gsap.to(elementOnCenter, { scale: 1, color: 'var(--highlight-text-color)', duration: 0.12 });
-    }
-  });
+  const tl = gsap.timeline();
 
   tl.to(proxy, {
     idx: steps,
@@ -98,7 +127,7 @@ function animateModificator(operation: ModOperation, modValueRaw: number, elemen
     ease: 'none',
     onUpdate: () => {
       const cur = Math.floor(proxy.idx);
-      if(cur == steps) return;
+      if (cur == steps) return;
       if (cur !== lastStep) {
         lastStep = cur;
         let currentVal = parseInt(elementOnCenter.textContent || String(originalValue), 10) || originalValue;
@@ -111,8 +140,8 @@ function animateModificator(operation: ModOperation, modValueRaw: number, elemen
       }
 
       const stepProgress = proxy.idx - Math.floor(proxy.idx);
-      let percentage = 100 -  Math.round(stepProgress * 100);
-      let scale = Math.min(1 / stepProgress, 1.5);
+      let percentage = 100 - Math.round(stepProgress * 100);
+      let scale = 1.2 * Math.min(1 / stepProgress, 1.5);
       if (sign < 0) scale = 1 / scale;
       gsap.set(elementOnCenter, { scale });
       let colorOfNumberChange = sign > 0 ? 'var(--increase-color)' : 'var(--decrease-color)';
@@ -130,4 +159,40 @@ function glow(elementOnCenter: HTMLElement, color: string, durationSec: number, 
   elementOnCenter.style.color = `color-mix(in oklab, ${success ? 'white' : 'black'}, ${color} 50%)`;
   elementOnCenter.style.transform = `scale(2)`;
 }
-export { animateModificator, animateRoll };
+
+function collapseColumns(columns: HTMLElement[], highlights: HTMLElement) {
+  let result = 0;
+  for (let i = 0; i < columns.length; i += 1) {
+    result += parseInt(elementsOnCenter[i].innerText) || 0;
+  }
+  let highs = Array.from(highlights.children);
+  let tl = gsap.timeline()
+  for (let i = 0; i < columns.length; i += 1) {
+    let column = columns[i];
+    let t = Array.from(column.children).filter(child => !child.classList.contains("onCenter"));
+    tl.to(t, { color: 'transparent', duration: 0.5, ease: 'power2.in' }, 0);
+    tl.to(column, { x: "0", duration: 0.5, ease: 'power2.in' }, 0);
+    tl.to(highs[i], { x: 0, width:320, duration: 0.5, ease: 'power2.in' }, 0);
+  }
+
+  if(columns.length < 2) {
+    tl.to(elementsOnCenter,{onComplete: () => {
+      setTimeout(()=>animateResult(elementsOnCenter[0]),0)
+    }})
+    return
+  }
+
+  tl.to(elementsOnCenter, { filter: "blur(2px)", duration: 0.5, ease: 'power2.out' }, 0);
+  for (let i = 0; i < elementsOnCenter.length; i += 1) {
+    let c = i == 0 ? 'var(--highlight-text-color)' : 'transparent';
+    tl.set(elementsOnCenter[i], { color: c });
+  }
+  tl.set(elementsOnCenter[0], { text: { value: String(result) } });
+  tl.to(elementsOnCenter, {
+    filter: "none", duration: 0.1, ease: 'power2.in',
+    onComplete: () => {
+      setTimeout(()=>animateResult(elementsOnCenter[0]),300)
+    }
+  });
+}
+export { animateAllRolls };

@@ -3,7 +3,7 @@
   import type { RNGAnimationInfo } from "@core/RNG";
   import { eventGlobal } from "./eventGlobal.svelte";
   import { onMount } from "svelte";
-  import { animateRoll } from "./rngAnimations";
+  import { animateAllRolls } from "./rngAnimations";
 
   const itemHeight = 80;
   // const halfHeight = itemHeight / 2;
@@ -35,6 +35,11 @@
   function organizeHtmlElements(animationInfo: RNGAnimationInfo[]) {
     let divs = [];
     let hlDivs = []
+
+    // I'm using position absolute instead of flex to make it easier to animate after.
+    let winWidth = window.innerWidth;
+    let columnWidth = winWidth / animationInfo.length;
+
     for (let i = 0; i < animationInfo.length; i++) {
       let column = document.createElement("div");
       column.classList.add("rng-column");
@@ -45,10 +50,16 @@
         
         column.appendChild(div);
       }
-      column.style.transform = `translateY(${animationInfo[i].initialPosition + center - itemHeight / 2}px)`;
+
+      let initialPositionY = animationInfo[i].initialPosition + center - itemHeight / 2;
+      let initialPositionX = -winWidth/2 + columnWidth * i + columnWidth / 2;
+      column.style.transform = `translate(${initialPositionX}px, ${initialPositionY}px)`;
       divs.push(column);
+
       let highlight = document.createElement("div")
       highlight.classList.add("rng-highlight");
+      highlight.style.transform = `translate(${initialPositionX}px, 0px)`;
+      highlight.style.width = `${Math.min(columnWidth-10, 320)}px`;
       hlDivs.push(highlight);
     }
     highlights.replaceChildren(...hlDivs);
@@ -58,6 +69,7 @@
 
   function endAnimation() {
     spinning = false;
+    console.log("ending")
     eventGlobal.send(null, eventGlobal.message + " done");
   }
 
@@ -67,16 +79,7 @@
     let animationInfos = dices.getAnimationInfos(numberVisibleItems,itemHeight);
     organizeHtmlElements(animationInfos);
     let columns = overlay.querySelectorAll(".rng-column");
-    for(let i = 0; i < animationInfos.length; i++) {
-      animateRoll(
-        dices,
-        animationInfos[i],
-        columns[i] as HTMLElement,
-        center,
-        itemHeight,
-        endAnimation,
-      );
-    }
+    animateAllRolls(dices, animationInfos, Array.from(columns) as HTMLElement[], highlights, center, itemHeight, endAnimation);
     spinning = true;
   }
 
